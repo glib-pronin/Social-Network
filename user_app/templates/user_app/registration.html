@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <form action="" method="post">
+        <div>
+            <span class="selected switcher-btn">Реєстрація</span>
+            <span class="switcher-btn">Авторизація</span>
+        </div>
+        <div class="input-container">
+            <label for="email">Електронна пошта</label>
+            <input id="email" type="email" required name="email" placeholder="you@example.com">
+        </div>
+        <div class="input-container">
+            <label for="password">Пароль</label>
+            <input id="password" type="password" required name="password" placeholder="Введи пароль">
+        </div>
+        <div class="input-container" id="confirm-password-block">
+            <label for="confirm_password">Підтверди пароль</label>
+            <input id="confirm_password" type="password" required name="confirm_password" placeholder="Повтори пароль">
+        </div>
+        <button type="submit" id="send-button">Створити акаунт</button>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'user_app/js/form.js' %}"></script>
+{% endblock %}
