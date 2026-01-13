@@ -1,0 +1,50 @@
+form {
+    background-color: var(--element-color);
+    border-radius: var(--form-radius);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--form-gap);
+}
+
+.inputs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 6px;
+    font-size: 1rem;
+    position: relative;
+}
+
+.send-btn {
+    background-color: var(--btn-color);
+    border-radius: 100px;
+    padding: 16px 24px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+}
+
+.error-msg {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--error-color);
+}
+
+.form-header {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    gap: 6px;
+}

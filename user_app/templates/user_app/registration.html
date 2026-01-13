@@ -1,26 +1,129 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
+{% endblock %}
 {% block content %}
-    <form action="" method="post">
-        <div>
-            <span class="selected switcher-btn">Реєстрація</span>
-            <span class="switcher-btn">Авторизація</span>
+    <form action="" method="post" id="auth-form" class="auth">
+        {% csrf_token %}
+        <div class="switchers-container">
+            <span class="selected switcher-btn" data-type="registration">Реєстрація</span>
+            <span class="switcher-btn" data-type="authorization">Авторизація</span>
         </div>
+        <div class="form-header">
+            <h3 class="form-text">Приєднуйся до World IT</h3>
+            <p class="error-msg main-error hidden"></p>
+        </div>
+        <div class="inputs">
+            <div class="input-container">
+                <label for="email">Електронна пошта</label>
+                <input id="email" type="email" name="email" placeholder="you@example.com">
+                <p class="error-msg hidden">Неправильний формат електронної пошти</p>
+            </div>
+            <div class="input-container password-container">
+                <label for="password">Пароль</label>
+                <input id="password" type="password" name="password" placeholder="Введи пароль">
+                <p class="error-msg hidden">Пароль повинен складатися мінімум з 6 символів</p>
+                <svg class="password-switcher password-shown hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1389_7434)">
+                        <g clip-path="url(#clip1_1389_7434)">
+                            <path d="M1.66699 9.99996C1.66699 9.99996 4.16699 4.16663 10.0003 4.16663C15.8337 4.16663 18.3337 9.99996 18.3337 9.99996C18.3337 9.99996 15.8337 15.8333 10.0003 15.8333C4.16699 15.8333 1.66699 9.99996 1.66699 9.99996Z" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.0003 12.5C11.381 12.5 12.5003 11.3807 12.5003 9.99996C12.5003 8.61925 11.381 7.49996 10.0003 7.49996C8.61961 7.49996 7.50033 8.61925 7.50033 9.99996C7.50033 11.3807 8.61961 12.5 10.0003 12.5Z" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1389_7434">
+                            <rect width="20" height="20" fill="white"/>
+                        </clipPath>
+                        <clipPath id="clip1_1389_7434">
+                            <rect width="20" height="20" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+                <svg class="password-switcher password-hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1389_7436)">
+                        <path d="M8.23268 8.23329C7.98706 8.46217 7.79005 8.73817 7.65341 9.04483C7.51677 9.3515 7.4433 9.68254 7.43738 10.0182C7.43145 10.3539 7.4932 10.6873 7.61894 10.9986C7.74468 11.3099 7.93182 11.5927 8.16922 11.8301C8.40662 12.0675 8.6894 12.2546 9.00069 12.3804C9.31198 12.5061 9.64541 12.5679 9.98109 12.5619C10.3168 12.556 10.6478 12.4825 10.9545 12.3459C11.2611 12.2093 11.5371 12.0122 11.766 11.7666M8.94102 4.23329C9.29211 4.18955 9.64554 4.16729 9.99935 4.16663C15.8327 4.16663 18.3327 9.99996 18.3327 9.99996C17.9601 10.7976 17.4929 11.5474 16.941 12.2333M5.50768 5.50829C3.85039 6.63715 2.52424 8.18768 1.66602 9.99996C1.66602 9.99996 4.16602 15.8333 9.99935 15.8333C11.5959 15.8376 13.1583 15.3709 14.491 14.4916M1.66602 1.66663L18.3327 18.3333" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1389_7436">
+                            <rect width="20" height="20" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+            </div>
+            <div class="input-container password-container" id="confirm-password-block">
+                <label for="confirm_password">Підтверди пароль</label>
+                <input id="confirm-password" type="password" name="confirmPassword" placeholder="Повтори пароль">
+                <p class="error-msg hidden">Паролі не збігаються</p>
+                <svg class="password-switcher password-shown hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1389_7434)">
+                        <g clip-path="url(#clip1_1389_7434)">
+                            <path d="M1.66699 9.99996C1.66699 9.99996 4.16699 4.16663 10.0003 4.16663C15.8337 4.16663 18.3337 9.99996 18.3337 9.99996C18.3337 9.99996 15.8337 15.8333 10.0003 15.8333C4.16699 15.8333 1.66699 9.99996 1.66699 9.99996Z" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M10.0003 12.5C11.381 12.5 12.5003 11.3807 12.5003 9.99996C12.5003 8.61925 11.381 7.49996 10.0003 7.49996C8.61961 7.49996 7.50033 8.61925 7.50033 9.99996C7.50033 11.3807 8.61961 12.5 10.0003 12.5Z" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1389_7434">
+                            <rect width="20" height="20" fill="white"/>
+                        </clipPath>
+                        <clipPath id="clip1_1389_7434">
+                            <rect width="20" height="20" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+                <svg class="password-switcher password-hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_1389_7436)">
+                        <path d="M8.23268 8.23329C7.98706 8.46217 7.79005 8.73817 7.65341 9.04483C7.51677 9.3515 7.4433 9.68254 7.43738 10.0182C7.43145 10.3539 7.4932 10.6873 7.61894 10.9986C7.74468 11.3099 7.93182 11.5927 8.16922 11.8301C8.40662 12.0675 8.6894 12.2546 9.00069 12.3804C9.31198 12.5061 9.64541 12.5679 9.98109 12.5619C10.3168 12.556 10.6478 12.4825 10.9545 12.3459C11.2611 12.2093 11.5371 12.0122 11.766 11.7666M8.94102 4.23329C9.29211 4.18955 9.64554 4.16729 9.99935 4.16663C15.8327 4.16663 18.3327 9.99996 18.3327 9.99996C17.9601 10.7976 17.4929 11.5474 16.941 12.2333M5.50768 5.50829C3.85039 6.63715 2.52424 8.18768 1.66602 9.99996C1.66602 9.99996 4.16602 15.8333 9.99935 15.8333C11.5959 15.8376 13.1583 15.3709 14.491 14.4916M1.66602 1.66663L18.3327 18.3333" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1389_7436">
+                            <rect width="20" height="20" fill="white"/>
+                        </clipPath>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+        <button type="submit" id="send-button" class="send-btn">Створити акаунт</button>
+        <div class="loading hidden">
+            <div class="spinner"></div>
+            <span>Обробка даних...</span>
+        </div>
+    </form>
+    <form action="" method="post" id="verify-email" class="auth hidden">
+        <h2 class="form-header">Підтвердження пошти</h2>
+        <h3 class="form-msg">Ми надіслали 6-значний код на вашу пошту (<span id="user-email"></span>). Введіть його нижче, щоб підтвердити акаунт</h3>
         <div class="input-container">
-            <label for="email">Електронна пошта</label>
-            <input id="email" type="email" required name="email" placeholder="you@example.com">
+            <label for="">Код підтвердження</label>
+            <div class="numeric-inputs">
+                <div class="digit-pair">                    
+                    <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit1" maxlength="1">
+                    <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit2" maxlength="1">
+                </div>
+                <div class="digit-pair">
+                    <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit4" maxlength="1">
+                    <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit3" maxlength="1">
+                </div>
+                <div class="digit-pair">
+                    <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit5" maxlength="1">
+                    <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit6" maxlength="1">
+                </div>
+            </div>
+            <p class="error-msg hidden"></p>
         </div>
-        <div class="input-container">
-            <label for="password">Пароль</label>
-            <input id="password" type="password" required name="password" placeholder="Введи пароль">
+        <div class="btns-container">
+            <button class="send-btn" type="submit">Підтвердити</button>
+            <div class="loading hidden">
+                <div class="spinner"></div>
+                <span>Перевіряємо код...</span>
+            </div>
+            <button class="back-btn" type="button">Назад</button>
         </div>
-        <div class="input-container" id="confirm-password-block">
-            <label for="confirm_password">Підтверди пароль</label>
-            <input id="confirm_password" type="password" required name="confirm_password" placeholder="Повтори пароль">
-        </div>
-        <button type="submit" id="send-button">Створити акаунт</button>
     </form>
 {% endblock %}
 {% block scripts %}
+    <script src="{% static 'user_app/js/validation.js' %}"></script>
+    <script src="{% static 'user_app/js/spinner.js' %}"></script>
     <script src="{% static 'user_app/js/form.js' %}"></script>
+    <script src="{% static 'user_app/js/password.js' %}"></script>
+    <script src="{% static 'user_app/js/digitInputs.js' %}"></script>
 {% endblock %}

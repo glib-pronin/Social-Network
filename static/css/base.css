@@ -1,0 +1,92 @@
+font-face {
+  font-family: "GT Walsheim Pro";
+  src: url("../fonts/GTWalsheimPro-Light.woff2") format("woff2"),
+    url("../fonts/GTWalsheimPro-Light.woff") format("woff");
+  font-weight: 200;
+}
+@font-face {
+  font-family: "GT Walsheim Pro";
+  src: url("../fonts/GTWalsheimPro-Regular.woff2") format("woff2"),
+    url("../fonts/GTWalsheimPro-Regular.woff") format("woff");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "GT Walsheim Pro";
+  src: url("../fonts/GTWalsheimPro-Medium.woff2") format("woff2"),
+    url("../fonts/GTWalsheimPro-Medium.woff") format("woff");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "GT Walsheim Pro";
+  src: url("../fonts/GTWalsheimPro-Bold.woff2") format("woff2"),
+    url("../fonts/GTWalsheimPro-Bold.woff") format("woff");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "GT Walsheim Pro";
+  src: url("../fonts/GTWalsheimPro-UltraBold.woff2") format("woff2"),
+    url("../fonts/GTWalsheimPro-UltraBold.woff") format("woff");
+  font-weight: 800;
+}
+
+:root {
+  --element-color: white;
+  --bg-color1: #E9E5EE;
+  --main-text-color: #070A1C;
+  --secondary-text-color: #81818D;
+  --btn-color: #543C52;
+  --error-color: #FF4C4C;
+  --input-border-color: #CDCED2;
+
+  --header-height: 88px;
+  --side-padding: 80px;
+  --form-padding1: 44px;
+  --form-radius: 20px;
+  --form-gap: 36px;
+}
+
+body {
+    font-family: "GT Walsheim Pro";
+    margin: 0;
+    padding: 0;
+    color: var(--main-text-color);
+}
+
+header {
+  height: var(--header-height);
+  padding: 0 var(--side-padding);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: var(--element-color);
+}
+
+.hidden {
+    display: none !important;
+}
+
+main {
+  min-height: calc(100vh - var(--header-height));
+  background-color: var(--bg-color1);
+  padding: 0 var(--side-padding);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  font-family: 'GT Walsheim Pro';
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}
