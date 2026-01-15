@@ -42,8 +42,10 @@ font-face {
   --input-border-color: #CDCED2;
 
   --header-height: 88px;
-  --side-padding: 80px;
-  --form-padding1: 44px;
+  --side-padding-horizontal: 80px;
+  --side-padding-vertical: 16px;
+  --form-padding-vertical: 44px;
+  --form-padding-horizontal: 44px;
   --form-radius: 20px;
   --form-gap: 36px;
 }
@@ -57,7 +59,7 @@ body {
 
 header {
   height: var(--header-height);
-  padding: 0 var(--side-padding);
+  padding: 0 var(--side-padding-horizontal);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -73,9 +75,10 @@ header {
 }
 
 main {
+  position: relative;
   min-height: calc(100vh - var(--header-height));
   background-color: var(--bg-color1);
-  padding: 0 var(--side-padding);
+  padding: var(--side-padding-vertical) var(--side-padding-horizontal);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -89,4 +92,14 @@ button {
 
 h1, h2, h3, p {
   margin: 0;
+}
+
+@media (max-width: 680px) {
+  :root {
+    --header-height: 56px;   
+    --side-padding-horizontal: 0;
+    --side-padding-vertical: 8px;
+    --form-padding-horizontal: 16px;
+    --form-gap: 24px; 
+  }
 }

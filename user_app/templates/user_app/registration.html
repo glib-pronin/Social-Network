@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
 {% endblock %}
 {% block content %}
+<div class="auth-wrapper">
     <form action="" method="post" id="auth-form" class="auth">
         {% csrf_token %}
         <div class="switchers-container">
@@ -119,6 +120,8 @@
             <button class="back-btn" type="button">Назад</button>
         </div>
     </form>
+    <img src="{% static 'user_app/img/auth_bg.png' %}" alt="" class="auth-bg-img">
+</div>
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'user_app/js/validation.js' %}"></script>

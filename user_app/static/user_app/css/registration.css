@@ -1,6 +1,18 @@
+.auth-wrapper {
+    position: relative;
+    left: 5%;
+    width: 1088px;
+    height: 552px;
+    display: flex;
+    align-items: center;
+}
+
 form.auth {
-    padding: var(--form-padding1);
+    padding: var(--form-padding-vertical) var(--form-padding-horizontal);
     width: 488px;
+    position: absolute;
+    z-index: 2;
+    left: 0;
 }
 
 form.auth .send-btn {
@@ -57,6 +69,7 @@ form.auth .send-btn {
 .form-header {
     font-size: 34px;
     font-weight: 500;
+    text-align: center;
 }
 
 .password-switcher {
@@ -124,18 +137,57 @@ form.auth .send-btn {
     }
 }
 
-/* .spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-    margin-right: 8px;
+.auth-bg-img {
+    position: absolute;
+    right: 0;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg);}
-    100% { transform: rotate(360deg);}
-} */
+@media (max-width: 1175px) {
+    .auth-bg-img {
+        display: none;
+    }
+
+    form.auth {
+        position: static;
+    }
+
+    .auth-wrapper {
+        position: static;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 680px) {
+    .switchers-container span, .form-header {
+        font-size: 24px;
+    }
+
+    form.auth {
+        width: 343px;
+    }
+
+    .switchers-container {
+        gap: 24px;
+        width: fit-content;
+    }
+
+    .switchers-container::before {
+        width: 46%;
+    }
+
+    .switchers-container.auth::before {
+        left: 50%;
+        width: 50%;
+    }
+
+    .digit-pair {
+        gap: 8px;
+    }
+
+    .numeric-inputs input {
+        width: 40px;
+        height: 40px;
+    }
+}
