@@ -1,14 +1,18 @@
+main {
+    background-color: var(--color-plum);
+}
+
 .auth-wrapper {
     position: relative;
     left: 5%;
     width: 1088px;
+    max-width: 85vw;
     height: 552px;
     display: flex;
     align-items: center;
 }
 
 form.auth {
-    padding: var(--form-padding-vertical) var(--form-padding-horizontal);
     width: 488px;
     position: absolute;
     z-index: 2;
@@ -31,7 +35,7 @@ form.auth .send-btn {
     content: '';
     width: 47%;
     height: 3px;
-    background-color: var(--main-text-color);
+    background-color: var(--color-indigo);
     position: absolute;
     bottom: -8px;
     left: 0;
@@ -46,13 +50,13 @@ form.auth .send-btn {
 .switchers-container span {
     font-size: 34px;
     font-weight: 500;
-    color: var(--secondary-text-color);
+    color: var(--color-blue);
     cursor: pointer;
 }
 
 .switcher-btn.selected {
     font-weight: 600;
-    color: var(--main-text-color);
+    color: var(--color-indigo);
 }
 
 .form-text {
@@ -89,13 +93,6 @@ form.auth .send-btn {
     gap: 16px;
 }
 
-.numeric-inputs input {
-    padding: 10px;
-    width: 50px;
-    height: 45px;
-    text-align: center;
-}
-
 .btns-container {
     width: 100%;
     display: flex;
@@ -106,7 +103,7 @@ form.auth .send-btn {
 
 .back-btn {
     font-size: 16px;
-    background-color: var(--element-color);
+    background-color: var(--color-white);
     border: none;
     cursor: pointer;
 }
@@ -121,7 +118,7 @@ form.auth .send-btn {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background: conic-gradient(var(--main-text-color), var(--element-color));
+    background: conic-gradient(var(--color-indigo), var(--color-white));
     mask: radial-gradient(farthest-side, transparent 60%, black 61%);
     -webkit-mask: radial-gradient(farthest-side, transparent 60%, black 61%);
     animation: spin 1s linear infinite;
@@ -142,7 +139,7 @@ form.auth .send-btn {
     right: 0;
 }
 
-@media (max-width: 1175px) {
+@media (max-width: 1075px) {
     .auth-bg-img {
         display: none;
     }

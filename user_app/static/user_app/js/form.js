@@ -12,11 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainError = form.querySelector('.main-error')
     let switcherType = 'registration'
 
-    emailForm.querySelector('.back-btn').addEventListener('click', () => {
-        form.classList.remove('hidden')
-        emailForm.classList.add('hidden')
-        showSpinner(false, emailForm)
-    })
+    const verifyEmail = sessionStorage.getItem('verify-email')
+    if (verifyEmail) {
+        form.classList.add('hidden')
+        emailForm.classList.remove('hidden')
+        emailForm.querySelector('#user-email').textContent = verifyEmail 
+    }
 
     emailField.addEventListener('input', () => {
         emailField.nextElementSibling.classList.add('hidden')
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     passwordField.addEventListener('input', () => {
-        if (passwordField.value.length < 6 && passwordField.value) {
+        if (passwordField.value.length < 6 && passwordField.value && switcherType === 'registration') {
             passwordField.nextElementSibling.classList.remove('hidden')
         } else {
             passwordField.nextElementSibling.classList.add('hidden')
@@ -114,11 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
             form.classList.add('hidden')
             emailForm.classList.remove('hidden')
             emailForm.querySelector('#user-email').textContent = email
+            sessionStorage.setItem('verify-email', email)
+            sendCode()
         } else {
             if (error === 'user_exists') {
                 mainError.textContent = 'Користувач з такою поштою вже існує'
-            } else if (error === 'smtp_error') {
-                mainError.textContent = 'Сталася помилка під час відправлення коду для підтвердження пошти. Спробуйте пізніше'
+            } else {
+                mainError.textContent = 'Сталася помилка під час обробки даних'
             }
             mainError.classList.remove('hidden')
         }
@@ -126,16 +129,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleAuthorization({ success, error, email }) {
         if (success) {
-            location.href = '/registration'
+            location.href = '/'
         } else if (error === 'verify_email') {
             form.classList.add('hidden')
             emailForm.classList.remove('hidden')
             emailForm.querySelector('#user-email').textContent = email
+            sessionStorage.setItem('verify-email', email)
+            sendCode()
         } else {
             if (error === 'incorrect_credentials') {
                 mainError.textContent = 'Неправильна пошта або пароль'
-            } else if (error === 'smtp_error') {
-                mainError.textContent = 'Сталася помилка під час відправлення коду для підтвердження пошти. Спробуйте пізніше'
+            } else {
+                mainError.textContent = 'Сталася помилка під час обробки даних'
             }
             mainError.classList.remove('hidden')
         }

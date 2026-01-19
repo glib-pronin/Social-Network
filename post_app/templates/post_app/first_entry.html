@@ -1,0 +1,39 @@
+<div class="modal-container">
+    <form action="" method="post" id="first-entry-form" class="auth">
+        {% csrf_token %}
+        <div class="form-header">
+            <button class="close-modal" type="button">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.49539 11.0253L5.6709 7.20077L1.84641 11.0253C1.64355 11.2281 1.3684 11.3421 1.08151 11.3421C0.794618 11.3421 0.519476 11.2281 0.316613 11.0253C0.113749 10.8224 -0.000218546 10.5473 -0.000218546 10.2604C-0.000218208 9.97347 0.11375 9.69833 0.316613 9.49546L4.1411 5.67097L0.316613 1.84648C0.113749 1.64362 -0.000217871 1.36848 -0.000217745 1.08159C-0.000217634 0.794693 0.113749 0.519552 0.316613 0.316688C0.519476 0.113824 0.794618 -0.000142783 1.08151 -0.000142893C1.3684 -0.00014302 1.64354 0.113824 1.84641 0.316688L5.6709 4.14118L9.49539 0.316687C9.69825 0.113824 9.97339 -0.000143694 10.2603 -0.000143926C10.5472 -0.00014381 10.8223 0.113824 11.0252 0.316687C11.228 0.519551 11.342 0.794693 11.342 1.08158C11.342 1.36848 11.228 1.64362 11.0252 1.84648L7.20069 5.67097L11.0252 9.49546C11.228 9.69833 11.342 9.97347 11.342 10.2604C11.342 10.5473 11.228 10.8224 11.0252 11.0253C10.8223 11.2281 10.5472 11.3421 10.2603 11.3421C9.97339 11.3421 9.69825 11.2281 9.49539 11.0253Z" fill="black"/>
+                </svg>
+            </button>
+            <h3 class="form-text">Додайте деталі про себе</h3>
+        </div>
+        <div class="inputs">
+            <div class="input-container">
+                <label for="first-name">Ім'я</label>
+                <input id="first-name" type="text" name="firstName" placeholder="Введіть Ваше ім'я">
+                <p class="error-msg hidden">Для генерації потрібно ввести ім'я</p>
+            </div>
+            <div class="input-container">
+                <label for="last-name">Прізвище</label>
+                <input id="last-name" type="text" name="lastName" placeholder="Введіть Ваше прізвище">
+                <p class="error-msg hidden">Для генерації потрібно ввести прізвище</p>
+            </div>
+            <div class="input-container">
+                <label for="username">Ім'я користувача</label>
+                <input id="username" type="text" name="username" placeholder="@">
+                <p class="error-msg hidden">Таке ім'я користувача вже існує</p>
+                <p>
+                    Або оберіть:
+                    <span id="generate-username" style="color: #22C55E; cursor: pointer;">Запропоновані варіанти відповідно до Ім'я та Прізвища</span>
+                </p>
+            </div>
+        </div>
+        <button type="submit" class="send-btn">Продовжити</button>
+        <div class="loading hidden">
+            <div class="spinner"></div>
+            <span>Обробка даних...</span>
+        </div>
+    </form>
+</div>

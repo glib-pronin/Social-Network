@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import json, random, re
 
-def get_data_from_json(data):
+def get_data_from_json(data)->dict:
     return json.loads(data)
 
 def rand_code():

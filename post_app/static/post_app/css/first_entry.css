@@ -1,0 +1,61 @@
+.modal-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+
+}
+
+form {
+    padding-top: 24px;
+    gap: 24px;
+    width: 490px;
+}
+
+.form-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+}
+
+.form-header .close-modal {
+    align-self: flex-end;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    height: 20px;
+}
+
+.form-text {
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+
+.send-btn {
+    align-self: flex-end;
+    padding: 10px 16px;
+}
+
+p:has(#generate-username) {
+    font-size: 12px;
+}
+
+@media (max-width: 680px) {
+    form {
+        width: 343px;
+    }
+
+    .form-text {
+        font-size: 24px;
+    }
+}

@@ -33,19 +33,21 @@ font-face {
 }
 
 :root {
-  --element-color: white;
-  --bg-color1: #E9E5EE;
-  --main-text-color: #070A1C;
-  --secondary-text-color: #81818D;
-  --btn-color: #543C52;
-  --error-color: #FF4C4C;
-  --input-border-color: #CDCED2;
+  --color-white: white;
+  --color-plum: #E9E5EE;
+  --color-indigo: #070A1C;
+  --color-blue: #81818D;
+  --color-purple: #543C52;
+  --color-red: #FF4C4C;
+  --color-silver: #CDCED2;
 
   --header-height: 88px;
   --side-padding-horizontal: 80px;
   --side-padding-vertical: 16px;
   --form-padding-vertical: 44px;
   --form-padding-horizontal: 44px;
+  --header-padding-vertical: 24px;
+  --header-padding-horizontal: 80px;
   --form-radius: 20px;
   --form-gap: 36px;
 }
@@ -54,12 +56,12 @@ body {
     font-family: "GT Walsheim Pro";
     margin: 0;
     padding: 0;
-    color: var(--main-text-color);
+    color: var(--color-indigo);
 }
 
 header {
   height: var(--header-height);
-  padding: 0 var(--side-padding-horizontal);
+  padding: var(--header-padding-vertical) var(--header-padding-horizontal);
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -67,7 +69,68 @@ header {
   position: sticky;
   top: 0;
   z-index: 5;
-  background-color: var(--element-color);
+  background-color: var(--color-white);
+}
+
+header:has(nav) {
+  justify-content: space-between;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.nav-wrapper a {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.nav-wrapper a.selected {
+  padding: 4px 8px;
+  background-color: var(--color-plum);
+  border-radius: 3px;
+}
+
+#logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--color-purple);
+}
+
+nav.mobile {
+  display: none;
+  gap: 30px;
+}
+
+nav.mobile a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 100px;
+  border: 1px solid var(--color-purple);
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-indigo);
+  font-weight: 500;
 }
 
 .hidden {
@@ -77,7 +140,7 @@ header {
 main {
   position: relative;
   min-height: calc(100vh - var(--header-height));
-  background-color: var(--bg-color1);
+  background-color: #FAF8FF;
   padding: var(--side-padding-vertical) var(--side-padding-horizontal);
   box-sizing: border-box;
   display: flex;
@@ -94,6 +157,52 @@ h1, h2, h3, p {
   margin: 0;
 }
 
+footer {
+  display: none;
+  box-sizing: border-box;
+  height: 70px;
+  padding-bottom: 16px;
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--color-white);
+  align-items: center;
+  justify-content: space-around;
+}
+
+footer a {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+footer a.selected {
+  border-top: 2px solid var(--color-purple);
+}
+
+@media (max-width: 1030px) {
+  nav.desktop {
+    display: none;
+  }
+
+  nav.mobile {
+    display: flex;
+  }
+
+  footer {
+    display: flex;
+  }
+
+  main {
+    padding-bottom: calc(70px + var(--side-padding-vertical));
+  }
+}
+
 @media (max-width: 680px) {
   :root {
     --header-height: 56px;   
@@ -101,5 +210,14 @@ h1, h2, h3, p {
     --side-padding-vertical: 8px;
     --form-padding-horizontal: 16px;
     --form-gap: 24px; 
+    --header-padding-vertical: 8px;
+    --header-padding-horizontal: 16px;
+  }
+
+  nav.mobile {
+    width: 30%;
+    justify-content: space-between;
+    min-width: 140px;
+    gap: 0;
   }
 }

@@ -22,22 +22,13 @@ def render_registration(req: HttpRequest):
             return JsonResponse(data={'success': False, 'error': 'unmatched_password'})
         if User.objects.filter(email=email, is_active=True).exists():
             return JsonResponse(data={'success': False, 'error': 'user_exists'})
-        code = rand_code()
         user = User.objects.filter(email=email).first()
         if user:
-            user.set_password(password)
-            user.save()
-            user.email_verification.set_code(code)
+            return make_response_with_cookie('pk', user.pk, {'success': True, 'email': email})
         else:  
             user = User.objects.create_user(username=email, email=email, password=password, is_active=False)
-            email_verification = EmailVerification(user=user)
-            email_verification.set_code(code=code)
-        try:
-            send_code(code, email)
-        except Exception as e:
-            print(e)
-            return JsonResponse(data={'success': False, 'error': 'smtp_error'})
-        return make_response_with_cookie('email', email, {'success': True, 'email': email})
+            EmailVerification.objects.create(user=user)
+        return make_response_with_cookie('pk', user.pk, {'success': True, 'email': email})
     return render(
         request=req,
         template_name='user_app/registration.html'
@@ -59,36 +50,52 @@ def login_user(req: HttpRequest):
                 login(request=req, user=user)
                 return JsonResponse({'success': True})
             else:
-                code = rand_code()
-                user.email_verification.set_code(code)
-                try:
-                    send_code(code, email)
-                except Exception:
-                    return JsonResponse(data={'success': False, 'error': 'smtp_error'})
-                return make_response_with_cookie('email', email, {'success': False, 'error': 'verify_email', 'email': email})
+                return make_response_with_cookie('pk', user.id, {'success': False, 'error': 'verify_email', 'email': email})
         else:
             return JsonResponse(data={'success': False, 'error': 'incorrect_credentials'})
     return redirect('/registration')
 
 @anonymous_required
-def verify_code(req:HttpRequest):
+def handle_sending_code(req: HttpRequest):
+    if req.method == "POST":
+        pk = req.COOKIES.get('pk')
+        if not pk:
+            return JsonResponse(data={'success': False, 'error': 'no_pk_cookie'})
+        user = User.objects.filter(pk=pk).first()
+        if not user or user.is_active:
+            return JsonResponse(data={'success': False, 'error': 'user_not_found'})
+        code = rand_code()
+        user.email_verification.set_code(code)
+        try:
+            send_code(code, user.email)
+        except Exception:
+            return JsonResponse(data={'success': False, 'error': 'smtp_error'})
+        return JsonResponse(data={'success': True})
+    return JsonResponse(data={'success': False, 'error': 'wrong method'})
+
+@anonymous_required
+def verify_code(req: HttpRequest):
     if req.method == 'POST':
         data = get_data_from_json(req.body)
         code = data.get('code')
-        email = req.COOKIES.get('email')
-        if not email:
-            return JsonResponse(data={'success': False, 'error': 'no_email_cookie'})
-        user = User.objects.filter(email=email).first()
-        if not user:
+        pk = req.COOKIES.get('pk')
+        if not pk:
+            return JsonResponse(data={'success': False, 'error': 'no_pk_cookie'})
+        user = User.objects.filter(pk=pk).first()
+        if not user or user.is_active:
             return JsonResponse(data={'success': False, 'error': 'user_not_found'})
         if user.email_verification.check_code(code):
             user.is_active = True
+            user.email_verification.delete()
             user.save()
             login(request=req, user=user)
             resp = JsonResponse({'success': True})
-            resp.delete_cookie('email')
+            resp.delete_cookie('pk')
             return resp
         else: 
             return JsonResponse(data={'success': False, 'error': 'wrong_code'})
     return redirect('/registration')
-    
+
+def logout_user(req: HttpRequest):
+    logout(request=req)
+    return redirect('/registration')

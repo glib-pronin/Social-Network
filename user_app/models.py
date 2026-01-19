@@ -20,6 +20,15 @@ class EmailVerification(models.Model):
         return timezone.now() >= self.expires_at
     
     def check_code(self, user_code):
-        if not self.is_expired():
+        if self.code_hash and not self.is_expired():
             return check_password(user_code, self.code_hash)
         return False
+    
+class Profile(models.Model):
+    photo = models.ImageField(upload_to='profiles', null=True)
+    birth_date = models.DateField(null=True)
+    signature = models.ImageField(upload_to='profile/signature', null=True)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE,  related_name='profile')
+
+    def __str__(self):
+        return f'Profile - {self.user.username}'

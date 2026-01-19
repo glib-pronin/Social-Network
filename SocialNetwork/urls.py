@@ -22,7 +22,7 @@ from .settings import DEBUG, MEDIA_ROOT, MEDIA_URL
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user_app.urls')),
-    # path('', include('post_app.urls')),
+    path('', include('post_app.urls')),
     # path('profile/', include('profile_app.urls')),
     # path('chat/', include('chat_app.urls')),
 ]
