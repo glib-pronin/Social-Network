@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_app/css/profile.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="layout-container">
+        <div class="navigation-links">
+            <a href="profile/" {% if request.path == "/profile/" %} class="selected" {% endif %}>Особиста інформація</a>
+            <a href="profile/" {% if request.path == "" %} class="selected" {% endif %}>Альбоми</a>
+        </div>
+        <div class="layout-content">
+            {% block section %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

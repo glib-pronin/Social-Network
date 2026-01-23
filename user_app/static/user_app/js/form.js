@@ -33,27 +33,18 @@ document.addEventListener('DOMContentLoaded', () => {
             passwordField.nextElementSibling.classList.add('hidden')
         }
     })
-    passwordField.addEventListener('input', checkPasswords)
-    confirmPasswordField.addEventListener('input', checkPasswords)
+    passwordField.addEventListener('input', () => checkPasswords(confirmPasswordField, passwordField))
+    confirmPasswordField.addEventListener('input', () => checkPasswords(confirmPasswordField, passwordField))
     
     emailField.addEventListener('input', () => checkAllFields(emailField.value, passwordField.value, confirmPasswordField.value))
     passwordField.addEventListener('input', () => checkAllFields(emailField.value, passwordField.value, confirmPasswordField.value))
     confirmPasswordField.addEventListener('input', () => checkAllFields(emailField.value, passwordField.value, confirmPasswordField.value))
-
-    function checkPasswords() {
-        if (!confirmPasswordField.value || confirmPasswordField.value === passwordField.value) {
-            confirmPasswordField.nextElementSibling.classList.add('hidden')
-        } else {
-            confirmPasswordField.nextElementSibling.classList.remove('hidden')
-        }
-    }
 
     function checkAllFields(email, password, confirmPassword) {
         if (email && password && (confirmPassword || switcherType === 'authorization')) {
             mainError.classList.add('hidden')
         }
     }
-
 
     switchers.forEach(btn => (
         btn.addEventListener('click', () => {

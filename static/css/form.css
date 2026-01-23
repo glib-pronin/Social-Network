@@ -50,10 +50,42 @@ form {
     color: var(--color-red);
 }
 
+.success-msg {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-orange);
+}
+
 .form-header {
     display: flex;
     flex-direction: column;
     width: 100%;
     text-align: center;
     gap: 6px;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.spinner {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: conic-gradient(var(--color-indigo), var(--color-white));
+    mask: radial-gradient(farthest-side, transparent 60%, black 61%);
+    -webkit-mask: radial-gradient(farthest-side, transparent 60%, black 61%);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

@@ -10,25 +10,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = new URL(location.href)
     url.searchParams.delete('first_entry')
     history.replaceState(null, '', url.toString())
-    console.log(form.elements.firstName, form.elements.lastName);
+
+    let isUsernameAvailable = true
+    const debounceCheck = debounce(async (input) => {
+        isUsernameAvailable = await checkUsername(input)
+    }, 500)
+    usernameInput.addEventListener('input', () => debounceCheck(usernameInput))
     
     inputs.forEach(input => input.addEventListener('input', () => input.nextElementSibling.classList.add('hidden')))
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault()
+        if (!isUsernameAvailable) return
         const firstName = form.elements.firstName.value
         const lastName = form.elements.lastName.value
         const username = usernameInput.value
-        if (!username) {
-            usernameInput.nextElementSibling.classList.remove('hidden')
-            usernameInput.nextElementSibling.textContent = "Це поле обов'язкове"
-            return
-        }
-        if (!/^@[a-z0-9]+([_.][a-z0-9]+)*$/.test(username)) {
-            usernameInput.nextElementSibling.classList.remove('hidden')
-            usernameInput.nextElementSibling.textContent = "Спеціальні знаки (нижнє підкреслення та крапка) не можуть бути в кінці або напочатку"
-            return
-        }
+        if (!validateUsername(usernameInput)) return
         showSpinner(true, form)
         const res = await fetch('/first-entry', {
             method: 'POST',
@@ -77,11 +74,5 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation()
     })
 
-    usernameInput.addEventListener('input', ()=> {
-        let value = usernameInput.value
-        value = value.toLowerCase()
-        value = value.replaceAll(/[^a-z0-9_.]/g, '')
-        usernameInput.value = '@' + value
-    })
-
+    usernameInput.addEventListener('input', () => handleUsernameInput(usernameInput))
 })

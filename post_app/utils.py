@@ -13,7 +13,12 @@ def generate_username(first_name, last_name):
     for base in base_variants:
         for _ in range(MAX_ATTEMPTS):
             username = f'{base}{random.randint(a=1000, b=9999)}'
-            user = User.objects.filter(username=username).first()
-            if not user:
+            if is_username_available(username=username):
                 return username
     return None
+
+def is_username_available(username, user=None):
+    u = User.objects.filter(username=username)
+    if user:
+        u = u.exclude(pk=user.id)
+    return not u.exists()

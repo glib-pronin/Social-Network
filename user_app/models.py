@@ -27,8 +27,11 @@ class EmailVerification(models.Model):
 class Profile(models.Model):
     photo = models.ImageField(upload_to='profiles', null=True)
     birth_date = models.DateField(null=True)
-    signature = models.ImageField(upload_to='profile/signature', null=True)
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE,  related_name='profile')
+    signature = models.ImageField(upload_to='profiles/signature', null=True)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE,  related_name='profile', null=True)
 
     def __str__(self):
         return f'Profile - {self.user.username}'
+    
+    def formatted_birth_date(self):
+        return self.birth_date.strftime('%Y-%m-%d') if self.birth_date else ''

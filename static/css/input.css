@@ -7,9 +7,25 @@ input {
     font-size: 1rem;
 }
 
+input:disabled {
+    background-color: var(--color-white);
+}
+
+.password-switcher {
+    position: absolute;
+    top: 35px;
+    right: 16px;
+    cursor: pointer;
+}
+
 .numeric-inputs input {
     padding: 10px;
     width: 50px;
     height: 45px;
     text-align: center;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset; /* фон */
+    -webkit-text-fill-color: #000; /* колір тексту */
 }

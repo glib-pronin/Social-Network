@@ -33,5 +33,5 @@ def send_code(code, email):
         html_message=html_content
     )
 
-def checkEmail(email):
+def check_email(email):
     return re.match(r'^[\w+._%-]+@[\w.-]+\.[a-zA-Z]{2,}$', email)

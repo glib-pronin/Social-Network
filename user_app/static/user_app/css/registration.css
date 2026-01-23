@@ -76,13 +76,6 @@ form.auth .send-btn {
     text-align: center;
 }
 
-.password-switcher {
-    position: absolute;
-    top: 35px;
-    right: 16px;
-    cursor: pointer;
-}
-
 .numeric-inputs {
     display: flex;
     justify-content: space-between;
@@ -106,32 +99,6 @@ form.auth .send-btn {
     background-color: var(--color-white);
     border: none;
     cursor: pointer;
-}
-
-.loading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.spinner {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: conic-gradient(var(--color-indigo), var(--color-white));
-    mask: radial-gradient(farthest-side, transparent 60%, black 61%);
-    -webkit-mask: radial-gradient(farthest-side, transparent 60%, black 61%);
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
 }
 
 .auth-bg-img {
