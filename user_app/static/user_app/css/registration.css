@@ -1,4 +1,4 @@
-main {
+main:has(.auth) {
     background-color: var(--color-plum);
 }
 
@@ -86,7 +86,7 @@ form.auth .send-btn {
     gap: 16px;
 }
 
-.btns-container {
+form .btns-container {
     width: 100%;
     display: flex;
     flex-direction: column;

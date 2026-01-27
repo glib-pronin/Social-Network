@@ -37,11 +37,19 @@ form {
     color: white;
     cursor: pointer;
     transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .send-btn:hover {
     background-color: var(--color-white);
     color: var(--color-purple);
+}
+
+.send-btn:hover path {
+    fill: var(--color-purple);
 }
 
 .error-msg {

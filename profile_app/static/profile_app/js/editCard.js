@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.querySelector('.cancel-edit-card')
 
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
-    const avatarImg = document.getElementById('avatar')
+    const avatarImg = document.querySelector('.avatar')
     const photoInput = document.getElementById('photo-input')
     const usernameSpan = document.getElementById('username-span')
     const usernameInput = document.getElementById('username')

@@ -4,6 +4,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from user_app.utils import get_data_from_json, User
 from .utils import generate_username
+from .models import *
 import re
 
 # Create your views here.
@@ -17,7 +18,7 @@ def render_main(req: HttpRequest):
     return render(
         request=req,
         template_name='post_app/main.html',
-        context={'first_entry': is_first_entry}
+        context={'first_entry': is_first_entry, "tags": Tag.objects.all()}
     )
 
 @login_required(login_url='registration')
@@ -45,3 +46,14 @@ def send_username(req: HttpRequest):
         return JsonResponse({'success': False, 'error': 'wrong_data'})
     username = generate_username(first_name, last_name)
     return JsonResponse({'username': username})
+
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def create_tag(req: HttpRequest):
+    data = get_data_from_json(req.body)
+    tag_name = data.get('tagName')
+    tag = Tag.objects.filter(name=tag_name).exists()
+    if not tag:
+        Tag.objects.create(name=tag_name.replace('#', ''))
+    return JsonResponse({'success': True})

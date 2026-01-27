@@ -1,20 +1,9 @@
-.modal-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    z-index: 100;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-
-}
-
 form {
     padding-top: 24px;
     gap: 24px;
+}
+
+form#first-entry-form {
     width: 490px;
 }
 
@@ -24,15 +13,6 @@ form {
     align-items: center;
     gap: 0;
     position: relative;
-}
-
-.form-header .close-modal {
-    align-self: flex-end;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    height: 20px;
 }
 
 .form-text {
@@ -51,7 +31,7 @@ p:has(#generate-username) {
 }
 
 @media (max-width: 680px) {
-    form {
+    form#first-entry-form {
         width: 343px;
     }
 

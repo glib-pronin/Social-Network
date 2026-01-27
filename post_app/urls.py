@@ -5,4 +5,5 @@ urlpatterns = [
     path('', view=render_main, name='main'),
     path('first-entry', view=handle_first_entry, name='first_entry'),
     path('generate-username', view=send_username, name='first_entry'),
+    path('create-tag', view=create_tag, name='create_tag'),
 ]

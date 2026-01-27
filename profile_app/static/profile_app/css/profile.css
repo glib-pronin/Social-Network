@@ -25,11 +25,12 @@
     font-weight: 500;
 }
 
-.first-line button {
+.first-line button, .verify-email-btn {
     box-sizing: border-box;
     padding: 10px;
     border: 1px solid var(--color-indigo);
     background-color: var(--color-white);
+    color: var(--color-purple);
     border-radius: 100px;
     display: flex;
     align-items: center;
@@ -39,7 +40,16 @@
     transition: all 0.25s ease;
 }
 
-.first-line button:hover {
+.verify-email-btn {
+    width: fit-content;
+    margin-top: 10px;
+}
+
+.input-container .loading {
+    margin-top: 10px;
+}
+
+.first-line button:hover, .verify-email-btn:hover {
     background-color: var(--color-plum);
 }
 
@@ -137,6 +147,18 @@
     gap: 16px;
 }
 
+form#verify-form {
+    width: 488px;
+}
+
+form#verify-form .form-text {
+    font-size: 34px;
+}
+
+form#verify-form .send-btn {
+    width: 100%;
+}
+
 @media (max-width: 1030px) {
     .layout-container {
         flex-direction: column;
@@ -153,6 +175,16 @@
         flex-direction: row;
         align-self: flex-start;
         padding: 25px 0 10px 16px;
+    }
+}
+
+@media (max-width: 680px) {
+    form#verify-form {
+        width: 343px;
+    }
+
+    form#verify-form .form-text {
+        font-size: 24px;
     }
 }
 

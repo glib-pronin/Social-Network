@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const digitInputs = document.querySelectorAll('.digit')
     const emailForm = document.getElementById('verify-email')
     const form = document.getElementById('auth-form')
-    const token = document.getElementById('auth-form').elements.csrfmiddlewaretoken.value
+    const token = document.getElementById('auth-form')?.elements.csrfmiddlewaretoken.value
 
     digitInputs.forEach((digitInput, ind) => {
         digitInput.addEventListener('input', () => {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 
-    emailForm.addEventListener('submit', async (e) => {
+    emailForm?.addEventListener('submit', async (e) => {
         e.preventDefault()
         let code = ''
         digitInputs.forEach(input => code += input.value)
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    emailForm.querySelector('.back-btn').addEventListener('click', () => {
+    emailForm?.querySelector('.back-btn').addEventListener('click', () => {
         form.classList.remove('hidden')
         emailForm.classList.add('hidden')
         showSpinner(false, emailForm)

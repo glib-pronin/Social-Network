@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = form.parentElement
     const token = form.elements.csrfmiddlewaretoken.value
     const generator = document.getElementById('generate-username')
-    const closeBtn = form.querySelector('.close-modal')
     const inputs = form.querySelectorAll('input')
     const usernameInput = form.elements.username
     
@@ -60,18 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         const { username } = await res.json()
         usernameInput.value = username
-    })
-
-    closeBtn.addEventListener('click', () => {
-        modal.classList.add('hidden')
-    })
-    
-    modal.addEventListener('click', () => {
-        modal.classList.add('hidden')
-    })
-
-    form.addEventListener('click', (e) => {
-        e.stopPropagation()
     })
 
     usernameInput.addEventListener('input', () => handleUsernameInput(usernameInput))

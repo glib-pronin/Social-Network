@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from django.http import JsonResponse, HttpRequest, QueryDict
+from django.http import JsonResponse, HttpRequest
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from user_app.utils import get_data_from_json, check_email, User
+from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code
 from post_app.utils import is_username_available
-from user_app.models import Profile
+from user_app.models import Profile, EmailVerification
 from datetime import date
 import re
 
@@ -25,15 +25,12 @@ def update_credentials(req: HttpRequest):
     first_name = data.get('firstName')
     last_name = data.get('lastName')
     birth_date = data.get('birthDate')
-    email = data.get('email')
 
-    if not email or not check_email(email):
-        return JsonResponse({ 'success': False, 'error': 'invalid_payload' })
+    ev = getattr(req.user, 'email_verification', None)
+    if ev and ev.is_verified:
+        req.user.email = ev.new_email
+        ev.delete()
     
-    user = User.objects.filter(email=email).exclude(pk=req.user.id).first()
-    if user: 
-        return JsonResponse({ 'success': False, 'error': 'user_exists' })
-    req.user.email = email
     req.user.first_name = first_name
     req.user.last_name = last_name
     req.user.save()
@@ -59,6 +56,9 @@ def update_passwords(req: HttpRequest):
     data = get_data_from_json(req.body)
     password = data.get('password')
     confirm_password = data.get('confirmPassword')
+    old_password = data.get('oldPassword')
+    if not req.user.check_password(old_password):
+        return JsonResponse({'success': False, 'error': 'wrong_payload'})
     if not password or len(password) < 6 or password != confirm_password:
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     req.user.set_password(password)
@@ -93,3 +93,45 @@ def update_personal_data(req: HttpRequest):
 def check_username(req: HttpRequest):
     username = req.GET.get('username')
     return JsonResponse({'available': is_username_available(username=username, user=req.user)})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def start_email_verification(req: HttpRequest):
+    data = get_data_from_json(req.body)
+    email = data.get('email')
+    if not email or not check_email(email):
+        return JsonResponse({'success': False, 'error': 'invalid_email'})
+    if User.objects.filter(email=email).exclude(pk=req.user.id).exists():
+        return JsonResponse({'success': False, 'error': 'email_exists'})
+    code = rand_code()
+    ev, _ = EmailVerification.objects.get_or_create(user=req.user)
+    ev.set_code(code)
+    ev.new_email = email
+    ev.save()
+    try:
+        send_code(code=code, email=email)
+    except:
+        return JsonResponse({'success': False, 'error': 'smtp_error'})
+    return JsonResponse({'success': True, 'email': email})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def verify_email_code(req: HttpRequest):
+    data = get_data_from_json(req.body)
+    code = data.get('code')
+    ev = getattr(req.user, 'email_verification', None)
+    if not ev:
+        return JsonResponse({'success': False, 'error': 'no_verification'})
+    if not ev.check_code(code):
+        return JsonResponse({'success': False, 'error': 'wrong_code'})
+    ev.is_verified = True
+    ev.save()
+    return JsonResponse({'success': True, 'email': ev.new_email})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def cancel_email_verification(req: HttpRequest):
+    ev = getattr(req.user, 'email_verification', None)
+    if ev:
+        ev.delete()
+    return JsonResponse({'success': True})

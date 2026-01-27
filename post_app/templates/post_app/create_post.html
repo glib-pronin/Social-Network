@@ -1,0 +1,66 @@
+<div class="modal-container">
+    <form action="" enctype="multipart/form-data" method="post" id="create-post">
+        {% csrf_token %}
+        <div class="form-header">
+            <button class="close-modal" type="button">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.49539 11.0253L5.6709 7.20077L1.84641 11.0253C1.64355 11.2281 1.3684 11.3421 1.08151 11.3421C0.794618 11.3421 0.519476 11.2281 0.316613 11.0253C0.113749 10.8224 -0.000218546 10.5473 -0.000218546 10.2604C-0.000218208 9.97347 0.11375 9.69833 0.316613 9.49546L4.1411 5.67097L0.316613 1.84648C0.113749 1.64362 -0.000217871 1.36848 -0.000217745 1.08159C-0.000217634 0.794693 0.113749 0.519552 0.316613 0.316688C0.519476 0.113824 0.794618 -0.000142783 1.08151 -0.000142893C1.3684 -0.00014302 1.64354 0.113824 1.84641 0.316688L5.6709 4.14118L9.49539 0.316687C9.69825 0.113824 9.97339 -0.000143694 10.2603 -0.000143926C10.5472 -0.00014381 10.8223 0.113824 11.0252 0.316687C11.228 0.519551 11.342 0.794693 11.342 1.08158C11.342 1.36848 11.228 1.64362 11.0252 1.84648L7.20069 5.67097L11.0252 9.49546C11.228 9.69833 11.342 9.97347 11.342 10.2604C11.342 10.5473 11.228 10.8224 11.0252 11.0253C10.8223 11.2281 10.5472 11.3421 10.2603 11.3421C9.97339 11.3421 9.69825 11.2281 9.49539 11.0253Z" fill="black"/>
+                </svg>
+            </button>
+            <h3 class="form-text">Створення публікації</h3>
+        </div>
+        <div class="inputs">
+            <div class="input-container">
+                <label for="title">Назва публікації</label>
+                <input type="text" name="title" required placeholder="Напишіть назву публікації">
+            </div>
+            <div class="input-container">
+                <label for="subject">Тема публікації</label>
+                <input type="text" name="subject" placeholder="Напишіть тему публікації">
+            </div>
+            <div class="input-container full-width">
+                <label for="">Теги</label>
+                <div class="tags-container">
+                    {% for tag in tags %}
+                        <span class="tag">#{{ tag.name }}</span>
+                    {% endfor %}
+                    <button type="button" id="add-tag" class="control-btn">+</button>
+                    <div id="save-tag" class="hidden">
+                        <input type="text" class="tag-input" value="#">
+                        <button type="button" class="control-btn">
+                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.125 2.8125L5.25 12.1875L1.875 8.4375" stroke="#543C52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="input-container full-width">
+                <textarea name="content" id="" required placeholder="Напишіть текст публікації"></textarea>
+            </div>
+            <div class="links-container input-container">
+                <div class="links-vertical" id="links">
+                    <label for="">Посилання</label>
+                    <input type="text" name="link" placeholder="Введіть посилання">
+                </div>
+                <button type="button" id="add-link" class="control-btn">+</button>
+            </div>
+            <div class="images-grid"></div>
+        </div>
+        <div class="btns-container">
+            <button type="button" id="add-image">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1.66699 4.99984C1.66699 4.11578 2.01818 3.26794 2.6433 2.64281C3.26842 2.01769 4.11627 1.6665 5.00033 1.6665H15.0003C15.8844 1.6665 16.7322 2.01769 17.3573 2.64281C17.9825 3.26794 18.3337 4.11578 18.3337 4.99984V14.9998C18.3337 15.8839 17.9825 16.7317 17.3573 17.3569C16.7322 17.982 15.8844 18.3332 15.0003 18.3332H5.00033C4.11627 18.3332 3.26842 17.982 2.6433 17.3569C2.01818 16.7317 1.66699 15.8839 1.66699 14.9998V4.99984Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7.08333 9.16667C8.23393 9.16667 9.16667 8.23393 9.16667 7.08333C9.16667 5.93274 8.23393 5 7.08333 5C5.93274 5 5 5.93274 5 7.08333C5 8.23393 5.93274 9.16667 7.08333 9.16667Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12.105 10.5171L5 18.3329H15.1108C15.9655 18.3329 16.7851 17.9934 17.3895 17.3891C17.9938 16.7847 18.3333 15.9651 18.3333 15.1104V14.9996C18.3333 14.6113 18.1875 14.4621 17.925 14.1746L14.5667 10.5121C14.4101 10.3414 14.2198 10.2051 14.0076 10.1121C13.7955 10.019 13.5664 9.97121 13.3347 9.97168C13.1031 9.97215 12.8741 10.0209 12.6624 10.1148C12.4507 10.2087 12.2608 10.3457 12.105 10.5171Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <button type="submit" class="send-btn">
+                Публікація
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.3306 8.62997L4.20093 1.13778C3.9241 0.982713 3.60662 0.9156 3.29072 0.94537C2.97481 0.97514 2.67546 1.10038 2.43248 1.30444C2.18949 1.5085 2.01439 1.7817 1.93046 2.0877C1.84654 2.3937 1.85776 2.718 1.96265 3.01747L4.32046 9.99872L1.96265 16.98C1.87976 17.2155 1.85451 17.4674 1.88903 17.7147C1.92354 17.962 2.01682 18.1974 2.16103 18.4012C2.30525 18.6051 2.49621 18.7713 2.71792 18.8862C2.93963 19.001 3.18563 19.061 3.43531 19.0612C3.70381 19.0607 3.96768 18.9913 4.20171 18.8597L4.20874 18.855L17.3337 11.3495C17.5744 11.2133 17.7746 11.0156 17.9139 10.7767C18.0532 10.5378 18.1265 10.2663 18.1265 9.98974C18.1265 9.7132 18.0532 9.44163 17.9139 9.20273C17.7746 8.96384 17.5744 8.76619 17.3337 8.62997H17.3306ZM3.99702 16.8159L5.98296 10.9362H10.3103C10.5589 10.9362 10.7974 10.8374 10.9732 10.6616C11.149 10.4858 11.2478 10.2474 11.2478 9.99872C11.2478 9.75008 11.149 9.51162 10.9732 9.33581C10.7974 9.15999 10.5589 9.06122 10.3103 9.06122H5.98296L3.99624 3.17997L15.9306 9.99013L3.99702 16.8159Z" fill="white"/>
+                </svg>
+            </button>
+        </div>
+    </form>
+</div>

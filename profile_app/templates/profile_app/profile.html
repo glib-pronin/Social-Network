@@ -43,9 +43,9 @@
             <div class="photo-container">
                 <h3 class="hidden-part hidden">Оберіть або завантажте фото профілю</h3>
                 {% if user.profile.photo %}
-                    <img src="{{ user.profile.photo.url }}" alt="Profile photo" id="avatar">
+                    <img src="{{ user.profile.photo.url }}" alt="Profile photo" class="avatar">
                 {% else %}
-                    <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo">
+                    <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                 {% endif %}
                 <div class="photo-btns hidden-part hidden">
                     <label class="photo-btn">
@@ -131,6 +131,12 @@
                     <label for="email">Електронна адреса</label>
                     <input id="email" type="email" name="email" placeholder="" value="{{ user.email }}" data-value="{{ user.email }}" disabled>
                     <p class="error-msg hidden"></p>
+                    <p class="success-msg hidden" id="success-verifing">Пошту (<span class="user-email"></span>) успішно підтверджено</p>
+                    <button type="button" class="verify-email-btn hidden send-btn" id="start-verifing">Підтвердити пошту</button>
+                    <div class="loading hidden">
+                        <div class="spinner"></div>
+                        <span>Перевіямо дані...</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,6 +184,37 @@
             <div class="data-container disabled">
                 <p class="success-msg hidden">Пароль успішно змінено</p>
                 <div class="input-container password-container">
+                    <label for="password">Поточний пароль</label>
+                    <input id="old-password" type="password" name="password" placeholder="Введіть поточний пароль" disabled>
+                    <p class="error-msg hidden"></p>
+                    <svg class="password-switcher password-shown hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_1389_7434)">
+                            <g clip-path="url(#clip1_1389_7434)">
+                                <path d="M1.66699 9.99996C1.66699 9.99996 4.16699 4.16663 10.0003 4.16663C15.8337 4.16663 18.3337 9.99996 18.3337 9.99996C18.3337 9.99996 15.8337 15.8333 10.0003 15.8333C4.16699 15.8333 1.66699 9.99996 1.66699 9.99996Z" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M10.0003 12.5C11.381 12.5 12.5003 11.3807 12.5003 9.99996C12.5003 8.61925 11.381 7.49996 10.0003 7.49996C8.61961 7.49996 7.50033 8.61925 7.50033 9.99996C7.50033 11.3807 8.61961 12.5 10.0003 12.5Z" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </g>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_1389_7434">
+                                <rect width="20" height="20" fill="white"/>
+                            </clipPath>
+                            <clipPath id="clip1_1389_7434">
+                                <rect width="20" height="20" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <svg class="password-switcher password-hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_1389_7436)">
+                            <path d="M8.23268 8.23329C7.98706 8.46217 7.79005 8.73817 7.65341 9.04483C7.51677 9.3515 7.4433 9.68254 7.43738 10.0182C7.43145 10.3539 7.4932 10.6873 7.61894 10.9986C7.74468 11.3099 7.93182 11.5927 8.16922 11.8301C8.40662 12.0675 8.6894 12.2546 9.00069 12.3804C9.31198 12.5061 9.64541 12.5679 9.98109 12.5619C10.3168 12.556 10.6478 12.4825 10.9545 12.3459C11.2611 12.2093 11.5371 12.0122 11.766 11.7666M8.94102 4.23329C9.29211 4.18955 9.64554 4.16729 9.99935 4.16663C15.8327 4.16663 18.3327 9.99996 18.3327 9.99996C17.9601 10.7976 17.4929 11.5474 16.941 12.2333M5.50768 5.50829C3.85039 6.63715 2.52424 8.18768 1.66602 9.99996C1.66602 9.99996 4.16602 15.8333 9.99935 15.8333C11.5959 15.8376 13.1583 15.3709 14.491 14.4916M1.66602 1.66663L18.3327 18.3333" stroke="#81818D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_1389_7436">
+                                <rect width="20" height="20" fill="white"/>
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="input-container password-container hidden-part hidden">
                     <label for="password">Новий пароль</label>
                     <input id="password" type="password" name="password" placeholder="Введіть новий пароль" disabled>
                     <p class="error-msg hidden">Пароль повинен складатися мінімум з 6 символів</p>
@@ -255,11 +292,51 @@
             </button>
         </div>
     </div>
+    <div class="modal-container hidden" id="verify-email-modal">
+        <form action="" method="post" id="verify-form">
+            <div class="form-header">
+                <button class="close-modal" type="button">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.49539 11.0253L5.6709 7.20077L1.84641 11.0253C1.64355 11.2281 1.3684 11.3421 1.08151 11.3421C0.794618 11.3421 0.519476 11.2281 0.316613 11.0253C0.113749 10.8224 -0.000218546 10.5473 -0.000218546 10.2604C-0.000218208 9.97347 0.11375 9.69833 0.316613 9.49546L4.1411 5.67097L0.316613 1.84648C0.113749 1.64362 -0.000217871 1.36848 -0.000217745 1.08159C-0.000217634 0.794693 0.113749 0.519552 0.316613 0.316688C0.519476 0.113824 0.794618 -0.000142783 1.08151 -0.000142893C1.3684 -0.00014302 1.64354 0.113824 1.84641 0.316688L5.6709 4.14118L9.49539 0.316687C9.69825 0.113824 9.97339 -0.000143694 10.2603 -0.000143926C10.5472 -0.00014381 10.8223 0.113824 11.0252 0.316687C11.228 0.519551 11.342 0.794693 11.342 1.08158C11.342 1.36848 11.228 1.64362 11.0252 1.84648L7.20069 5.67097L11.0252 9.49546C11.228 9.69833 11.342 9.97347 11.342 10.2604C11.342 10.5473 11.228 10.8224 11.0252 11.0253C10.8223 11.2281 10.5472 11.3421 10.2603 11.3421C9.97339 11.3421 9.69825 11.2281 9.49539 11.0253Z" fill="black"/>
+                    </svg>
+                </button>
+                <h3 class="form-text">Підтвердження пошти</h3>
+            </div>
+            <h3 class="form-msg">Ми надіслали 6-значний код на вашу пошту (<span class="user-email"></span>). Введіть його нижче, щоб підтвердити акаунт</h3>
+            <div class="input-container">
+                <label for="">Код підтвердження</label>
+                <div class="numeric-inputs">
+                    <div class="digit-pair">                    
+                        <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit1" maxlength="1">
+                        <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit2" maxlength="1">
+                    </div>
+                    <div class="digit-pair">
+                        <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit4" maxlength="1">
+                        <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit3" maxlength="1">
+                    </div>
+                    <div class="digit-pair">
+                        <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit5" maxlength="1">
+                        <input inputmode="numeric" class="digit" type="text" placeholder="___" required name="digit6" maxlength="1">
+                    </div>
+                </div>
+                <p class="error-msg hidden"></p>
+            </div>
+            <div class="btns-container">
+                <button class="send-btn" type="submit">Підтвердити</button>
+                <div class="loading hidden">
+                    <div class="spinner"></div>
+                    <span>Перевіряємо код...</span>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 {% block scripts %}
+    <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'post_app/js/debounce.js' %}"></script>
     <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
     <script src="{% static 'user_app/js/password.js' %}"></script>
+    <script src="{% static 'user_app/js/digitInputs.js' %}"></script>
     <script src="{% static 'user_app/js/spinner.js' %}"></script>
     <script src="{% static 'profile_app/js/enableEditing.js' %}"></script>
     <script src="{% static 'profile_app/js/editCard.js' %}"></script>

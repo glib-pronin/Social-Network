@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
-from .models import User, EmailVerification
+from .models import User, EmailVerification, Profile
 from django.contrib.auth import login, logout
 from .utils import *
 from .decorators import anonymous_required
@@ -85,6 +85,7 @@ def verify_code(req: HttpRequest):
         return JsonResponse(data={'success': False, 'error': 'user_not_found'})
     if user.email_verification.check_code(code):
         user.is_active = True
+        Profile.objects.get_or_create(user=user)
         user.email_verification.delete()
         user.save()
         login(request=req, user=user)
