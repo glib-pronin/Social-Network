@@ -46,7 +46,7 @@ class Profile(models.Model):
         for post in list(posts.get_page(number=1)):
             if len(tags) >= 10:
                 break
-            for tag in post.tags:
+            for tag in post.tags.all():
                 if len(tags) < 10 and tag not in tags:
                     tags.append(tag)
         return tags

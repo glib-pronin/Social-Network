@@ -1,4 +1,4 @@
-<div class="modal-container">
+<div class="modal-container hidden" id="create-post-modal">
     <form action="" enctype="multipart/form-data" method="post" id="create-post">
         {% csrf_token %}
         <div class="form-header">
@@ -21,12 +21,16 @@
             <div class="input-container full-width">
                 <label for="">Теги</label>
                 <div class="tags-container">
-                    {% for tag in tags %}
-                        <span class="tag">#{{ tag.name }}</span>
+                    {% for tag in user.profile.get_tags %}
+                        <span class="tag" data-id="{{ tag.id }}">#{{ tag.name }}</span>
                     {% endfor %}
-                    <button type="button" id="add-tag" class="control-btn">+</button>
+                    <button type="button" id="add-tag" class="control-btn">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.3672 8.3102H8.31069V12.3667C8.31069 12.5819 8.22521 12.7882 8.07306 12.9404C7.92092 13.0925 7.71456 13.178 7.49939 13.178C7.28422 13.178 7.07786 13.0925 6.92572 12.9404C6.77357 12.7882 6.68809 12.5819 6.68809 12.3667V8.3102H2.63161C2.41644 8.3102 2.21008 8.22472 2.05794 8.07257C1.90579 7.92043 1.82031 7.71407 1.82031 7.4989C1.82031 7.28373 1.90579 7.07738 2.05794 6.92523C2.21008 6.77308 2.41644 6.6876 2.63161 6.6876H6.68809V2.63112C6.68809 2.41595 6.77357 2.20959 6.92572 2.05745C7.07786 1.9053 7.28422 1.81982 7.49939 1.81982C7.71456 1.81982 7.92092 1.9053 8.07306 2.05745C8.22521 2.20959 8.31069 2.41595 8.31069 2.63112V6.6876H12.3672C12.5823 6.6876 12.7887 6.77308 12.9408 6.92523C13.093 7.07738 13.1785 7.28373 13.1785 7.4989C13.1785 7.71407 13.093 7.92043 12.9408 8.07257C12.7887 8.22472 12.5823 8.3102 12.3672 8.3102Z" fill="#543C52"/>
+                        </svg>
+                    </button>
                     <div id="save-tag" class="hidden">
-                        <input type="text" class="tag-input" value="#">
+                        <input type="text" class="tag-input" value="#" id="new-tag-input">
                         <button type="button" class="control-btn">
                             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13.125 2.8125L5.25 12.1875L1.875 8.4375" stroke="#543C52" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -36,14 +40,30 @@
                 </div>
             </div>
             <div class="input-container full-width">
-                <textarea name="content" id="" required placeholder="Напишіть текст публікації"></textarea>
+                <textarea name="content" id="content" required placeholder="Напишіть текст публікації"></textarea>
             </div>
-            <div class="links-container input-container">
-                <div class="links-vertical" id="links">
-                    <label for="">Посилання</label>
+            <div class="links-vertical" id="links">
+                <label for="">Посилання</label>
+                <div class="first-input">
                     <input type="text" name="link" placeholder="Введіть посилання">
+                    <button type="button" id="add-link" class="control-btn">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.3672 8.3102H8.31069V12.3667C8.31069 12.5819 8.22521 12.7882 8.07306 12.9404C7.92092 13.0925 7.71456 13.178 7.49939 13.178C7.28422 13.178 7.07786 13.0925 6.92572 12.9404C6.77357 12.7882 6.68809 12.5819 6.68809 12.3667V8.3102H2.63161C2.41644 8.3102 2.21008 8.22472 2.05794 8.07257C1.90579 7.92043 1.82031 7.71407 1.82031 7.4989C1.82031 7.28373 1.90579 7.07738 2.05794 6.92523C2.21008 6.77308 2.41644 6.6876 2.63161 6.6876H6.68809V2.63112C6.68809 2.41595 6.77357 2.20959 6.92572 2.05745C7.07786 1.9053 7.28422 1.81982 7.49939 1.81982C7.71456 1.81982 7.92092 1.9053 8.07306 2.05745C8.22521 2.20959 8.31069 2.41595 8.31069 2.63112V6.6876H12.3672C12.5823 6.6876 12.7887 6.77308 12.9408 6.92523C13.093 7.07738 13.1785 7.28373 13.1785 7.4989C13.1785 7.71407 13.093 7.92043 12.9408 8.07257C12.7887 8.22472 12.5823 8.3102 12.3672 8.3102Z" fill="#543C52"/>
+                        </svg>
+                    </button>
+                    <button type="button" id="remove-link" class="control-btn hidden">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_1610_1339)">
+                                <path d="M10.3684 11.5144L7.5 8.64606L4.63163 11.5144C4.47949 11.6666 4.27313 11.752 4.05796 11.752C3.84279 11.752 3.63643 11.6666 3.48429 11.5144C3.33214 11.3623 3.24666 11.1559 3.24666 10.9408C3.24666 10.7256 3.33214 10.5192 3.48429 10.3671L6.35265 7.49871L3.48429 4.63035C3.33214 4.4782 3.24666 4.27184 3.24666 4.05667C3.24666 3.8415 3.33214 3.63515 3.48429 3.483C3.63643 3.33085 3.84279 3.24538 4.05796 3.24538C4.27313 3.24538 4.47949 3.33085 4.63163 3.483L7.5 6.35137L10.3684 3.483C10.5205 3.33085 10.7269 3.24538 10.942 3.24538C11.1572 3.24538 11.3636 3.33085 11.5157 3.483C11.6679 3.63515 11.7533 3.8415 11.7533 4.05667C11.7533 4.27184 11.6679 4.4782 11.5157 4.63035L8.64735 7.49871L11.5157 10.3671C11.6679 10.5192 11.7533 10.7256 11.7533 10.9408C11.7533 11.1559 11.6679 11.3623 11.5157 11.5144C11.3636 11.6666 11.1572 11.752 10.942 11.752C10.7269 11.752 10.5205 11.6666 10.3684 11.5144Z" fill="#543C52"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1610_1339">
+                                    <rect width="15" height="15" fill="white"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </button>
                 </div>
-                <button type="button" id="add-link" class="control-btn">+</button>
             </div>
             <div class="images-grid"></div>
         </div>

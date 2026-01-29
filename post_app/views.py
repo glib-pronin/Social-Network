@@ -18,7 +18,7 @@ def render_main(req: HttpRequest):
     return render(
         request=req,
         template_name='post_app/main.html',
-        context={'first_entry': is_first_entry, "tags": Tag.objects.all()}
+        context={'first_entry': is_first_entry}
     )
 
 @login_required(login_url='registration')
@@ -53,7 +53,34 @@ def send_username(req: HttpRequest):
 def create_tag(req: HttpRequest):
     data = get_data_from_json(req.body)
     tag_name = data.get('tagName')
-    tag = Tag.objects.filter(name=tag_name).exists()
+    if not tag_name:
+        return JsonResponse({'success': False, 'error': 'wrong_data'})
+    tag = Tag.objects.filter(name=tag_name).first()
     if not tag:
-        Tag.objects.create(name=tag_name.replace('#', ''))
+        tag = Tag.objects.create(name=tag_name.replace('#', ''))
+    return JsonResponse({'success': True, 'id': tag.id})
+
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def get_tags(req: HttpRequest):
+    data = req.user.profile.get_tags()
+    tags = [{'tagName': tag.name, 'id': tag.id} for tag in data]
+    return JsonResponse({'success': True, 'tags': tags})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def create_post(req: HttpRequest):
+    data = get_data_from_json(req.body)
+    title = data.get('title')
+    if not title:
+        return JsonResponse({'success': False, 'error': 'no_title'})
+    subject = data.get('subject')
+    content = data.get('content')
+    links = data.get('links')
+    tags = data.get('tags')
+    post = Post.objects.create(title=title, subject=subject, content=content, links=links, author=req.user)
+    post.tags.set(tags or [])
+    print(post)
     return JsonResponse({'success': True})
+
+    

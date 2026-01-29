@@ -1,0 +1,10 @@
+#textarea-container {
+    position: relative;
+    width: 100%;
+}
+
+#open-form {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+}

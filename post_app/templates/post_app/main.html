@@ -2,19 +2,24 @@
 {% load static %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'post_app/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'post_app/css/first_entry.css' %}">
     <link rel="stylesheet" href="{% static 'post_app/css/create_post.css' %}">
 {% endblock %}
 {% block content %}
-    <h1>Main page</h1>
+    <div id="textarea-container">
+        <textarea name="" id="" placeholder="Текст публікації" id="btn-textarea"></textarea>
+        <button class="send-btn" id="open-form">Перейти до оформлення</button>
+    </div>
     {% include 'post_app/create_post.html' %}
     {% if first_entry %}
         {% include 'post_app/first_entry.html' %}
     {% endif %}
 {% endblock %}
 {% block scripts %}
-    <script src="{% js/modal.js' %}"></script>
-    <script src="{% static 'post_app/js/createTag.js' %}"></script>
+    <script src="{% static 'js/modal.js' %}"></script>
+    <script src="{% static 'post_app/js/cleanForm.js' %}"></script>
+    <script src="{% static 'post_app/js/createPost.js' %}"></script>
     <script src="{% static 'post_app/js/debounce.js' %}"></script>
     <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
     <script src="{% static 'post_app/js/firstEntry.js' %}"></script>
