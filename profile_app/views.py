@@ -6,6 +6,7 @@ from django.views.decorators.http import require_http_methods
 from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code
 from post_app.utils import is_username_available
 from user_app.models import Profile, EmailVerification
+from .utils import str_to_bool
 from datetime import date
 import re
 
@@ -68,6 +69,27 @@ def update_passwords(req: HttpRequest):
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
+def update_signature(req: HttpRequest):
+    signature = req.FILES.get('signature')
+    profile, _ = Profile.objects.get_or_create(user=req.user)
+    if 'is_image_signature' in req.POST:
+        profile.is_image_signature = str_to_bool(req.POST.get('is_image_signature'))
+    if 'is_text_signature' in req.POST:
+        profile.is_text_signature = str_to_bool(req.POST.get('is_text_signature'))
+    if signature:
+        if profile.signature:
+            profile.signature.delete(save=False)
+        profile.signature = signature
+    profile.save()
+    url = '' if not profile.signature else profile.signature.url
+    return JsonResponse({
+        'success': True, 'url': url, 
+        'is_image_signature': profile.is_image_signature,
+        'is_text_signature': profile.is_text_signature
+        })
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
 def update_personal_data(req: HttpRequest):
     username = req.POST.get('username')
     avatar = req.FILES.get('avatar')
@@ -80,7 +102,7 @@ def update_personal_data(req: HttpRequest):
     if avatar:
         profile, _ = Profile.objects.get_or_create(user=req.user)
         if profile.photo:
-            profile.photo.delete()
+            profile.photo.delete(save=False)
         profile.photo = avatar
         profile.save()
     return JsonResponse({'success': True,'data': {

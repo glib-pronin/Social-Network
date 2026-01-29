@@ -25,12 +25,13 @@
     font-weight: 500;
 }
 
-.first-line button, .verify-email-btn {
+.first-line button, .verify-email-btn, .signature-btn {
     box-sizing: border-box;
     padding: 10px;
     border: 1px solid var(--color-indigo);
     background-color: var(--color-white);
     color: var(--color-purple);
+    font-weight: 500;
     border-radius: 100px;
     display: flex;
     align-items: center;
@@ -38,10 +39,10 @@
     font-size: 14px;
     cursor: pointer;
     transition: all 0.25s ease;
+    width: fit-content;
 }
 
 .verify-email-btn {
-    width: fit-content;
     margin-top: 10px;
 }
 
@@ -49,7 +50,7 @@
     margin-top: 10px;
 }
 
-.first-line button:hover, .verify-email-btn:hover {
+.first-line button:hover, .verify-email-btn:hover, .signature-btn:hover {
     background-color: var(--color-plum);
 }
 
@@ -129,9 +130,9 @@
     width: 343px;
 }
 
-.data-container.disabled label, .data-container.disabled input, .data-container.disabled input:-webkit-autofill {
+.data-container.disabled label, .data-container.disabled input:not(input[type="checkbox"]), .data-container.disabled input:-webkit-autofill {
     color: var(--color-gray);
-    -webkit-box-shadow: 0 0 0px 1000px var(--color-white) inset; /* фон */
+    /* -webkit-box-shadow: 0 0 0px 1000px var(--color-white) inset;  */
     -webkit-text-fill-color: var(--color-gray); 
 }
 
@@ -157,6 +158,48 @@ form#verify-form .form-text {
 
 form#verify-form .send-btn {
     width: 100%;
+}
+
+.signature-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.signature-wrapper canvas {
+    height: 208px;
+    border: 1px dashed var(--color-gray);
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.signature-wrapper canvas {
+    cursor: url('../img/cursor.png') 4 12, auto;
+}
+
+.signature-wrapper img {
+    width: 220px;
+    height: 65px;
+    object-fit: contain;
+    align-self: self-start;
+}
+
+.signature-wrapper img.not-saved {
+    border: 1px dashed var(--color-gray);
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.signature-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.signature-header input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
 }
 
 @media (max-width: 1030px) {

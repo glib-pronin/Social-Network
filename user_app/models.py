@@ -32,6 +32,8 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='profiles', null=True)
     birth_date = models.DateField(null=True)
     signature = models.ImageField(upload_to='profiles/signature', null=True)
+    is_text_signature= models.BooleanField(default=False)
+    is_image_signature= models.BooleanField(default=False)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE,  related_name='profile', null=True)
 
     def __str__(self):

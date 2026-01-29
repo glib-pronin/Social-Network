@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = sendBtn.nextElementSibling
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
     const nameSurname = document.querySelector('.name-surname')
+    const textSignature = document.getElementById('text-signature')
     const startVerifingBtn = document.getElementById('start-verifing')
     const successVerifing = document.getElementById('success-verifing')
     const modal = document.getElementById('verify-email-modal')
@@ -65,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const { data } = await res.json()
         if (data.firstName !== inputData.firstName.dataset.value || data.lastName !== inputData.lastName.dataset.value){
             nameSurname.textContent = data.firstName + ' ' + data.lastName
+            textSignature.textContent = data.firstName + ' ' + data.lastName
         }
         Object.entries(data).forEach(([key, value]) => {
             inputData[key].dataset.value = value
