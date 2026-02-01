@@ -17,7 +17,7 @@ function createTag({tagName, id}, selected = true) {
     const addTagBtn = document.getElementById('add-tag')
     const tagContainer = document.querySelector('.tags-container')
     tag = document.createElement('span')
-    tag.textContent = tagName
+    tag.textContent = '#' + tagName.replace('#', '')
     tag.classList.add('tag')
     tag.classList.toggle('selected', selected)
     tag.dataset.id = id

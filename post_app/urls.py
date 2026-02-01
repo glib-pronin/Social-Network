@@ -8,4 +8,5 @@ urlpatterns = [
     path('create-tag', view=create_tag, name='create_tag'),
     path('get-tags', view=get_tags, name='get_tags'),
     path('create-post', view=create_post, name='create_post'),
+    path('get-posts', view=get_post, name='get_post'),
 ]

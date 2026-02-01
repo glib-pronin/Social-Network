@@ -8,3 +8,10 @@
     bottom: 16px;
     right: 16px;
 }
+
+.avatar {
+    height: 46px;
+    width: 46px;
+    border-radius: 100px;
+    object-fit: cover;
+}

@@ -28,6 +28,9 @@ class Post(models.Model):
             else:
                 images[-1].append(img)
         return images
+    
+    def get_links(self):
+        return self.links.split('; ')    
 
 class PostImage(models.Model):
     image = models.ImageField(upload_to='posts/images/')

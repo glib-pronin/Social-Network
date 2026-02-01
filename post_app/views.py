@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 from user_app.utils import get_data_from_json, User
-from .utils import generate_username
+from .utils import generate_username, get_page_data
 from .models import *
 import re
 
@@ -18,8 +19,17 @@ def render_main(req: HttpRequest):
     return render(
         request=req,
         template_name='post_app/main.html',
-        context={'first_entry': is_first_entry}
+        context={'first_entry': is_first_entry, 'post_content': get_page_data(Post, 1)}
     )
+
+@login_required(login_url='registration')
+def get_post(req: HttpRequest):
+    page_num = req.GET.get('page')
+    page = get_page_data(Post, page_num)
+    return JsonResponse({
+        'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}),
+        'has_next': page.get('has_next')
+    })
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
@@ -83,4 +93,3 @@ def create_post(req: HttpRequest):
     print(post)
     return JsonResponse({'success': True})
 
-    

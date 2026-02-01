@@ -1,0 +1,36 @@
+{% load static %}
+{% for post in post_content.page %}
+    <div class="post">
+        <div class="author-line">
+            {% if post.author.profile.photo %}
+                <img src="{{ post.author.profile.photo.url }}" alt="" class="avatar">
+            {% else %}
+                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+            {% endif %}
+            <span>{{ post.author.username }}</span>
+            {% if post.author.profile.signature %}
+                <img src="{{ post.author.profile.signature.url }}" alt="" class="signature" style="display: none;">
+            {% endif %}
+        </div>
+        <hr>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.subject }}</p>
+        <p>{{ post.content }} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quo vel quia similique laborum ab fugit rerum. Amet id, quidem labore excepturi adipisci nobis obcaecati? Cum error quod saepe voluptas dolores?100</p>
+        <p>
+            {% for tag in post.tags.all %}
+                <span>#{{ tag.name }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {% for img_row in post.get_images %}
+                <div class="rows">
+                    {% for img in img_row %}
+                        <img src="{{ img.url }}" alt="">
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        <br>
+        <br>
+{% endfor %}
