@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     removeLinkBtn.addEventListener('click', () => {
         const inputs = linksContainer.querySelectorAll(':scope > input')
         if (inputs.length > 0) {
+            firstInput.value = inputs[inputs.length-1].value 
             inputs[inputs.length-1].remove()
             if (inputs.length === 1) removeLinkBtn.classList.add('hidden')
         }

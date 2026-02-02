@@ -6,11 +6,14 @@ async function cleanForm(modal) {
         if (inp.id !== 'new-tag-input') inp.value = '';
     })
     linksContainer.querySelectorAll(':scope > input').forEach(inp => inp.remove())
-    document.getElementById('remove-link')
+    document.getElementById('remove-link').classList.add('hidden')
     document.querySelectorAll('.tag').forEach(tag => tag.remove())
     const res = await fetch('/get-tags')
     const { tags } = await res.json()
     tags.forEach(tag => createTag(tag, false))
+    form.querySelectorAll('.image-item').forEach(imageItem => {
+        imageItem.querySelector('.delete-image')?.click()
+    })
 }
 
 function createTag({tagName, id}, selected = true) {
