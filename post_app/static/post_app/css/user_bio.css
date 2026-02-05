@@ -1,0 +1,65 @@
+.user-bio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+}
+
+.user-bio-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    width: 100%;
+}
+
+.user-bio-name {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-bio-name .names {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.user-bio-name .username {
+    font-weight: 500;
+}
+
+.user-bio .avatar {
+    width: 96px;
+    height: 96px;
+}
+
+.user-bio-statistic {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.statistic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+}
+
+.statistic span:first-child {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.statistic span:last-child {
+    font-weight: 500;
+    color: var(--color-blue);
+}
+
+.vertical-line {
+    width: 1px;
+    background-color: var(--color-silver);
+}

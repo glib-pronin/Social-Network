@@ -1,0 +1,30 @@
+{% load static %}
+<div class="user-bio standart-border">
+    <div class="user-bio-info">
+        {% if user.profile.photo %}
+            <img src="{{ user.profile.photo.url }}" alt="" class="avatar">
+        {% else %}
+            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+        {% endif %}
+        <div class="user-bio-name">
+            <span class="names">{{ user.first_name }} {{ user.last_name }}</span>
+            <span class="username">{{ user.username }}</span>
+        </div>
+    </div>
+    <div class="user-bio-statistic">
+        <div class="statistic">
+            <span class="statistic-data">{{ user.posts.count }}</span>
+            <span class="statistic-name">Дописи</span>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="statistic">
+            <span class="statistic-data">12.1K</span>
+            <span class="statistic-name">Читачі</span>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="statistic">
+            <span class="statistic-data">222</span>
+            <span class="statistic-name">Друзі</span>
+        </div>
+    </div>
+</div>

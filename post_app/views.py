@@ -80,16 +80,20 @@ def get_tags(req: HttpRequest):
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
 def create_post(req: HttpRequest):
-    data = get_data_from_json(req.body)
-    title = data.get('title')
+    title = req.POST.get('title')
     if not title:
         return JsonResponse({'success': False, 'error': 'no_title'})
-    subject = data.get('subject')
-    content = data.get('content')
-    links = data.get('links')
-    tags = data.get('tags')
+    subject = req.POST.get('subject')
+    content = req.POST.get('content')
+    links = req.POST.get('links')
+    tags = get_data_from_json(req.POST.get('tags'))
     post = Post.objects.create(title=title, subject=subject, content=content, links=links, author=req.user)
     post.tags.set(tags or [])
     print(post)
+    positions = get_data_from_json(req.POST.get('positions', '[]'))
+    images = req.FILES.getlist('images')
+    if len(images) == len(positions):
+        for img, pos in zip(images, positions):
+            PostImage.objects.create(image=img, row=pos.get('row'), column=pos.get('col'), post=post)
     return JsonResponse({'success': True})
 

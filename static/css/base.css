@@ -196,7 +196,7 @@ footer a.selected {
   border-top: 2px solid var(--color-purple);
 }
 
-@media (max-width: 1030px) {
+@media (max-width: 1060px) {
   nav.desktop {
     display: none;
   }

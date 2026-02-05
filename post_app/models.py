@@ -22,15 +22,17 @@ class Post(models.Model):
     
     def get_images(self):
         images = []
-        for img in self.images.order_by('row').order_by('column'):
-            if img.row > len(images):
-                images.append([img])
-            else:
-                images[-1].append(img)
+        current_row = None
+        for img in self.images.order_by('row', 'column'):
+            if img.row != current_row:
+                images.append([])
+                current_row = img.row
+            images[-1].append(img)
         return images
     
     def get_links(self):
-        return self.links.split('; ')    
+        return self.links.split('; ') if self.links else []  
+  
 
 class PostImage(models.Model):
     image = models.ImageField(upload_to='posts/images/')

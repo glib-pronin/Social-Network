@@ -79,21 +79,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault()
+        const formData = new FormData()
         const title = form.elements.title.value
         if (!title) return
+        formData.append('title', title)
         const tags = Array.from(document.querySelectorAll('.tag.selected')).map(tag => tag.dataset.id).filter(Boolean)
+        formData.append('tags', JSON.stringify(tags))
         const links = Array.from(form.querySelectorAll('input[name="link"]')).map(link => link.value.trim()).filter(Boolean).join('; ')
-        const payload = {
-            title,
-            subject: form.elements.subject.value,
-            content: form.elements.content.value,
-            links,
-            tags
-        }
+        formData.append('links', links)
+        formData.append('subject', form.elements.subject.value)
+        formData.append('content', form.elements.content.value)
+        const rows = form.imagesState ?? []
+        console.log(rows);
+        
+        if (rows.length > 0) {
+            const positions = []
+            rows.forEach((row, rowInd) => {
+                row.items.forEach((item, itemInd) => {
+                    console.log(item.file);
+                    if (item.file) {
+                        console.log('1');
+                        
+                        formData.append('images', item.file)
+                        positions.push({row: rowInd, col: itemInd})
+                    }
+                })
+            })
+            formData.append('positions', JSON.stringify(positions))
+        }        
         const res = await fetch('/create-post', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
-            body: JSON.stringify(payload) 
+            headers: {'X-CSRFToken': token},
+            body: formData 
         })
         const data = await res.json()
         console.log(data);

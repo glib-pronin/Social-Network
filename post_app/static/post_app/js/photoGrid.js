@@ -151,7 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.querySelector('.next-row').classList.toggle('hidden', (ind !== row.items.length-1 || nextCondition))
             })
         })
-        rows = rows.filter(row => row.items.length !== 0)
+        for (let i = rows.length - 1; i >= 0; i--) {
+            if (rows[i].items.length === 0) {
+                rows.splice(i, 1)
+            }
+        }
     }
 
     function createTrashIcon() {
