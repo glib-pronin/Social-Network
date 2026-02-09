@@ -15,13 +15,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const firstInput = addLinkBtn.previousElementSibling
 
     const openForm = document.getElementById('open-form')
+    const openFormMobile = document.getElementById('open-create-post-mobile')
 
-    openForm.addEventListener('click', async () => {
+    const openCreatePost = async (e) => {
+        e.preventDefault()
         await cleanForm(modal)
         modal.classList.remove('hidden')
         modal.querySelector('textarea').value = openForm.previousElementSibling.value
-        openForm.previousElementSibling.value = ''
-    })
+        openForm.previousElementSibling.value = '' 
+    }
+
+    openForm.addEventListener('click', openCreatePost)
+    openFormMobile.addEventListener('click', openCreatePost)
+
+
 
     tagContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('tag')) {

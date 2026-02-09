@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code
 from post_app.utils import is_username_available
-from user_app.models import Profile, EmailVerification
+from user_app.models import EmailVerification
+from profile_app.models import Profile
 from .utils import str_to_bool
 from datetime import date
 import re

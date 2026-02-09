@@ -194,3 +194,24 @@ form#create-post textarea {
 .image-item .next-row {
     top: 110px;
 }
+
+
+@media (max-width: 500px) {
+    form#create-post .input-container, .first-input, .links-vertical, 
+    form#create-post .input-container.full-width  {
+        width: 90%;
+    }
+
+    form#create-post textarea  {
+        height: 140px;
+    }
+
+    .row {
+        gap: 8px;
+        height: 225px;
+    }
+
+    .images-grid {
+        gap: 8px;
+    }
+}

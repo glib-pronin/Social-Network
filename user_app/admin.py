@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import EmailVerification, Profile
+from .models import EmailVerification
 
 # Register your models here.
 
-admin.site.register([EmailVerification, Profile])
+admin.site.register(EmailVerification)

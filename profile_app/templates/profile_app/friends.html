@@ -1,0 +1,114 @@
+{% extends 'profile_app/profile_layout.html' %}
+{% load static %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_app/css/friends.css' %}">
+{% endblock %}
+{% block navigation-links %}
+    <a href="{% url 'friends' %}" {% if request.path == "/profile/friends/all" %} class="selected" {% endif %}>Головна</a>
+    <a href="profile/" {% if request.path == "" %} class="selected" {% endif %}>Запити</a>
+    <a href="profile/" {% if request.path == "" %} class="selected" {% endif %}>Рекомендації</a>
+    <a href="profile/" {% if request.path == "" %} class="selected" {% endif %}>Всі друзі</a>
+{% endblock %}
+{% block section %}
+    <div class="friends-section">
+        <div class="friends-section-header">
+            <h3>Запити</h3>
+            <a>Дивитись всі</a>
+        </div>
+        <div class="friends-section-content">
+            {% if not user.profile.received_requests.exists %}
+                <h3 class="empty-msg">Вам поки що ніхто не надсилав запитів на дружбу.</h3>
+            {% endif %}
+            {% for friend_request in user.profile.received_requests.all|slice:6 %}
+                <div class="friends-section-card">
+                    <div class="user-info">
+                        {% if friend_request.from_profile.photo %}
+                            <img src="{{ friend_request.from_profile.photo.url }}" alt="Profile photo" class="avatar">
+                        {% else %}
+                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                        {% endif %}
+                        <div class="user-names">
+                            <p>{{ friend_request.from_profile.user.first_name }} {{ friend_request.from_profile.user.last_name }}</p>
+                            <p>{{ friend_request.from_profile.user.username }}</p>
+                        </div>
+                    </div>
+                    <div class="btns-container">
+                        <a href="/profile/friends/accept-friend-request/{{ friend_request.from_profile.id }}">
+                            <button class="friends-btn btn1">Підтвердити</button>
+                        </a>
+                        <a href="/profile/friends/cancel-friend-request/{{ friend_request.from_profile.id }}">
+                            <button class="friends-btn btn2">Видалити</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="friends-section">
+        <div class="friends-section-header">
+            <h3>Рекомендації</h3>
+            <a>Дивитись всі</a>
+        </div>
+        <div class="friends-section-content">
+            {% if not recommendation_list|length > 0 %}
+                <h3 class="empty-msg">Ми не можемо скласти рекомендації, адже у Вас ще немає друзів.</h3>
+            {% endif %}
+            {% for potential_friend in recommendation_list %}
+                <div class="friends-section-card">
+                    <div class="user-info">
+                        {% if potential_friend.user.profile.photo %}
+                            <img src="{{ potential_friend.user.profile.photo.url }}" alt="Profile photo" class="avatar">
+                        {% else %}
+                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                        {% endif %}
+                        <div class="user-names">
+                            <p>{{ potential_friend.user.first_name }} {{ potential_friend.user.last_name }}</p>
+                            <p>{{ potential_friend.user.username }}</p>
+                        </div>
+                    </div>
+                    <div class="btns-container">
+                        <a href="/profile/friends/add-friend/{{ potential_friend.id }}">
+                            <button class="friends-btn btn1">Додати</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="friends-section">
+        <div class="friends-section-header">
+            <h3>Всі друзі</h3>
+            <a>Дивитись всі</a>
+        </div>
+        <div class="friends-section-content">
+            {% if not user.profile.friends.exists %}
+                <h3 class="empty-msg">У вас поки що немає друзів.</h3>
+            {% endif %}
+            {% for friend in user.profile.friends.all %}
+                <div class="friends-section-card">
+                    <div class="user-info">
+                        {% if friend.user.profile.photo %}
+                            <img src="{{ friend.user.profile.photo.url }}" alt="Profile photo" class="avatar">
+                        {% else %}
+                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                        {% endif %}
+                        <div class="user-names">
+                            <p>{{ friend.user.first_name }} {{ friend.user.last_name }}</p>
+                            <p>{{ friend.user.username }}</p>
+                        </div>
+                    </div>
+                    <div class="btns-container">
+                        <a href="/profile/friends/remove-friend/{{ friend.id }}">
+                            <button class="friends-btn btn1">Повідомлення</button>
+                            <button class="friends-btn btn2">Видалити</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    
+{% endblock %}

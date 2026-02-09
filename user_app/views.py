@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
-from .models import User, EmailVerification, Profile
+from .models import User, EmailVerification
+from profile_app.models import Profile
 from django.contrib.auth import login, logout
 from .utils import *
 from .decorators import anonymous_required
