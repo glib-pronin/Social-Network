@@ -34,8 +34,4 @@ p:has(#generate-username) {
     form#first-entry-form {
         width: 343px;
     }
-
-    .form-text {
-        font-size: 24px;
-    }
 }

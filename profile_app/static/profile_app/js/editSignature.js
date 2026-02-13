@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let signaturePad = null
     let signatureBlob = null
     let isChanging = false
+    let tempObjectURL = null
 
     openEditionBtn.addEventListener('click', () => {
         openEditionBtn.classList.add('hidden')
@@ -63,7 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
         const formData = new FormData()
-        if (signatureBlob) formData.append('signature', signatureBlob, `signature_${Date.now()}.png`)
+        if (signatureBlob) {
+            formData.append('signature', signatureBlob, `signature_${Date.now()}.png`)
+            URL.revokeObjectURL(tempObjectURL)
+            tempObjectURL = null
+        } 
         if (textCheckbox.checked !== originalText) formData.append('is_text_signature', textCheckbox.checked)
         if (imageCheckbox.checked !== originalImage) formData.append('is_image_signature', imageCheckbox.checked)
         const res = await fetch('/profile/update-signature', {
@@ -107,7 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
         editSignatureBtn.classList.remove('hidden')
         image.classList.remove('hidden')
         image.classList.add('not-saved')
-        image.src = URL.createObjectURL(signatureBlob)
+        if (tempObjectURL) URL.revokeObjectURL(tempObjectURL)
+        tempObjectURL = URL.createObjectURL(signatureBlob)
+        image.src = tempObjectURL
         isChanging = false
         msgError.classList.add('hidden')
     }

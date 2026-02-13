@@ -1,0 +1,45 @@
+{% extends 'profile_app/profile_layout.html' %}
+{% load static %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_app/css/friends.css' %}">
+{% endblock %}
+{% block navigation-links %}
+ <a href="{% url 'friends' %}" {% if request.path == "/profile/friends/all" %} class="selected" {% endif %}>Головна</a>
+    <a href="{% url 'friends_requests' %}" {% if request.path == "/profile/friends/requests" %} class="selected" {% endif %}>Запити</a>
+    <a href="{% url 'friends_recommendation' %}" {% if request.path == "/profile/friends/recommendation" %} class="selected" {% endif %}>Рекомендації</a>
+    <a href="{% url 'friends_all' %}" {% if request.path == "/profile/friends" %} class="selected" {% endif %}>Всі друзі</a>
+{% endblock %}
+{% block section %}
+    {% csrf_token %}
+    <div class="friends-section" id="friends-recommendation-preview"  data-has-more="{{ has_more_recommendation }}" data-mode="fullscreen">
+        <div class="friends-section-header">
+            <h3>Рекомендації</h3>
+        </div>
+        <p class="result-msg hidden"></p>
+        <div class="friends-section-content">
+            <h3 class="empty-msg {% if recommendation_list|length > 0 %} hidden {% endif %}">Ми поки не можемо скласти для вас рекомендації.</h3>
+            {% for potential_friend in recommendation_list %}
+                <div class="friends-section-card" data-id="{{ potential_friend.id }}">
+                    <div class="user-info">
+                        {% if potential_friend.profile.photo %}
+                            <img src="{{ potential_friend.photo.url }}" alt="Profile photo" class="avatar">
+                        {% else %}
+                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                        {% endif %}
+                        <div class="user-names">
+                            <p>{{ potential_friend.user.first_name }} {{ potential_friend.user.last_name }}</p>
+                            <p>{{ potential_friend.user.username }}</p>
+                        </div>
+                    </div>
+                    <div class="btns-container">
+                        <button class="friends-btn btn1">Додати</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'profile_app/js/friends.js' %}"></script>
+{% endblock %}

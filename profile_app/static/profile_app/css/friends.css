@@ -103,7 +103,40 @@
     color: var(--color-purple);
 }
 
-.empty-msg {
-    font-size: 18px;
+.result-msg {
+    color: var(--color-orange);
+}
+
+form {
+    width: 488px;
+    box-sizing: border-box;
+}
+
+form .btns-container {
+    align-self: flex-end;
+}
+
+
+form h3 {
+    font-size: 34px;
     font-weight: 500;
+}
+
+@media (max-width: 805px) {
+    .friends-section-content:has(.friends-section-card) {
+        justify-content: center;
+    }   
+}
+
+@media (max-width: 680px) {
+    form {
+        width: 343px;
+    }
+
+}
+
+@media (max-width: 642px) {
+    .friends-section-content.preview .friends-section-card:nth-of-type(n+3) {
+        display: none;
+    }
 }

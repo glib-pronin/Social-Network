@@ -196,6 +196,11 @@ footer a.selected {
   border-top: 2px solid var(--color-purple);
 }
 
+.empty-msg, .result-msg {
+    font-size: 18px;
+    font-weight: 500;
+}
+
 @media (max-width: 1060px) {
   nav.desktop {
     display: none;

@@ -22,6 +22,25 @@
                     </div>
                     <span>Дивитись всі</span>
                 </div>
+                {% if not user.profile.received_requests.exists %}
+                    <h3 class="empty-msg">Вам поки що ніхто не надсилав запитів на дружбу.</h3>
+                {% else %}
+                    <div class="info-block-content">
+                        {% for friend_request in user.profile.received_requests.all|slice:3 %}
+                            <div class="info-block-content-element">
+                                {% if friend_request.from_profile.photo %}
+                                    <img src="{{ friend_request.from_profile.photo.url }}" alt="Profile photo" class="avatar">
+                                {% else %}
+                                    <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                                {% endif %}
+                                <div class="data">
+                                    <p>{{ friend_request.from_profile.user.first_name }} {{ friend_request.from_profile.user.last_name }}</p>
+                                    <p>0 підписників</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
             <div class="info-block standart-border">
                 <div class="info-block-header">

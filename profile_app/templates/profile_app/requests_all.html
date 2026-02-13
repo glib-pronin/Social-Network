@@ -7,20 +7,19 @@
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
 {% endblock %}
 {% block navigation-links %}
-    <a href="{% url 'friends' %}" {% if request.path == "/profile/friends/all" %} class="selected" {% endif %}>Головна</a>
-    <a href="{% url 'friends_requests' %}" {% if request.path == "/profile/friends/requests" %} class="selected" {% endif %}>Запити</a>
+ <a href="{% url 'friends' %}" {% if request.path == "/profile/friends/all" %} class="selected" {% endif %}>Головна</a>
+    <a href="{% url 'friends_requests' %}" data-c="{{ request.path }}" {% if request.path == "/profile/friends/requests" %} class="selected" {% endif %}>Запити</a>
     <a href="{% url 'friends_recommendation' %}" {% if request.path == "/profile/friends/recommendation" %} class="selected" {% endif %}>Рекомендації</a>
     <a href="{% url 'friends_all' %}" {% if request.path == "/profile/friends" %} class="selected" {% endif %}>Всі друзі</a>
 {% endblock %}
 {% block section %}
     {% csrf_token %}
-    <div class="friends-section" id="friends-request-preview" data-has-more="{{ has_more_requests }}">
+    <div class="friends-section" id="friends-request-preview" data-has-more="{{ has_more_requests }}" data-mode="fullscreen">
         <div class="friends-section-header">
             <h3>Запити</h3>
-            <a href="{% url 'friends_requests' %}">Дивитись всі</a>
         </div>
         <p class="result-msg hidden"></p>
-        <div class="friends-section-content preview">
+        <div class="friends-section-content">
             <h3 class="empty-msg {% if user.profile.received_requests.exists %} hidden {% endif %}">Вам поки що ніхто не надсилав запитів на дружбу.</h3>
             {% for friend_request in user.profile.received_requests.all|slice:6 %}
                 <div class="friends-section-card" data-id="{{ friend_request.from_profile.id }}">
@@ -38,63 +37,6 @@
                     <div class="btns-container">
                         <button class="friends-btn btn1" data-action="accept">Підтвердити</button>
                         <button class="friends-btn btn2" data-action="decline">Видалити</button>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="friends-section" id="friends-recommendation-preview"  data-has-more="{{ has_more_recommendation }}">
-        <div class="friends-section-header">
-            <h3>Рекомендації</h3>
-            <a href="{% url 'friends_recommendation' %}">Дивитись всі</a>
-        </div>
-        <p class="result-msg hidden"></p>
-        <div class="friends-section-content preview">
-            <h3 class="empty-msg {% if recommendation_list|length > 0 %} hidden {% endif %}">Ми поки не можемо скласти для вас рекомендації.</h3>
-            {% for potential_friend in recommendation_list %}
-                <div class="friends-section-card" data-id="{{ potential_friend.id }}">
-                    <div class="user-info">
-                        {% if potential_friend.profile.photo %}
-                            <img src="{{ potential_friend.photo.url }}" alt="Profile photo" class="avatar">
-                        {% else %}
-                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
-                        {% endif %}
-                        <div class="user-names">
-                            <p>{{ potential_friend.user.first_name }} {{ potential_friend.user.last_name }}</p>
-                            <p>{{ potential_friend.user.username }}</p>
-                        </div>
-                    </div>
-                    <div class="btns-container">
-                        <button class="friends-btn btn1">Додати</button>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    <div class="friends-section" id="friends-preview" data-has-more="{{ has_more_friends }}">
-        <div class="friends-section-header">
-            <h3>Всі друзі</h3>
-            <a href="{% url 'friends_all' %}">Дивитись всі</a>
-        </div>
-        <p class="result-msg hidden"></p>
-        <div class="friends-section-content preview">
-            <h3 class="empty-msg {% if user.profile.friends.exists %} hidden {% endif %}">У вас поки що немає друзів.</h3>
-            {% for friend in user.profile.friends.all reversed  %}
-                <div class="friends-section-card" data-id="{{ friend.id }}"">
-                    <div class="user-info">
-                        {% if friend.profile.photo %}
-                            <img src="{{ friend.profile.photo.url }}" alt="Profile photo" class="avatar">
-                        {% else %}
-                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
-                        {% endif %}
-                        <div class="user-names">
-                            <p>{{ friend.user.first_name }} {{ friend.user.last_name }}</p>
-                            <p>{{ friend.user.username }}</p>
-                        </div>
-                    </div>
-                    <div class="btns-container">
-                        <button class="friends-btn btn1">Повідомлення</button>
-                        <button class="friends-btn btn2 delete-btn">Видалити</button>
                     </div>
                 </div>
             {% endfor %}
