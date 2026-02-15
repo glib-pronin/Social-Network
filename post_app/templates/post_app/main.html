@@ -6,12 +6,13 @@
     <link rel="stylesheet" href="{% static 'post_app/css/post.css' %}">
     <link rel="stylesheet" href="{% static 'post_app/css/user_bio.css' %}">
     <link rel="stylesheet" href="{% static 'post_app/css/first_entry.css' %}">
-    <link rel="stylesheet" href="{% static 'post_app/css/create_post.css' %}">
 {% endblock %}
 {% block content %}
     <div class="main-layout">
         <div class="side-block">
-            {% include 'post_app/user_bio.html' %}
+            <a href="{% url 'profile' %}">
+                {% include 'post_app/user_bio.html' %}
+            </a>
             <div class="info-block standart-border">
                 <div class="info-block-header">
                     <div class="header-name">
@@ -20,7 +21,9 @@
                         </svg>
                         <span>Запити</span>
                     </div>
-                    <span>Дивитись всі</span>
+                    <a href="{% url 'friends_requests' %}">
+                        <span>Дивитись всі</span>
+                    </a>
                 </div>
                 {% if not user.profile.received_requests.exists %}
                     <h3 class="empty-msg">Вам поки що ніхто не надсилав запитів на дружбу.</h3>
@@ -66,7 +69,6 @@
             <div id="post-loader"></div>
         </div>
     </div>
-    {% include 'post_app/create_post.html' %}
     {% if first_entry %}
         {% include 'post_app/first_entry.html' %}
     {% endif %}
@@ -75,8 +77,6 @@
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'post_app/js/loadPost.js' %}"></script>
     <script src="{% static 'post_app/js/photoGrid.js' %}"></script>
-    <script src="{% static 'post_app/js/cleanForm.js' %}"></script>
-    <script src="{% static 'post_app/js/createPost.js' %}"></script>
     <script src="{% static 'post_app/js/debounce.js' %}"></script>
     <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
     <script src="{% static 'post_app/js/firstEntry.js' %}"></script>

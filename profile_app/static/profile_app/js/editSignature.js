@@ -19,17 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isChanging = false
     let tempObjectURL = null
 
-    openEditionBtn.addEventListener('click', () => {
-        openEditionBtn.classList.add('hidden')
-        openEditionBtn.nextElementSibling.classList.remove('hidden')
-        editSignatureBtn.classList.remove('hidden')
-        const dataContainer = openEditionBtn.parentElement.nextElementSibling
-        dataContainer.querySelectorAll('.data-container').forEach(dc => dc.classList.remove('disabled'))
-        dataContainer.parentElement.classList.add('highlighted-border')
-        dataContainer.querySelectorAll('input').forEach(input => {
-            input.disabled = false
-        })
-    })
+    openEditionBtn.addEventListener('click', () => editSignatureBtn.classList.remove('hidden'))
 
     cancelEditionBtn.addEventListener('click', () => {
         openEditionBtn.classList.remove('hidden')
@@ -50,7 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
         signatureBlob = null
         msgError.classList.add('hidden')
         textCheckbox.checked = originalText
-        imageCheckbox.checked = originalImage
+        if (signatureBlob) {
+            URL.revokeObjectURL(tempObjectURL)
+            tempObjectURL = null
+        } 
     })
 
     saveSignatureBtn.addEventListener('click', async () => {

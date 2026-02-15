@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const newTagInput = saveBtn.previousElementSibling
     const tagList = document.querySelectorAll('.tag')
     const tagContainer = document.querySelector('.tags-container')
-    const token = document.querySelector('form').elements.csrfmiddlewaretoken.value
+    const tagListSpan = document.querySelector('.selected-tags-list')
+    let textForTagListSpan = []
+    const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
     const linksContainer = document.getElementById('links')
     const addLinkBtn = document.getElementById('add-link')
@@ -21,18 +23,38 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault()
         await cleanForm(modal)
         modal.classList.remove('hidden')
-        modal.querySelector('textarea').value = openForm.previousElementSibling.value
+        const textarea = modal.querySelector('textarea') 
+        textarea.value = openForm.previousElementSibling.value
+        textarea.style.height = '20px'
         openForm.previousElementSibling.value = '' 
+        textForTagListSpan = []
+        tagListSpan.classList.add('hidden')
     }
 
-    openForm.addEventListener('click', openCreatePost)
+    openForm?.addEventListener('click', openCreatePost)
     openFormMobile.addEventListener('click', openCreatePost)
 
-
+    form.elements.content.addEventListener('input', () => {
+        const textarea = form.elements.content
+        textarea.style.height = '20px'
+        textarea.style.height = textarea.scrollHeight + 'px'
+        console.log(textarea.scrollHeight);
+        
+    })
 
     tagContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('tag')) {
-            e.target.classList.toggle('selected')
+            const tag = e.target
+            tag.classList.toggle('selected')
+            const tagText = tag.textContent
+            const index = textForTagListSpan.indexOf(tagText)
+            if (tag.classList.contains('selected') && index === -1) {
+                textForTagListSpan.push(tag.textContent)
+            } else if (!tag.classList.contains('selected') && index !== -1) {
+                textForTagListSpan.splice(index, 1)
+            }
+            tagListSpan.textContent = textForTagListSpan.join(' ')
+            tagListSpan.classList.toggle('hidden', textForTagListSpan.length === 0)
         }
     })
 

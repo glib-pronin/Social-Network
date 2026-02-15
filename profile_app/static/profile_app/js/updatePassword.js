@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordInput = document.getElementById('password')
     const passwordConfirmInput = document.getElementById('confirm-password')
     const oldPasswordInput = document.getElementById('old-password')
-    const successMsg = document.querySelector('.success-msg')
+    const successMsg = passwordInput.parentElement.parentElement.querySelector('.success-msg')
+    
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
     oldPasswordInput.addEventListener('input', () => oldPasswordInput.nextElementSibling.classList.add('hidden'))

@@ -5,7 +5,7 @@
             <div class="author-info">
                 <div class="user-wrapper">
                     {% if post.author.profile.photo %}
-                        <img src="{{ post.author.profile.photo.url }}" alt="" class="avatar">
+                        <img src="{{ post.author.profile.photo_webp.url }}" alt="" class="avatar">
                     {% else %}
                         <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                     {% endif %}
@@ -51,7 +51,7 @@
                         <div class="post-image-row">
                             {% for img in img_row %}
                                 <div class="post-image-item">
-                                    <img src="{{ img.image.url }}" alt="">
+                                    <img src="{{ img.image_webp.url }}" alt="">
                                 </div>
                             {% endfor %}
                         </div>

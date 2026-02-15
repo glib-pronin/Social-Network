@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
 
 # Create your models here.
 
@@ -36,6 +38,7 @@ class Post(models.Model):
 
 class PostImage(models.Model):
     image = models.ImageField(upload_to='posts/images/')
+    image_webp = ImageSpecField(source='image', format='WEBP', processors=[ResizeToFit(width=400, height=400)], options={'quality': 75})
     row = models.IntegerField()
     column = models.IntegerField()
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='images')

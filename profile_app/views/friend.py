@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from profile_app.models import Profile, FriendRequest
-from .utils import make_recommendation_list
+from ..utils import make_recommendation_list
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
@@ -47,8 +47,7 @@ def add_friend(req: HttpRequest, id: int):
     if reverse_request:
         from_profile.friends.add(to_profile)
         reverse_request.delete()
-        has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=1)) >= 1 else 'False'
-        return JsonResponse({'success': True, 'msg': 'created_friend', 'has_more_rec': has_more_rec})
+        return JsonResponse({'success': True, 'msg': 'created_friend'})
     
     try:
         FriendRequest.objects.create(from_profile=from_profile, to_profile=to_profile)
@@ -66,11 +65,16 @@ def cancel_friends_request(req: HttpRequest, id: int):
     if not request:
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     request.delete()
-    return JsonResponse({'success': True})
+    return JsonResponse({'success': True, 'request_count': to_profile.get_request_count()})
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
 def accept_friends_request(req: HttpRequest, id: int):
+    loaded_rec = req.GET.get('loaded')
+    try:
+        loaded_count = int(loaded_rec) + 1
+    except (TypeError, ValueError):
+        return JsonResponse({'success': False, 'error': 'wrong_payload'})
     from_profile = get_object_or_404(Profile, pk=id)
     to_profile = req.user.profile
     request = FriendRequest.objects.filter(to_profile=to_profile, from_profile=from_profile).first()
@@ -78,16 +82,21 @@ def accept_friends_request(req: HttpRequest, id: int):
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     from_profile.friends.add(to_profile)
     request.delete()
-    has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=1)) >= 1 else 'False'
-    return JsonResponse({'success': True, 'has_more_rec': has_more_rec})
+    has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=loaded_count)) >= loaded_count else 'False'
+    return JsonResponse({'success': True, 'has_more_rec': has_more_rec, 'request_count': to_profile.get_request_count()})
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
 def remove_friend(req: HttpRequest, id: int):
+    loaded_rec = req.GET.get('loaded')
+    try:
+        loaded_count = int(loaded_rec) + 1
+    except (TypeError, ValueError):
+        return JsonResponse({'success': False, 'error': 'wrong_payload'})
     friend = get_object_or_404(Profile, pk=id)
     my_profile = req.user.profile
     if friend not in my_profile.friends.all():
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     my_profile.friends.remove(friend)
-    has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=1)) >= 1 else 'False'
+    has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=loaded_count)) >= loaded_count else 'False'
     return JsonResponse({'success': True, 'has_more_rec': has_more_rec})

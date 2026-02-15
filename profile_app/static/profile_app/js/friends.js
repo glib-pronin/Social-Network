@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelModalBtn = modal?.querySelector('#cancel-action-btn')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
+    const requestCountContainer = document.querySelectorAll('.request-count')
+    function changeRequestCount(count) {
+        requestCountContainer.forEach(container => {
+            if (!count) {
+                container.classList.add('hidden')
+                return
+            }
+            container.classList.remove('hidden')
+            container.textContent = count
+        })
+    }    
+
     let callback = null
 
     const emptyMsgs = {
@@ -48,10 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
         msgContainer.classList.remove('hidden')
     }
 
+    function getRecommendationCount(container) {
+        if (container.dataset.mode === 'fullscreen') return 0 
+        return recommendationContainer.querySelectorAll('.friends-section-card').length
+    }
+
     function changeRecommendationHasMore(container, hasMore) {
         if (container.dataset.mode === 'fullscreen') return
-        container.dataset.hasMore = hasMore
+        recommendationContainer.dataset.hasMore = hasMore
         isEmptySection(container, 'recommendation')
+        console.log(hasMore);
     }
 
     function checkFriends(card) {
@@ -65,12 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function handleRequestProcessing(card, profileId, action) {
-        const url = (action === 'accept') ? `/profile/friends/accept-friend-request/${profileId}` : `/profile/friends/cancel-friend-request/${profileId}`
+        const url = (action === 'accept') ? `/profile/friends/accept-friend-request/${profileId}?loaded=${getRecommendationCount(recommendationContainer)}` : `/profile/friends/cancel-friend-request/${profileId}?loaded=${getRecommendationCount(recommendationContainer)}`
         const res = await fetch(url, { method: 'POST', headers: {'X-CSRFToken': token} })
-        const { success, has_more_rec } = await res.json()
+        const { success, has_more_rec, request_count } = await res.json()
         cancelModalBtn.click()
         if (success) {
             card.remove()
+            changeRequestCount(request_count)
             if (action === 'accept' && requestsContainer.dataset.mode != 'fullscreen')  {
                 checkFriends(card)
                 changeRecommendationHasMore(requestsContainer, has_more_rec)
@@ -106,10 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const { success, msg, has_more_rec } = await res.json()
         if (success) {
             card.remove()
-            if (msg === 'created_friend' && recommendationContainer.dataset.mode != 'fullscreen') {
-                checkFriends(card)
-                changeRecommendationHasMore(recommendationContainer, has_more_rec)
-            }
+            if (msg === 'created_friend' && recommendationContainer.dataset.mode != 'fullscreen') checkFriends(card)
             showResultMsg(recommendationContainer.querySelector('.result-msg'), 'Запит на дружбу надіслано!')
             isEmptySection(recommendationContainer, 'recommendation')
         }
@@ -124,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.classList.remove('hidden')
         modal.querySelector('p').textContent = 'Ви дійсно хочете видалити користувача?'
         callback = async () => {
-            const res = await fetch(`/profile/friends/remove-friend/${profileId}`, { method: 'POST', headers: {'X-CSRFToken': token} })
+            const res = await fetch(`/profile/friends/remove-friend/${profileId}?loaded=${getRecommendationCount(friendsContainer)}`, { method: 'POST', headers: {'X-CSRFToken': token} })
             const { success, has_more_rec } = await res.json()
             cancelModalBtn.click()
             if (success) {

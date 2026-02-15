@@ -3,10 +3,18 @@ form#create-post {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    padding-top: 24px;
 }
 
-.form-header .form-text {
+form#create-post .form-header {
+    gap: 0;
+}
+
+form#create-post .form-header .form-text {
     align-self: flex-start;
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -1px;
 }
 
 form#create-post .input-container {
@@ -31,8 +39,29 @@ form#create-post .inputs::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
-form#create-post textarea {
+.input-container.textarea-wrapper {
+    border-radius: 10px;
+    border: 1px solid var(--color-silver);
+    padding: 16px;
+    box-sizing: border-box;
     height: 126px;
+    flex-shrink: 0;
+    overflow: auto;
+    gap: 0;
+}
+
+.input-container.textarea-wrapper .selected-tags-list {
+    color: var(--color-purple);
+}
+
+form#create-post textarea {
+    height: 20px;
+    border: none;
+    outline: none;
+    padding: 0;
+    border-radius: 0;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
 .tags-container {
@@ -113,11 +142,13 @@ form#create-post textarea {
     flex-shrink: 0;
 }
 
-.btns-container {
+form#create-post .btns-container {
     display: flex;
     gap: 10px;
     align-items: center;
     align-self: flex-end;
+    flex-direction: row;
+    width: fit-content;
 }
 
 #add-image {
@@ -195,6 +226,10 @@ form#create-post textarea {
     top: 110px;
 }
 
+form#create-post .send-btn {
+    align-self: flex-end;
+    padding: 10px 16px;
+}
 
 @media (max-width: 500px) {
     form#create-post .input-container, .first-input, .links-vertical, 
@@ -202,7 +237,7 @@ form#create-post textarea {
         width: 90%;
     }
 
-    form#create-post textarea  {
+    .input-container.textarea-wrapper {
         height: 140px;
     }
 
@@ -213,5 +248,9 @@ form#create-post textarea {
 
     .images-grid {
         gap: 8px;
+    }
+
+    form#create-post .form-header .form-text {
+        font-size: 24px;
     }
 }

@@ -2,11 +2,14 @@ from django.db import models
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.utils import timezone
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill, ResizeToFit
 
 # Create your models here.
 
 class Profile(models.Model):
     photo = models.ImageField(upload_to='profiles', null=True, blank=True)
+    photo_webp = ImageSpecField(processors=[ResizeToFill(width=100, height=100)], source='photo', format='WEBP', options={'quality': 75})
     birth_date = models.DateField(null=True, blank=True)
     signature = models.ImageField(upload_to='profiles/signature', null=True, blank=True)
     is_text_signature= models.BooleanField(default=False)
@@ -31,6 +34,12 @@ class Profile(models.Model):
                     tags.append(tag)
         return tags
     
+    def get_request_count(self):
+        received_requests = self.received_requests.count()
+        if received_requests == 0:
+            return ''
+        return received_requests if self.received_requests.count() <= 9 else '9+'
+    
 class FriendRequest(models.Model):
     from_profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='sent_requests')
     to_profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='received_requests')
@@ -48,3 +57,21 @@ class FriendRequest(models.Model):
     def __str__(self):
         return f'{self.from_profile} -> {self.to_profile}'
                 
+class Album(models.Model):
+    name = models.CharField(max_length=50)
+    theme = models.CharField(max_length=50)
+    year = models.IntegerField()
+    profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='albums')
+    is_shown = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'User - {self.profile.user.username}, album - {self.name}, {self.year} year'
+    
+class AlbumImage(models.Model):
+    image = models.ImageField(upload_to='albums')
+    image_webp = ImageSpecField(processors=[ResizeToFit(width=400, height=400)], source='image', format='WEBP', options={'quality': 75})
+    album = models.ForeignKey(to=Album, on_delete=models.CASCADE, related_name='images')
+    is_shown = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f'Image - {self.id}, album - {self.album.name}, {self.album.year} year'

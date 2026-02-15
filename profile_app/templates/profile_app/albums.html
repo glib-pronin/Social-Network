@@ -1,0 +1,40 @@
+{% extends 'profile_app/profile_layout.html' %}
+{% load static %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_app/css/profile.css' %}">
+{% endblock %}
+{% block navigation-links %}
+    <a href="{% url 'profile' %}" {% if request.path == "/profile/" %} class="selected" {% endif %}>Особиста інформація</a>
+    <a href="{% url 'albums' %}" {% if request.path == "/profile/albums" %} class="selected" {% endif %}>Альбоми</a>
+{% endblock %}
+{% block section %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Зберегти</button>
+    </form>
+    {% for album im albums %}
+        <div>
+            <p>{{ album.name }}</p>
+            <p></p>
+            <p></p>
+        </div>
+    {% endfor %}
+{% endblock %}
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="{% static 'js/modal.js' %}"></script>
+    <script src="{% static 'post_app/js/debounce.js' %}"></script>
+    <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
+    <script src="{% static 'user_app/js/password.js' %}"></script>
+    <script src="{% static 'user_app/js/digitInputs.js' %}"></script>
+    <script src="{% static 'user_app/js/spinner.js' %}"></script>
+    <script src="{% static 'profile_app/js/enableEditing.js' %}"></script>
+    <script src="{% static 'profile_app/js/editCard.js' %}"></script>
+    <script src="{% static 'profile_app/js/updateCredentials.js' %}"></script>
+    <script src="{% static 'profile_app/js/updatePassword.js' %}"></script>
+    <script src="{% static 'profile_app/js/editSignature.js' %}"></script>
+{% endblock %}

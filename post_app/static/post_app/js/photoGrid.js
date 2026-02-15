@@ -122,8 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function swapItems(from, to) {
-        console.log('swap');
-        
         if (from === to) return
         const fromRow = rows.find(r => r.items.includes(from))
         const toRow = rows.find(r => r.items.includes(to))

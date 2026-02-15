@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.classList.add('hidden')
             const btnContainer = btn.parentElement
             btnContainer.nextElementSibling.classList.remove('disabled')
+            btnContainer.nextElementSibling.querySelectorAll('.data-container').forEach(elem => elem.classList.remove('disabled'))
             btnContainer.parentElement.parentElement.classList.add('highlighted-border')
             btnContainer.nextElementSibling.querySelectorAll('input').forEach(input => {
                 input.disabled = false

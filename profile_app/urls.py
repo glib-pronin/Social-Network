@@ -1,9 +1,9 @@
 from django.urls import path
 from .views import *
-from .friend_views import *
 
 urlpatterns = [
     path('', view=render_profile, name='profile'),
+    path('albums', view=render_albums, name='albums'),
     path('update-credentials', view=update_credentials, name='update_credentials'),
     path('update-password', view=update_passwords, name='update_password'),
     path('update-signature', view=update_signature, name='update_signature'),

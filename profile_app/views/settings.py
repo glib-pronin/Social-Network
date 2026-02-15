@@ -7,7 +7,7 @@ from user_app.utils import get_data_from_json, check_email, User, rand_code, sen
 from post_app.utils import is_username_available
 from user_app.models import EmailVerification
 from profile_app.models import Profile
-from .utils import str_to_bool
+from ..utils import str_to_bool
 from datetime import date
 import re
 

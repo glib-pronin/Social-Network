@@ -8,7 +8,9 @@
     flex-direction: column;
     gap: 16px;
     width: 100%;
+    flex: 1 1 0;
 }
+
 
 .friends-section-header {
     display: flex;
