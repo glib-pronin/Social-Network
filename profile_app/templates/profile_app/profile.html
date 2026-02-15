@@ -330,14 +330,15 @@
             <div class="data-container disabled">
                 <div class="signature-header">
                     <input type="checkbox" name="" id="text-checkbox" {% if user.profile.is_text_signature %} checked {% endif %} disabled>
-                    <label for="" id="text-signature">Псевдонім</label>
+                    <label for="text-checkbox" id="text-signature">Псевдонім</label>
                 </div>
-                <input id="pseudonym" type="text" name="pseudonym" placeholder="Введіть псевдонім" value="" data-value="" disabled>
+                <input id="pseudonym" type="text" name="pseudonym" placeholder="Введіть псевдонім" value="{{ user.profile.pseudonym }}" data-value="" disabled>
+                <p class="error-msg hidden">Введіть псевдонім, він може складатись з латинських та криличних літер, цифр та нижнього підкреслення (не вкінці чи напочатку), від 3 до 20 символів</p>
             </div>
             <div class="data-container disabled">
                 <div class="signature-header">
                     <input type="checkbox" name="" id="image-checkbox" {% if user.profile.is_image_signature %} checked {% endif %} disabled>
-                    <label for="">Мій електронний підпис</label>
+                    <label for="image-checkbox">Мій електронний підпис</label>
                 </div>
                 <p class="error-msg hidden" id="end-error"></p>
                 {% if user.profile.signature %}

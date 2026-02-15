@@ -1,3 +1,5 @@
+import re
+
 def str_to_bool(value: str):
     return value == 'true'
 
@@ -19,3 +21,12 @@ def make_recommendation_list(user, limit=None):
                 return recommendation_list
 
     return recommendation_list
+
+
+MAX_LENGTH = 20
+MIN_LENGTH = 3
+
+def is_valid_pseudonym(pseudonym):
+    if len(pseudonym) < MIN_LENGTH or len(pseudonym) > MAX_LENGTH or not re.match(r'^(?!\d+$)[a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+([ _][a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+)*$', pseudonym):
+        return False
+    return True

@@ -7,7 +7,7 @@ from user_app.utils import get_data_from_json, check_email, User, rand_code, sen
 from post_app.utils import is_username_available
 from user_app.models import EmailVerification
 from profile_app.models import Profile
-from ..utils import str_to_bool
+from ..utils import str_to_bool, is_valid_pseudonym
 from datetime import date
 import re
 
@@ -73,6 +73,11 @@ def update_passwords(req: HttpRequest):
 def update_signature(req: HttpRequest):
     signature = req.FILES.get('signature')
     profile, _ = Profile.objects.get_or_create(user=req.user)
+    pseudonym = req.POST.get('pseudonym', '').strip()
+    if pseudonym and not is_valid_pseudonym(pseudonym):
+        return JsonResponse({'success': False, 'error': 'invalid_pseudonym'})
+    if pseudonym:
+        profile.pseudonym = pseudonym
     if 'is_image_signature' in req.POST:
         profile.is_image_signature = str_to_bool(req.POST.get('is_image_signature'))
     if 'is_text_signature' in req.POST:
@@ -86,7 +91,8 @@ def update_signature(req: HttpRequest):
     return JsonResponse({
         'success': True, 'url': url, 
         'is_image_signature': profile.is_image_signature,
-        'is_text_signature': profile.is_text_signature
+        'is_text_signature': profile.is_text_signature,
+        'pseudonym': profile.pseudonym,
         })
 
 @login_required(login_url='registration')

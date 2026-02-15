@@ -9,11 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const msgError = document.getElementById('end-error')
     const textCheckbox = document.getElementById('text-checkbox')
     const imageCheckbox = document.getElementById('image-checkbox')
+    const pseudonymInput = document.getElementById('pseudonym')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
     let originalSrc = image.src
     let originalText = textCheckbox.checked
     let originalImage = imageCheckbox.checked
+    let originalPseudonym = pseudonymInput.value
     let signaturePad = null
     let signatureBlob = null
     let isChanging = false
@@ -31,6 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         dataContainer.querySelectorAll('input').forEach(input => {
             input.disabled = true
         })
+        pseudonymInput.value = originalPseudonym
+        pseudonymInput.nextElementSibling.classList.add('hidden')
         editorBtns.classList.add('hidden')
         canvas.classList.add('hidden')
         image.src = originalSrc
@@ -52,16 +56,18 @@ document.addEventListener('DOMContentLoaded', () => {
             msgError.textContent ='Завершіть редагування підпису'
             return
         }
-        if (!signatureBlob && textCheckbox.checked === originalText && imageCheckbox.checked === originalImage) {
+        if (!signatureBlob && textCheckbox.checked === originalText && imageCheckbox.checked === originalImage && pseudonymInput.value === originalPseudonym) {
             cancelEditionBtn.click()
             return
         }
+        if (!checkPseudonym()) return
         const formData = new FormData()
         if (signatureBlob) {
             formData.append('signature', signatureBlob, `signature_${Date.now()}.png`)
             URL.revokeObjectURL(tempObjectURL)
             tempObjectURL = null
         } 
+        if (pseudonymInput.value !== originalPseudonym) formData.append('pseudonym', pseudonymInput.value)
         if (textCheckbox.checked !== originalText) formData.append('is_text_signature', textCheckbox.checked)
         if (imageCheckbox.checked !== originalImage) formData.append('is_image_signature', imageCheckbox.checked)
         const res = await fetch('/profile/update-signature', {
@@ -69,10 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {'X-CSRFToken': token},
             body: formData
         })
-        const { url, is_text_signature, is_image_signature } = await res.json()
+        const { url, is_text_signature, is_image_signature, pseudonym } = await res.json()
         originalSrc = url
         originalImage = is_image_signature
         originalText = is_text_signature
+        originalPseudonym = pseudonym
         cancelEditionBtn.click()
     })
 
@@ -125,4 +132,28 @@ document.addEventListener('DOMContentLoaded', () => {
         signatureBlob = await (await fetch(dataUrl)).blob()
         showPreview()
     })
+
+    const MAX_LENGTH = 20
+    const MIN_LENGTH = 3
+
+    pseudonymInput.addEventListener('input', () => {
+        let value = pseudonymInput.value
+        value = value.replaceAll(/[^a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ_. ]/g, '')
+        value = value.replaceAll(/[ _]{2,}/g, ' ')
+        if (value.length > MAX_LENGTH) {
+            value = value.slice(0, MAX_LENGTH)
+        }
+        pseudonymInput.value = value
+        console.log(checkPseudonym())
+    })
+
+    function checkPseudonym() {
+        const value = pseudonymInput.value
+        if (value.length > MAX_LENGTH || value.length < MIN_LENGTH || !/^(?!\d+$)[a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+([ _][a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+)*$/.test(value)) {
+            pseudonymInput.nextElementSibling.classList.remove('hidden')
+            return false
+        }
+        pseudonymInput.nextElementSibling.classList.add('hidden')
+        return true
+    }
 })

@@ -11,6 +11,7 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='profiles', null=True, blank=True)
     photo_webp = ImageSpecField(processors=[ResizeToFill(width=100, height=100)], source='photo', format='WEBP', options={'quality': 75})
     birth_date = models.DateField(null=True, blank=True)
+    pseudonym = models.CharField(max_length=255, null=True, blank=True)
     signature = models.ImageField(upload_to='profiles/signature', null=True, blank=True)
     is_text_signature= models.BooleanField(default=False)
     is_image_signature= models.BooleanField(default=False)
@@ -59,10 +60,11 @@ class FriendRequest(models.Model):
                 
 class Album(models.Model):
     name = models.CharField(max_length=50)
-    theme = models.CharField(max_length=50)
-    year = models.IntegerField()
+    theme = models.CharField(max_length=50, null=True, blank=True)
+    year = models.IntegerField(null=True, blank=True)
     profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='albums')
     is_shown = models.BooleanField(default=True)
+    is_special = models.BooleanField(default=False)
 
     def __str__(self):
         return f'User - {self.profile.user.username}, album - {self.name}, {self.year} year'

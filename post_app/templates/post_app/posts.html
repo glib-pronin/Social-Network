@@ -9,9 +9,11 @@
                     {% else %}
                         <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                     {% endif %}
-                    <span>{{ post.author.username|slice:"1:" }}</span>
+                    {% if post.author.profile.is_text_signature and post.author.profile.pseudonym %}
+                        <span>{{ post.author.profile.pseudonym }}</span>
+                    {% endif %}
                 </div>
-                {% if post.author.profile.signature %}
+                {% if post.author.profile.is_image_signature and post.author.profile.signature %}
                     <img src="{{ post.author.profile.signature.url }}" alt="" class="signature">
                 {% endif %}
             </div>
