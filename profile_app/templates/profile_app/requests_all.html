@@ -24,8 +24,8 @@
             {% for friend_request in user.profile.received_requests.all|slice:6 %}
                 <div class="friends-section-card" data-id="{{ friend_request.from_profile.id }}">
                     <div class="user-info">
-                        {% if friend_request.from_profile.photo %}
-                            <img src="{{ friend_request.from_profile.photo.url }}" alt="Profile photo" class="avatar">
+                        {% if friend_request.from_profile.photo.image %}
+                            <img src="{{ friend_request.from_profile.photo.image.url }}" alt="Profile photo" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}

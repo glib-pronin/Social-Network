@@ -4,8 +4,8 @@
         <div class="author-line">
             <div class="author-info">
                 <div class="user-wrapper">
-                    {% if post.author.profile.photo %}
-                        <img src="{{ post.author.profile.photo_webp.url }}" alt="" class="avatar">
+                    {% if post.author.profile.photo.image %}
+                        <img src="{{ post.author.profile.photo.image_webp.url }}" alt="" class="avatar">
                     {% else %}
                         <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                     {% endif %}

@@ -1,3 +1,4 @@
+from django.utils import timezone
 import re
 
 def str_to_bool(value: str):
@@ -23,10 +24,30 @@ def make_recommendation_list(user, limit=None):
     return recommendation_list
 
 
-MAX_LENGTH = 20
-MIN_LENGTH = 3
+MAX_PS_LENGTH = 20
+MIN_PS_LENGTH = 3
 
 def is_valid_pseudonym(pseudonym):
-    if len(pseudonym) < MIN_LENGTH or len(pseudonym) > MAX_LENGTH or not re.match(r'^(?!\d+$)[a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+([ _][a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+)*$', pseudonym):
+    if len(pseudonym) < MIN_PS_LENGTH or len(pseudonym) > MAX_PS_LENGTH or not re.match(r'^(?!\d+$)[a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+([ _][a-zA-Z0-9а-яА-ЯёЁіІїЇєЄґҐ]+)*$', pseudonym):
         return False
     return True
+
+
+MIN_DATA_LENGTH = 3
+MAX_DATA_LENGTH = 50
+MIN_YEAR = 1900
+
+def is_valid_album_data(name, theme, year):
+    if not (MIN_DATA_LENGTH < len(name) < MAX_DATA_LENGTH):
+        return False
+    if not (MIN_DATA_LENGTH < len(theme) < MAX_DATA_LENGTH):
+        return False
+    current_year = timezone.now().year
+    try: 
+        year = int(year)
+        if year < MIN_YEAR or year > current_year:
+            return False
+    except (TypeError, ValueError):
+        return False
+    return True
+    

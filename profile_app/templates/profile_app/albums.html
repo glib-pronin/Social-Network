@@ -3,38 +3,105 @@
 {% block links %}
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'profile_app/css/albums.css' %}">
 {% endblock %}
 {% block navigation-links %}
     <a href="{% url 'profile' %}" {% if request.path == "/profile/" %} class="selected" {% endif %}>Особиста інформація</a>
     <a href="{% url 'albums' %}" {% if request.path == "/profile/albums" %} class="selected" {% endif %}>Альбоми</a>
 {% endblock %}
 {% block section %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зберегти</button>
-    </form>
-    {% for album im albums %}
-        <div>
-            <p>{{ album.name }}</p>
-            <p></p>
-            <p></p>
-        </div>
+    {% csrf_token %}
+    <input type="file" id="file-input-album" class="hidden" accept="image/*">
+    {% for album in user.profile.albums.all %}
+        {% if album.is_default %}
+            <div class="section">
+                <div class="first-line">
+                    <span>{{ album.name }}</span>
+                    <button id="add-photo-default" data-album-id="{{ album.id }}">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.66602 4.99984C1.66602 4.11578 2.01721 3.26794 2.64233 2.64281C3.26745 2.01769 4.11529 1.6665 4.99935 1.6665H14.9993C15.8834 1.6665 16.7312 2.01769 17.3564 2.64281C17.9815 3.26794 18.3327 4.11578 18.3327 4.99984V14.9998C18.3327 15.8839 17.9815 16.7317 17.3564 17.3569C16.7312 17.982 15.8834 18.3332 14.9993 18.3332H4.99935C4.11529 18.3332 3.26745 17.982 2.64233 17.3569C2.01721 16.7317 1.66602 15.8839 1.66602 14.9998V4.99984Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7.08333 9.16667C8.23393 9.16667 9.16667 8.23393 9.16667 7.08333C9.16667 5.93274 8.23393 5 7.08333 5C5.93274 5 5 5.93274 5 7.08333C5 8.23393 5.93274 9.16667 7.08333 9.16667Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12.105 10.5171L5 18.3329H15.1108C15.9655 18.3329 16.7851 17.9934 17.3895 17.3891C17.9938 16.7847 18.3333 15.9651 18.3333 15.1104V14.9996C18.3333 14.6113 18.1875 14.4621 17.925 14.1746L14.5667 10.5121C14.4101 10.3414 14.2198 10.2051 14.0076 10.1121C13.7955 10.019 13.5664 9.97121 13.3347 9.97168C13.1031 9.97215 12.8741 10.0209 12.6624 10.1148C12.4507 10.2087 12.2608 10.3457 12.105 10.5171Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Додати фото</span>
+                    </button>
+                </div>
+                <div class="album-body">
+                    {% for photo in album.images.all %}
+                        <div class="album-photo">
+                            <img src="{{ photo.image_webp.url }}" alt="">
+                            <button class="delete-photo delete-default" data-photo-id="{{ photo.id }}">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3.33398 5.83333H16.6673M8.33398 9.16667V14.1667M11.6673 9.16667V14.1667M4.16732 5.83333L5.00065 15.8333C5.00065 16.2754 5.17625 16.6993 5.48881 17.0118C5.80137 17.3244 6.22529 17.5 6.66732 17.5H13.334C13.776 17.5 14.1999 17.3244 14.5125 17.0118C14.8251 16.6993 15.0007 16.2754 15.0007 15.8333L15.834 5.83333M7.50065 5.83333V3.33333C7.50065 3.11232 7.58845 2.90036 7.74473 2.74408C7.90101 2.5878 8.11297 2.5 8.33398 2.5H11.6673C11.8883 2.5 12.1003 2.5878 12.2566 2.74408C12.4129 2.90036 12.5007 3.11232 12.5007 3.33333V5.83333" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            {% include 'profile_app/album_pattern.html' %}
+        {% endif %}
     {% endfor %}
+    <div class="section" id="add-new-album-block">
+        <div class="first-line">
+            {% if user.profile.albums.count > 1 %}
+                <span class="msg-to-user">Створіть новий альбом</span>
+            {% else %}
+                <span class=" ">Немає ще жодного альбому</span>
+            {% endif %}
+            <button id="add-new-album">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.4902 11.0801H11.0816V16.4887C11.0816 16.7756 10.9676 17.0508 10.7647 17.2536C10.5619 17.4565 10.2867 17.5705 9.99984 17.5705C9.71294 17.5705 9.4378 17.4565 9.23494 17.2536C9.03208 17.0508 8.91811 16.7756 8.91811 16.4887V11.0801H3.50946C3.22257 11.0801 2.94743 10.9661 2.74457 10.7633C2.5417 10.5604 2.42773 10.2853 2.42773 9.99837C2.42773 9.71148 2.5417 9.43634 2.74457 9.23348C2.94743 9.03061 3.22257 8.91664 3.50946 8.91664H8.91811V3.508C8.91811 3.22111 9.03208 2.94596 9.23494 2.7431C9.4378 2.54024 9.71294 2.42627 9.99984 2.42627C10.2867 2.42627 10.5619 2.54024 10.7647 2.7431C10.9676 2.94596 11.0816 3.22111 11.0816 3.508V8.91664H16.4902C16.7771 8.91664 17.0522 9.03061 17.2551 9.23348C17.458 9.43634 17.5719 9.71148 17.5719 9.99837C17.5719 10.2853 17.458 10.5604 17.2551 10.7633C17.0522 10.9661 16.7771 11.0801 16.4902 11.0801Z" fill="#543C52"/>
+                </svg>
+                <span class="desktop">Створити альбом</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-container hidden" id="album-modal">
+        <form class="modal-body">
+            <div class="form-header">
+                <button class="close-modal" type="button">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.49539 11.0253L5.6709 7.20077L1.84641 11.0253C1.64355 11.2281 1.3684 11.3421 1.08151 11.3421C0.794618 11.3421 0.519476 11.2281 0.316613 11.0253C0.113749 10.8224 -0.000218546 10.5473 -0.000218546 10.2604C-0.000218208 9.97347 0.11375 9.69833 0.316613 9.49546L4.1411 5.67097L0.316613 1.84648C0.113749 1.64362 -0.000217871 1.36848 -0.000217745 1.08159C-0.000217634 0.794693 0.113749 0.519552 0.316613 0.316688C0.519476 0.113824 0.794618 -0.000142783 1.08151 -0.000142893C1.3684 -0.00014302 1.64354 0.113824 1.84641 0.316688L5.6709 4.14118L9.49539 0.316687C9.69825 0.113824 9.97339 -0.000143694 10.2603 -0.000143926C10.5472 -0.00014381 10.8223 0.113824 11.0252 0.316687C11.228 0.519551 11.342 0.794693 11.342 1.08158C11.342 1.36848 11.228 1.64362 11.0252 1.84648L7.20069 5.67097L11.0252 9.49546C11.228 9.69833 11.342 9.97347 11.342 10.2604C11.342 10.5473 11.228 10.8224 11.0252 11.0253C10.8223 11.2281 10.5472 11.3421 10.2603 11.3421C9.97339 11.3421 9.69825 11.2281 9.49539 11.0253Z" fill="black"/>
+                    </svg>
+                </button>
+                <h3 class="form-text">Створити альбом</h3>
+            </div>
+            <div class="inputs">
+                <div class="input-container">
+                    <label for="name">Назва альбому</label>
+                    <input id="name" type="text" name="name" placeholder="Введіть назву альбому">
+                    <p class="error-msg hidden">Назва албьому повинна містити 3-50 символів</p>
+                </div>
+                <div class="input-container">
+                    <label for="theme">Тема альбому</label>
+                    <input id="theme" type="text" name="theme" placeholder="Введіть тему альбому">
+                    <p class="error-msg hidden">Тема албьому повинна містити 3-50 символів</p>
+                </div>
+                <div class="input-container">
+                    <label for="year">Рік альбому</label>
+                    <input id="year" type="text" name="year" placeholder="Введіть рік альбому">
+                    <p class="error-msg hidden">Вкажіть коректний рік: від 1900 до поточного</p>
+                </div>
+            </div>
+            <div class="btns-container">
+                <button class="modal-btn btn2" type="button" id="album-modal-cancel-btn">Скасувати</button>
+                <button class="modal-btn btn1" type="button" id="album-modal-save-btn">Зберегти</button>
+            </div>
+            <div class="loading hidden">
+                <div class="spinner"></div>
+                <span>Обробка даних...</span>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <script src="{% static 'js/modal.js' %}"></script>
-    <script src="{% static 'post_app/js/debounce.js' %}"></script>
-    <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
-    <script src="{% static 'user_app/js/password.js' %}"></script>
-    <script src="{% static 'user_app/js/digitInputs.js' %}"></script>
-    <script src="{% static 'user_app/js/spinner.js' %}"></script>
-    <script src="{% static 'profile_app/js/enableEditing.js' %}"></script>
-    <script src="{% static 'profile_app/js/editCard.js' %}"></script>
-    <script src="{% static 'profile_app/js/updateCredentials.js' %}"></script>
-    <script src="{% static 'profile_app/js/updatePassword.js' %}"></script>
-    <script src="{% static 'profile_app/js/editSignature.js' %}"></script>
+    <script src="{% static 'profile_app/js/albums.js' %}"></script>
+    <script src="{% static 'profile_app/js/albumFormValidation.js' %}"></script>
+    <script src="{% static 'profile_app/js/createSVG.js' %}"></script>
 {% endblock %}

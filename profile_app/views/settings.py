@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code
 from post_app.utils import is_username_available
 from user_app.models import EmailVerification
-from profile_app.models import Profile
+from profile_app.models import Profile, AlbumImage, Album
 from ..utils import str_to_bool, is_valid_pseudonym
 from datetime import date
 import re
@@ -108,13 +108,13 @@ def update_personal_data(req: HttpRequest):
     req.user.save()
     if avatar:
         profile, _ = Profile.objects.get_or_create(user=req.user)
-        if profile.photo:
-            profile.photo.delete(save=False)
-        profile.photo = avatar
-        profile.save()
+        default_album = profile.albums.filter(is_default=True).first()
+        if default_album:
+            profile.photo = AlbumImage.objects.create(album=default_album, image=avatar, is_shown=False)
+            profile.save()
     return JsonResponse({'success': True,'data': {
         'username': req.user.username,
-        'photo_url': req.user.profile.photo.url if req.user.profile.photo else None
+        'photo_url': req.user.profile.photo.image.url if req.user.profile.photo else None
         }})
 
 @login_required(login_url='registration')

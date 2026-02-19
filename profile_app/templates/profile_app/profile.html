@@ -52,8 +52,8 @@
         <div class="content">
             <div class="photo-container">
                 <h3 class="hidden-part hidden">Оберіть або завантажте фото профілю</h3>
-                {% if user.profile.photo %}
-                    <img src="{{ user.profile.photo.url }}" alt="Profile photo" class="avatar">
+                {% if user.profile.photo.image %}
+                    <img src="{{ user.profile.photo.image.url }}" alt="Profile photo" class="avatar">
                 {% else %}
                     <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                 {% endif %}
@@ -332,7 +332,7 @@
                     <input type="checkbox" name="" id="text-checkbox" {% if user.profile.is_text_signature %} checked {% endif %} disabled>
                     <label for="text-checkbox" id="text-signature">Псевдонім</label>
                 </div>
-                <input id="pseudonym" type="text" name="pseudonym" placeholder="Введіть псевдонім" value="{{ user.profile.pseudonym }}" data-value="" disabled>
+                <input id="pseudonym" type="text" name="pseudonym" placeholder="Введіть псевдонім" value="{{ user.profile.pseudonym|default:'' }}" data-value="" disabled>
                 <p class="error-msg hidden">Введіть псевдонім, він може складатись з латинських та криличних літер, цифр та нижнього підкреслення (не вкінці чи напочатку), від 3 до 20 символів</p>
             </div>
             <div class="data-container disabled">

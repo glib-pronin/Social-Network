@@ -1,0 +1,93 @@
+.album-body {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.album-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.delete-photo, .toggle-photo {
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    border: 1px solid var(--color-purple);
+    background-color: var(--color-white);
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.toggle-photo {
+    right: 60px;
+}
+
+.delete-photo:hover, .toggle-photo:hover {
+    background-color: var(--color-plum);
+}
+
+.album-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.album-theme {
+    display: flex;
+    gap: 16px;
+}
+
+.album-theme span:last-child {
+    color: var(--color-blue);
+}
+
+.caption {
+    font-weight: 500;
+}
+
+.add-new-block {
+    width: 200px;
+    height: 200px;
+    box-sizing: border-box;
+    border: 1px dashed var(--color-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+#album-modal form {
+    width: 431px;
+    padding-top: 24px;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+.album-btns {
+    gap: 24px;
+}
+
+.album-btns svg {
+    cursor: pointer;
+}
+
+@media (max-width: 680px) {
+    #album-modal form {
+        width: 370px;
+    }
+
+    #album-modal form .form-text {
+        text-align: start;
+    }
+}

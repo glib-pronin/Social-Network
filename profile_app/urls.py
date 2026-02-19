@@ -4,6 +4,11 @@ from .views import *
 urlpatterns = [
     path('', view=render_profile, name='profile'),
     path('albums', view=render_albums, name='albums'),
+    path('albums/add-photo', view=add_photo, name='add_photo'),
+    path('albums/delete-photo/<int:photo_id>', view=delete_photo, name='delete_photo'),
+    path('albums/create-album', view=create_album, name='create_album'),
+    path('albums/toggle-album/<int:album_id>', view=toggle_album, name='toggle_album'),
+    path('albums/toggle-photo/<int:photo_id>', view=toggle_photo, name='toggle_photo'),
     path('update-credentials', view=update_credentials, name='update_credentials'),
     path('update-password', view=update_passwords, name='update_password'),
     path('update-signature', view=update_signature, name='update_signature'),

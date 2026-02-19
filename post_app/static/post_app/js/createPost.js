@@ -5,10 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const addTagContainer = document.getElementById('save-tag')
     const saveBtn = addTagContainer.querySelector('button')
     const newTagInput = saveBtn.previousElementSibling
-    const tagList = document.querySelectorAll('.tag')
+    let tagList = document.querySelectorAll('.tag')
     const tagContainer = document.querySelector('.tags-container')
     const tagListSpan = document.querySelector('.selected-tags-list')
-    let textForTagListSpan = []
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
     const linksContainer = document.getElementById('links')
@@ -24,9 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         await cleanForm(modal)
         modal.classList.remove('hidden')
         const textarea = modal.querySelector('textarea') 
-        textarea.value = openForm.previousElementSibling.value
+        textarea.value = openForm?.previousElementSibling.value || ''
         textarea.style.height = '20px'
-        openForm.previousElementSibling.value = '' 
+        if (openForm) openForm.previousElementSibling.value = '' 
         textForTagListSpan = []
         tagListSpan.classList.add('hidden')
     }
@@ -67,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tagName = newTagInput.value
         addTagBtn.classList.remove('hidden')
         addTagContainer.classList.add('hidden')
+        tagList = document.querySelectorAll('.tag')
         const isTagExist = Array.from(tagList).some(tag => tag.textContent === tagName)
         if (tagName.trim() !== '#' && !isTagExist && tagName.trim()) {
             const res = await fetch('/create-tag', {

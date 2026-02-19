@@ -170,7 +170,7 @@ a .nav-icon-container {
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 main {
@@ -222,8 +222,14 @@ footer a.selected {
 }
 
 .empty-msg, .result-msg {
-    font-size: 18px;
-    font-weight: 500;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.horizontal-line {
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-silver);
 }
 
 @media (max-width: 1060px) {

@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault()
-        if (!isUsernameAvailable) return
+        console.log('...');
+        
+        if (!isUsernameAvailable) {
+            usernameInput.nextElementSibling.classList.remove('hidden')
+            return
+        }
         const firstName = form.elements.firstName.value
         const lastName = form.elements.lastName.value
         const username = usernameInput.value
@@ -43,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     generator.addEventListener('click', async () => {
         const firstName = form.elements.firstName.value
+        usernameInput.nextElementSibling.classList.add('hidden')
         if (!firstName) {
             form.elements.firstName.nextElementSibling.classList.remove('hidden')
             return

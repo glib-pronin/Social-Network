@@ -25,7 +25,7 @@
     font-weight: 500;
 }
 
-.first-line button, .verify-email-btn, .signature-btn {
+.first-line button, .verify-email-btn, .signature-btn, .add-new-photo {
     box-sizing: border-box;
     padding: 10px;
     border: 1px solid var(--color-indigo);
@@ -50,7 +50,7 @@
     margin-top: 10px;
 }
 
-.first-line button:hover, .verify-email-btn:hover, .signature-btn:hover {
+.first-line button:hover, .verify-email-btn:hover, .signature-btn:hover, .add-new-photo:hover {
     background-color: var(--color-plum);
 }
 

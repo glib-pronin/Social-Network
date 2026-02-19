@@ -31,8 +31,8 @@
                     <div class="info-block-content">
                         {% for friend_request in user.profile.received_requests.all|slice:3 %}
                             <div class="info-block-content-element">
-                                {% if friend_request.from_profile.photo %}
-                                    <img src="{{ friend_request.from_profile.photo.url }}" alt="Profile photo" class="avatar">
+                                {% if friend_request.from_profile.photo.image %}
+                                    <img src="{{ friend_request.from_profile.photo.image.url }}" alt="Profile photo" class="avatar">
                                 {% else %}
                                     <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                                 {% endif %}
@@ -66,7 +66,7 @@
             <div class="posts" id="posts-container">
                 {% include 'post_app/posts.html' %}
             </div>
-            <div id="post-loader"></div>
+            <div id="post-loader" data-has-more="{{ post_content.has_next }}"></div>
         </div>
     </div>
     {% if first_entry %}
@@ -76,7 +76,6 @@
 {% block scripts %}
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'post_app/js/loadPost.js' %}"></script>
-    <script src="{% static 'post_app/js/photoGrid.js' %}"></script>
     <script src="{% static 'post_app/js/debounce.js' %}"></script>
     <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
     <script src="{% static 'post_app/js/firstEntry.js' %}"></script>

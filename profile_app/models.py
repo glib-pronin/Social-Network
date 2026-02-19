@@ -4,12 +4,12 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit
+import os, uuid
 
 # Create your models here.
 
 class Profile(models.Model):
-    photo = models.ImageField(upload_to='profiles', null=True, blank=True)
-    photo_webp = ImageSpecField(processors=[ResizeToFill(width=100, height=100)], source='photo', format='WEBP', options={'quality': 75})
+    photo = models.ForeignKey(to='AlbumImage', on_delete=models.SET_NULL, null=True, blank=True, related_name='as_avatar_for')
     birth_date = models.DateField(null=True, blank=True)
     pseudonym = models.CharField(max_length=255, null=True, blank=True)
     signature = models.ImageField(upload_to='profiles/signature', null=True, blank=True)
@@ -64,13 +64,18 @@ class Album(models.Model):
     year = models.IntegerField(null=True, blank=True)
     profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='albums')
     is_shown = models.BooleanField(default=True)
-    is_special = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
 
     def __str__(self):
         return f'User - {self.profile.user.username}, album - {self.name}, {self.year} year'
     
+def upload_image(instance, filename):
+    ext = filename.split('.')[-1]
+    new_filename = f'{uuid.uuid4()}.{ext}'
+    return os.path.join('albums/', new_filename)
+
 class AlbumImage(models.Model):
-    image = models.ImageField(upload_to='albums')
+    image = models.ImageField(upload_to=upload_image)
     image_webp = ImageSpecField(processors=[ResizeToFit(width=400, height=400)], source='image', format='WEBP', options={'quality': 75})
     album = models.ForeignKey(to=Album, on_delete=models.CASCADE, related_name='images')
     is_shown = models.BooleanField(default=True)

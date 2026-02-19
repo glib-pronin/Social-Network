@@ -16,6 +16,9 @@ async function cleanForm(modal) {
     })
 }
 
+let textForTagListSpan = []
+
+
 function createTag({tagName, id}, selected = true) {
     const addTagBtn = document.getElementById('add-tag')
     const tagContainer = document.querySelector('.tags-container')
@@ -23,6 +26,12 @@ function createTag({tagName, id}, selected = true) {
     tag.textContent = '#' + tagName.replace('#', '')
     tag.classList.add('tag')
     tag.classList.toggle('selected', selected)
+    if (selected) {
+        const tagListSpan = document.querySelector('.selected-tags-list')
+        textForTagListSpan.push(tag.textContent)
+        tagListSpan.textContent = textForTagListSpan.join(' ')
+        tagListSpan.classList.remove('hidden')
+    }
     tag.dataset.id = id
     tagContainer.insertBefore(tag, addTagBtn)
 }

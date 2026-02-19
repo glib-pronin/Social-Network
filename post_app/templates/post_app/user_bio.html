@@ -1,8 +1,8 @@
 {% load static %}
 <div class="user-bio standart-border">
     <div class="user-bio-info">
-        {% if user.profile.photo %}
-            <img src="{{ user.profile.photo.url }}" alt="" class="avatar">
+        {% if user.profile.photo.image %}
+            <img src="{{ user.profile.photo.image.url }}" alt="" class="avatar">
         {% else %}
             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
         {% endif %}

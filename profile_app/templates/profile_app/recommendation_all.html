@@ -22,8 +22,8 @@
             {% for potential_friend in recommendation_list %}
                 <div class="friends-section-card" data-id="{{ potential_friend.id }}">
                     <div class="user-info">
-                        {% if potential_friend.profile.photo %}
-                            <img src="{{ potential_friend.photo.url }}" alt="Profile photo" class="avatar">
+                        {% if potential_friend.profile.photo.image %}
+                            <img src="{{ potential_friend.photo.image.url }}" alt="Profile photo" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}
