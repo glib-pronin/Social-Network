@@ -51,8 +51,57 @@
     color: var(--color-purple);
 }
 
+.modal-container form.confirm-action {
+    width: 488px;
+    box-sizing: border-box;
+}
+
+.menu-container {
+    width: 343px;
+    box-sizing: border-box;
+    padding-top: 16px;
+    background-color: var(--color-plum);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.menu-container span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 16px 0 16px;
+    font-weight: 500;
+}
+
+.menu-container span.clickable {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 16px;
+}
+
+.menu-container span.clickable:hover {
+    background-color: rgb(183, 177, 192);
+}
+
+.close-menu {
+    background-color: inherit;
+    border: none;
+    align-self: flex-end;
+    margin-right: 16px;
+    cursor: pointer;
+}
+
 @media (max-width: 680px) {
     .modal-container form .form-text {
         font-size: 24px;
+    }
+
+    .modal-container form.confirm-action {
+        width: 343px;
     }
 }

@@ -109,11 +109,6 @@
     color: var(--color-orange);
 }
 
-form {
-    width: 488px;
-    box-sizing: border-box;
-}
-
 form .btns-container {
     align-self: flex-end;
 }
@@ -128,13 +123,6 @@ form h3 {
     .friends-section-content:has(.friends-section-card) {
         justify-content: center;
     }   
-}
-
-@media (max-width: 680px) {
-    form {
-        width: 343px;
-    }
-
 }
 
 @media (max-width: 642px) {

@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         albumModal.classList.remove('hidden')
     })
     // Обробники кнопок форми
-    albumModal.querySelector('#album-modal-save-btn').addEventListener('click', (e) => albumCb?.(e))
+    albumModal.addEventListener('submit', (e) => albumCb?.(e))
     albumModal.querySelector('#album-modal-cancel-btn').addEventListener('click', () => {
         albumCb = null
         albumModal.classList.add('hidden')
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.closest('.delete-photo')) {
             const deleteBtn = e.target.closest('.delete-photo')
             const photoId = deleteBtn.dataset.photoId
-            const res = await fetch(`/profile/albums/delete-photo/${photoId}`, { method: 'POST', headers: {'X-CSRFToken': token}})
+            const res = await fetch(`/profile/albums/delete-photo/${photoId}`, { method: 'POST', headers: {'X-CSRFToken': token} })
             const {success} = await res.json()
             if (success) {
                 deleteBtn.parentElement.remove()
@@ -114,22 +114,35 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (e.target.closest('.toggle-photo')) {
             const togglePhoto = e.target.closest('.toggle-photo')
             const photoId = togglePhoto.dataset.photoId
-            toggleAlbumElement(togglePhoto, `/profile/albums/toggle-photo/${photoId}`, '.toggle-photo.hidden')
+            toggleAlbumElement(token, togglePhoto, `/profile/albums/toggle-photo/${photoId}`, '.toggle-photo.hidden')
         }
 
         else if (e.target.closest('.toggle-album')) {
             const toggleAlbum = e.target.closest('.toggle-album')
             const albumId = toggleAlbum.dataset.albumId
-            toggleAlbumElement(toggleAlbum, `/profile/albums/toggle-album/${albumId}`, '.toggle-album.hidden')
+            toggleAlbumElement(token, toggleAlbum, `/profile/albums/toggle-album/${albumId}`, '.toggle-album.hidden', true)
+        }
+
+        else if (e.target.closest('.open-menu')) {
+            const section = e.target.closest('.section')
+            section.querySelector('.menu-container').classList.remove('hidden')
+        }
+
+        else if (e.target.closest('.close-menu')) {
+            const section = e.target.closest('.section')
+            section.querySelector('.menu-container').classList.add('hidden')
+        }
+        
+        else if (e.target.closest('.update-menu')) {   
+            albumCb = handleUpdateAlbum(e, albumModal, token)
+        }
+        
+        else if (e.target.closest('.delete-menu')) {   
+            const section = e.target.closest('.section')
+            const confirmModal = document.getElementById('confirm-delete-album-modal')
+            confirmModal.classList.remove('hidden')
+            confirmModal.dataset.albumId = section.dataset.albumId
+            confirmModal.sectionToDelete = section
         }
     })
-
-    async function toggleAlbumElement(element, url, cssClass) {
-        const res = await fetch(url, {method: 'POST', headers: {'X-CSRFToken': token}})
-        const { success } = await res.json()
-        if (success) {
-            element.parentElement.querySelector(cssClass).classList.remove('hidden')
-            element.classList.add('hidden')
-        }
-    }
 })

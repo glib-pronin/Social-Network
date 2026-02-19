@@ -14,7 +14,7 @@
 {% endblock %}
 {% block section %}
     {% csrf_token %}
-    <input type="file" id="file-input-album" class="hidden" accept="image/*">
+    <input type="file" id="file-input-album" class="hidden" accept="image/*" multiple>
     {% for album in user.profile.albums.all %}
         {% if album.is_default %}
             <div class="section">
@@ -51,7 +51,7 @@
             {% if user.profile.albums.count > 1 %}
                 <span class="msg-to-user">Створіть новий альбом</span>
             {% else %}
-                <span class=" ">Немає ще жодного альбому</span>
+                <span class="msg-to-user">Немає ще жодного альбому</span>
             {% endif %}
             <button id="add-new-album">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,8 +89,29 @@
                 </div>
             </div>
             <div class="btns-container">
-                <button class="modal-btn btn2" type="button" id="album-modal-cancel-btn">Скасувати</button>
-                <button class="modal-btn btn1" type="button" id="album-modal-save-btn">Зберегти</button>
+                <button class="modal-btn btn2 cancel-btn" type="button" id="album-modal-cancel-btn">Скасувати</button>
+                <button class="modal-btn btn1" type="submit" id="album-modal-save-btn">Зберегти</button>
+            </div>
+            <div class="loading hidden">
+                <div class="spinner"></div>
+                <span>Обробка даних...</span>
+            </div>
+        </form>
+    </div>
+     <div class="modal-container hidden" id="confirm-delete-album-modal">
+        <form class="modal-body confirm-action">
+            <div class="form-header">
+                <button class="close-modal" type="button">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.49539 11.0253L5.6709 7.20077L1.84641 11.0253C1.64355 11.2281 1.3684 11.3421 1.08151 11.3421C0.794618 11.3421 0.519476 11.2281 0.316613 11.0253C0.113749 10.8224 -0.000218546 10.5473 -0.000218546 10.2604C-0.000218208 9.97347 0.11375 9.69833 0.316613 9.49546L4.1411 5.67097L0.316613 1.84648C0.113749 1.64362 -0.000217871 1.36848 -0.000217745 1.08159C-0.000217634 0.794693 0.113749 0.519552 0.316613 0.316688C0.519476 0.113824 0.794618 -0.000142783 1.08151 -0.000142893C1.3684 -0.00014302 1.64354 0.113824 1.84641 0.316688L5.6709 4.14118L9.49539 0.316687C9.69825 0.113824 9.97339 -0.000143694 10.2603 -0.000143926C10.5472 -0.00014381 10.8223 0.113824 11.0252 0.316687C11.228 0.519551 11.342 0.794693 11.342 1.08158C11.342 1.36848 11.228 1.64362 11.0252 1.84648L7.20069 5.67097L11.0252 9.49546C11.228 9.69833 11.342 9.97347 11.342 10.2604C11.342 10.5473 11.228 10.8224 11.0252 11.0253C10.8223 11.2281 10.5472 11.3421 10.2603 11.3421C9.97339 11.3421 9.69825 11.2281 9.49539 11.0253Z" fill="black"/>
+                    </svg>
+                </button>
+                <h3 class="form-text">Підтвердити дію</h3>
+            </div>
+            <p>Ви дійсно хчоете видалити альбом?</p>
+            <div class="btns-container">
+                <button class="modal-btn btn2 cancel-btn" type="button" id="cancel-action-btn">Скасувати</button>
+                <button class="modal-btn btn1" type="button" id="accept-action-btn">Підтвердити</button>
             </div>
             <div class="loading hidden">
                 <div class="spinner"></div>
@@ -101,7 +122,10 @@
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'js/modal.js' %}"></script>
-    <script src="{% static 'profile_app/js/albums.js' %}"></script>
+    <script src="{% static 'profile_app/js/toggleAlbumElement.js' %}"></script>
+    <script src="{% static 'profile_app/js/updateAlbum.js' %}"></script>
     <script src="{% static 'profile_app/js/albumFormValidation.js' %}"></script>
     <script src="{% static 'profile_app/js/createSVG.js' %}"></script>
+    <script src="{% static 'profile_app/js/albums.js' %}"></script>
+    <script src="{% static 'profile_app/js/deleteAlbum.js' %}"></script>
 {% endblock %}

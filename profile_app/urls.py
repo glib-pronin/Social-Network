@@ -7,6 +7,8 @@ urlpatterns = [
     path('albums/add-photo', view=add_photo, name='add_photo'),
     path('albums/delete-photo/<int:photo_id>', view=delete_photo, name='delete_photo'),
     path('albums/create-album', view=create_album, name='create_album'),
+    path('albums/update-album/<int:album_id>', view=update_album, name='update_album'),
+    path('albums/delete-album/<int:album_id>', view=delete_album, name='delete_album'),
     path('albums/toggle-album/<int:album_id>', view=toggle_album, name='toggle_album'),
     path('albums/toggle-photo/<int:photo_id>', view=toggle_photo, name='toggle_photo'),
     path('update-credentials', view=update_credentials, name='update_credentials'),
