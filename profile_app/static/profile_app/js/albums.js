@@ -19,11 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     // Обробка завантаження фото
     fileInput.addEventListener('change', async (e) => {
-        const file = e.target.files[0]
+        const files = e.target.files
         console.log((e.target));      
-        if (!file) return
+        if (!files.length) return
         const formData = new FormData()
-        formData.append('photo', file)
+        for (const file of files) {
+            formData.append('photos', file)
+        }
         formData.append('album_id', fileInput.dataset.albumId)
         const res = await fetch('/profile/albums/add-photo', {
             method: 'POST',
@@ -32,32 +34,39 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: formData
         })
-        const {success, photoUrl, photoId, isShown} = await res.json()
+        const {success, photos} = await res.json()
         if (success) {
-            const imgWrapper = document.createElement('div')
-            imgWrapper.classList.add('album-photo')
-            const img = document.createElement('img')
-            img.src = photoUrl
-            const deleteBtn = document.createElement('button')
-            deleteBtn.append(createTrashIcon())
-            deleteBtn.classList.add('delete-photo')
-            deleteBtn.dataset.photoId = photoId
-            imgWrapper.append(img, deleteBtn)
-            if (albumType === 'default') {
-                imgContainer.append(imgWrapper)
-            } else {
-                const hideBtn = document.createElement('button')
-                hideBtn.classList.add('toggle-photo')
-                hideBtn.classList.toggle('hidden', !isShown)
-                hideBtn.append(createHideSVG())
-                const showBtn = document.createElement('button')
-                showBtn.classList.add('toggle-photo')
-                showBtn.classList.toggle('hidden', isShown)
-                showBtn.append(createShowSVG())
-                imgWrapper.append(hideBtn, showBtn)
-                const child = imgContainer.querySelector('.add-new-block')
-                if (child) imgContainer.insertBefore(imgWrapper, child)
-            }
+            photos.forEach(({photoUrlWebp, photoId, isShown, width, height, photoUrl}) => {
+                const imgWrapper = document.createElement('div')
+                imgWrapper.classList.add('album-photo')
+                const a = document.createElement('a')
+                a.href = photoUrl
+                a.dataset.pswpWidth = width
+                a.dataset.pswpHeight = height
+                const img = document.createElement('img')
+                img.src = photoUrlWebp
+                const deleteBtn = document.createElement('button')
+                deleteBtn.append(createTrashIcon())
+                deleteBtn.classList.add('delete-photo')
+                deleteBtn.dataset.photoId = photoId
+                a.append(img)
+                imgWrapper.append(a, deleteBtn)
+                if (albumType === 'default') {
+                    imgContainer.append(imgWrapper)
+                } else {
+                    const hideBtn = document.createElement('button')
+                    hideBtn.classList.add('toggle-photo')
+                    hideBtn.classList.toggle('hidden', !isShown)
+                    hideBtn.append(createHideSVG())
+                    const showBtn = document.createElement('button')
+                    showBtn.classList.add('toggle-photo')
+                    showBtn.classList.toggle('hidden', isShown)
+                    showBtn.append(createShowSVG())
+                    imgWrapper.append(hideBtn, showBtn)
+                    const child = imgContainer.querySelector('.add-new-block')
+                    if (child) imgContainer.insertBefore(imgWrapper, child)
+                }
+            })
 
         }
         imgContainer = null

@@ -80,7 +80,7 @@
     width: 100%;
 }
 
-.post-image-item {
+.post-image-item, .post-images .post-image-row a {
     height: 327px;
     flex: 1 1 0;
 }

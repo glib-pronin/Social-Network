@@ -16,14 +16,17 @@ def render_albums(req: HttpRequest):
 @require_http_methods(["POST"])
 def add_photo(req: HttpRequest):
     album_id = req.POST.get('album_id')
-    photo_file = req.FILES.get('photo')
-    if not album_id or not photo_file:
+    photo_files = req.FILES.getlist('photos')
+    if not album_id or not photo_files:
         return JsonResponse({'success': False, 'error': 'invalid_payload'})
     album = Album.objects.filter(pk=album_id, profile=req.user.profile).first()
     if not album:
         return JsonResponse({'success': False, 'error': 'invalid_payload'})
-    photo = AlbumImage.objects.create(album=album, image=photo_file, is_shown=not album.is_default)
-    return JsonResponse({'success': True, 'photoUrl': photo.image_webp.url, 'photoId': photo.id, 'isShown': photo.is_shown})
+    created = []
+    for file in photo_files:
+        photo = AlbumImage.objects.create(album=album, image=file, is_shown=not album.is_default)
+        created.append({'photoUrlWebp': photo.image_webp.url, 'photoId': photo.id, 'isShown': photo.is_shown, 'width': photo.width, 'height': photo.height, 'photoUrl': photo.image.url})
+    return JsonResponse({'success': True, 'photos': created})
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])

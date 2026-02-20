@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}WORLD IT{% endblock %}</title>
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css">
     <link rel="icon" type="image/svg" href="{% static 'img/icon.svg' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
@@ -129,6 +130,9 @@
         </footer>
         {% include 'post_app/create_post.html' %}
     {% endif %}
+    <script src="https://unpkg.com/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
+    <script src="https://unpkg.com/photoswipe@5/dist/umd/photoswipe-lightbox.umd.min.js"></script>
+    <script src="{% static 'js/photos.js' %}"></script>
     <script src="{% static 'user_app/js/spinner.js' %}"></script>
     <script src="{% static 'post_app/js/cleanForm.js' %}"></script>
     <script src="{% static 'post_app/js/createPost.js' %}"></script>

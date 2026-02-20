@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit
+from PIL import Image
 import os, uuid
 
 # Create your models here.
@@ -79,6 +80,16 @@ class AlbumImage(models.Model):
     image_webp = ImageSpecField(processors=[ResizeToFit(width=400, height=400)], source='image', format='WEBP', options={'quality': 75})
     album = models.ForeignKey(to=Album, on_delete=models.CASCADE, related_name='images')
     is_shown = models.BooleanField(default=True)
+    width = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'Image - {self.id}, album - {self.album.name}, {self.album.year} year'
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image and not self.width:
+            img = Image.open(self.image.path)
+            self.width, self.height = img.size
+            img.close()
+            super().save()

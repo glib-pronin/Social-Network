@@ -48,13 +48,15 @@
                 </div>
             {% endif %}
             {% if post.images.count > 0 %}
-                <div class="post-images">
+                <div class="post-images post-gallery">
                     {% for img_row in post.get_images %}
                         <div class="post-image-row">
                             {% for img in img_row %}
+                            <a href="{{ img.image.url }}" data-pswp-width="{{ img.width }}" data-pswp-height="{{ img.height }}" >
                                 <div class="post-image-item">
                                     <img src="{{ img.image_webp.url }}" alt="">
                                 </div>
+                            </a>
                             {% endfor %}
                         </div>
                     {% endfor %}
