@@ -54,8 +54,8 @@
             {% for potential_friend in recommendation_list %}
                 <div class="friends-section-card" data-id="{{ potential_friend.id }}">
                     <div class="user-info">
-                        {% if potential_friend.profile.photo.image %}
-                            <img src="{{ potential_friend.photo.image.url }}" alt="Profile photo" class="avatar">
+                        {% if potential_friend.photo.image %}
+                            <img src="{{ potential_friend.photo.image_webp.url }}" alt="Profile photo" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}
@@ -82,8 +82,8 @@
             {% for friend in user.profile.friends.all reversed  %}
                 <div class="friends-section-card" data-id="{{ friend.id }}"">
                     <div class="user-info">
-                        {% if friend.profile.photo.image %}
-                            <img src="{{ friend.profile.photo.image.url }}" alt="Profile photo" class="avatar">
+                        {% if friend.photo.image %}
+                            <img src="{{ friend.photo.image_webp.url }}" alt="Profile photo" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}

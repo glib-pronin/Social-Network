@@ -66,6 +66,7 @@ class Album(models.Model):
     profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='albums')
     is_shown = models.BooleanField(default=True)
     is_default = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'User - {self.profile.user.username}, album - {self.name}, {self.year} year'
@@ -82,6 +83,7 @@ class AlbumImage(models.Model):
     is_shown = models.BooleanField(default=True)
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f'Image - {self.id}, album - {self.album.name}, {self.album.year} year'

@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function cancelVerification() {
-        await fetch('/profile/email-verification/cancel', { method: 'POST', headers: { 'X-CSRFToken': token} })
+        await fetch('/profile/settings/email-verification/cancel', { method: 'POST', headers: { 'X-CSRFToken': token} })
         emailVerified = false
         verificationActive = false
     }
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             payload[input.name] = input.value
         })
 
-        const res = await fetch('/profile/update-credentials', {
+        const res = await fetch('/profile/settings/update-credentials', {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
             body: JSON.stringify(payload)
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!checkEmail(inputData.email)) return
         successVerifing.classList.add('hidden')
         showSpinner(true, startVerifingBtn.parentElement)
-        const res = await fetch('/profile/email-verification/start', {
+        const res = await fetch('/profile/settings/email-verification/start', {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
             body: JSON.stringify({email: inputData.email.value.trim()})
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }   
         showSpinner(true, verifyForm)
-        const res = await fetch('/profile/email-verification/verify', {
+        const res = await fetch('/profile/settings/email-verification/verify', {
             method: 'POST',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
             body: JSON.stringify({code})

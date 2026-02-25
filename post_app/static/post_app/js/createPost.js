@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const openForm = document.getElementById('open-form')
     const openFormMobile = document.getElementById('open-create-post-mobile')
+    
+    const postsContainer = document.getElementById('posts-container')
+    const addNewPostToDOM = postsContainer?.dataset.myProfile === 'True' ? true : false
+    
 
     const openCreatePost = async (e) => {
         e.preventDefault()
@@ -136,16 +140,20 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             formData.append('positions', JSON.stringify(positions))
         }        
-        const res = await fetch('/create-post', {
+        const res = await fetch(`/create-post?my_profile=${addNewPostToDOM}`, {
             method: 'POST',
             headers: {'X-CSRFToken': token},
             body: formData 
         })
         const data = await res.json()
-        console.log(data);
-        
         if (data.success) {
             modal.classList.add('hidden')
+            if (addNewPostToDOM ) {
+                postsContainer.insertAdjacentHTML('afterbegin', data.html)
+            }
         }
     })
+
+    const textarea = document.getElementById('content')
+    textarea.parentElement.addEventListener('click', () => textarea.focus())
 })

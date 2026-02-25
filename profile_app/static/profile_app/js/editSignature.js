@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pseudonymInput = document.getElementById('pseudonym')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
-    let originalSrc = image.src
+    let originalSrc = image.getAttribute('src')
     let originalText = textCheckbox.checked
     let originalImage = imageCheckbox.checked
     let originalPseudonym = pseudonymInput.value
@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.classList.add('hidden')
         image.src = originalSrc
         image.classList.remove('not-saved')
-        image.classList.remove('hidden')
+        console.log(originalSrc);
+        
+        if (originalSrc) image.classList.remove('hidden')
         if (!originalSrc) image.classList.add('hidden')
         signatureBlob = null
         msgError.classList.add('hidden')
@@ -60,17 +62,19 @@ document.addEventListener('DOMContentLoaded', () => {
             cancelEditionBtn.click()
             return
         }
-        if (!checkPseudonym()) return
         const formData = new FormData()
         if (signatureBlob) {
             formData.append('signature', signatureBlob, `signature_${Date.now()}.png`)
             URL.revokeObjectURL(tempObjectURL)
             tempObjectURL = null
         } 
-        if (pseudonymInput.value !== originalPseudonym) formData.append('pseudonym', pseudonymInput.value)
+        if (pseudonymInput.value !== originalPseudonym) {
+            if (!checkPseudonym()) return
+            formData.append('pseudonym', pseudonymInput.value)
+        } 
         if (textCheckbox.checked !== originalText) formData.append('is_text_signature', textCheckbox.checked)
         if (imageCheckbox.checked !== originalImage) formData.append('is_image_signature', imageCheckbox.checked)
-        const res = await fetch('/profile/update-signature', {
+        const res = await fetch('/profile/settings/update-signature', {
             method: 'POST', 
             headers: {'X-CSRFToken': token},
             body: formData

@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from user_app.utils import get_data_from_json, User
 from .utils import generate_username, get_page_data
 from .models import *
+from profile_app.models import *
 import re
 
 # Create your views here.
@@ -19,13 +20,20 @@ def render_main(req: HttpRequest):
     return render(
         request=req,
         template_name='post_app/main.html',
-        context={'first_entry': is_first_entry, 'post_content': get_page_data(Post, 1)}
+        context={'profile_user': req.user, 'first_entry': is_first_entry, 'post_content': get_page_data(Post.objects.all(), 1)}
     )
 
 @login_required(login_url='registration')
 def get_post(req: HttpRequest):
     page_num = req.GET.get('page')
-    page = get_page_data(Post, page_num)
+    profile_id = req.GET.get('id')
+    if not profile_id:
+        page = get_page_data(Post.objects.all(), page_num)
+    else:
+        profile = Profile.objects.filter(pk=profile_id).first()
+        if not profile:
+            return JsonResponse({'success': False, 'error': 'invalid_id'})
+        page = get_page_data(Post.objects.filter(author=profile.user), page_num)
     return JsonResponse({
         'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}),
         'has_next': page.get('has_next')
@@ -81,6 +89,7 @@ def get_tags(req: HttpRequest):
 @require_http_methods(["POST"])
 def create_post(req: HttpRequest):
     title = req.POST.get('title')
+    my_profile = req.GET.get('my_profile') == 'true'
     if not title:
         return JsonResponse({'success': False, 'error': 'no_title'})
     subject = req.POST.get('subject')
@@ -89,11 +98,13 @@ def create_post(req: HttpRequest):
     tags = get_data_from_json(req.POST.get('tags'))
     post = Post.objects.create(title=title, subject=subject, content=content, links=links, author=req.user)
     post.tags.set(tags or [])
-    print(post)
     positions = get_data_from_json(req.POST.get('positions', '[]'))
     images = req.FILES.getlist('images')
     if len(images) == len(positions):
         for img, pos in zip(images, positions):
             PostImage.objects.create(image=img, row=pos.get('row'), column=pos.get('col'), post=post)
-    return JsonResponse({'success': True})
+    return JsonResponse(
+        {
+            'success': True, 
+            'html': None if not my_profile else render_to_string(template_name='post_app/posts.html', context={'post_content': {'page': [post]}})})
 

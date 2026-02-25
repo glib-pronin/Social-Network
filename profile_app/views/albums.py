@@ -1,16 +1,28 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpRequest
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from ..models import Album, AlbumImage
+from django.db.models import Prefetch
+from ..models import Album, AlbumImage, Profile
 from ..utils import is_valid_album_data, delete_webp
 from user_app.utils import get_data_from_json
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
-def render_albums(req: HttpRequest):
-    return render(request=req, template_name='profile_app/albums.html')
+def render_albums(req: HttpRequest, profile_id: int):
+    profile = get_object_or_404(Profile, pk=profile_id)
+    is_owner = profile == req.user.profile 
+    albums = (profile.albums.all() if is_owner else profile.albums.filter(is_default=False, is_shown=True)).prefetch_related(
+        Prefetch(
+            'images',
+            queryset=AlbumImage.objects.all() if is_owner else AlbumImage.objects.filter(is_shown=True),
+            to_attr='visible_images'
+        )
+    )
+    return render(request=req, template_name='profile_app/albums.html', context={
+        'profile_user': profile.user, 'albums': albums
+    })
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
@@ -51,7 +63,7 @@ def create_album(req: HttpRequest):
     if not is_valid_album_data(name, theme, year):
         return JsonResponse({'success': False, 'errors': 'invalid_payload'})
     album = Album.objects.create(name=name, theme=theme, year=year, profile=req.user.profile)
-    return JsonResponse({'success': True, 'html': render_to_string(template_name='profile_app/album_pattern.html', context={'album': album})})
+    return JsonResponse({'success': True, 'html': render_to_string(template_name='profile_app/album_pattern.html', request=req, context={'album': album, 'is_albums_owner': True})})
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])

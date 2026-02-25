@@ -25,7 +25,7 @@ def is_username_available(username, user=None):
         u = u.exclude(pk=user.id)
     return not u.exists()
 
-def get_page_data(Model: models.Model, current_page: int, count: int = 10):
-    pages = Paginator(Model.objects.all(), count)
+def get_page_data(queryset: models.QuerySet, current_page: int, count: int = 10):
+    pages = Paginator(queryset, count)
     page = pages.get_page(current_page)
     return {'page': page, 'has_next': page.has_next(), 'current_page': page.number}        

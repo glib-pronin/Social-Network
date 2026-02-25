@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpRequest
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -14,10 +14,12 @@ import re
 # Create your views here.
 
 @login_required(login_url='registration')
-def render_profile(req: HttpRequest): 
+def render_profile_settings(req: HttpRequest, profile_id: int):
+    profile = get_object_or_404(Profile, pk=profile_id)
     return render(
         request=req,
-        template_name='profile_app/profile.html'
+        template_name='profile_app/settings.html',
+        context={'profile_user': profile.user}
     )
 
 @login_required(login_url='registration')

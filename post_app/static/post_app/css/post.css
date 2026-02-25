@@ -93,7 +93,7 @@
 }
 
 @media (max-width: 1050px) {
-    .post-image-item {
+    .post-image-item, .post-image-item, .post-images .post-image-row a {
         height: 203px;
     }
 
@@ -124,7 +124,7 @@
 }
 
 @media (max-width: 900px) and (min-width: 550px) {
-    .post-image-item {
+    .post-image-item, .post-image-item, .post-images .post-image-row a {
         height: 327px;
     }
 

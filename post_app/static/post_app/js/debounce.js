@@ -8,7 +8,7 @@ function debounce(func, delay) {
 }
 
 async function checkUsername(usernameInput) {
-    const res = await fetch(`/profile/username-available?username=${usernameInput.value}`)
+    const res = await fetch(`/profile/settings/username-available?username=${usernameInput.value}`)
     const { available } = await res.json()
     if (!available) {
         usernameInput.nextElementSibling.classList.remove('hidden')

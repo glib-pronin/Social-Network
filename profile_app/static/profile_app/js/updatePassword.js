@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         showSpinner(true, sendBtn.parentElement.parentElement)
         sendBtn.parentElement.classList.add('hidden')
-        const res = await fetch('/profile/update-password', {
+        const res = await fetch('/profile/settings/update-password', {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
             body: JSON.stringify({password, confirmPassword, oldPassword})

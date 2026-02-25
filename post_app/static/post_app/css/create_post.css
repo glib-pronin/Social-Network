@@ -48,6 +48,7 @@ form#create-post .inputs::-webkit-scrollbar-thumb {
     flex-shrink: 0;
     overflow: auto;
     gap: 0;
+    cursor: text;
 }
 
 .input-container.textarea-wrapper .selected-tags-list {

@@ -1,4 +1,5 @@
 from django.utils import timezone
+from .models import Album, AlbumImage
 import re, os
 
 def str_to_bool(value: str):
@@ -58,3 +59,13 @@ def delete_webp(photo):
         if os.path.exists(webp_path):
             os.remove(webp_path)
             os.rmdir(dir_path)
+
+def get_featured_album(profile):
+    photo = AlbumImage.objects.filter(
+        album__profile=profile,
+        album__is_shown=True,
+        is_shown=True
+    ).select_related('album').order_by('-album__created_at', 'created_at').first()
+    if not photo:
+        return (None, None)
+    return (photo.album, photo)
