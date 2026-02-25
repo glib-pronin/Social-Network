@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from post_app.utils import generate_username, get_page_data
 from post_app.models import Post
 from ..models import Profile
-from ..utils import get_featured_album
+from ..utils import get_featured_album, checkFriendship
 
 # Create your views here.
 
@@ -22,5 +22,6 @@ def render_profile(req: HttpRequest, profile_id: int):
         template_name='profile_app/profile.html',
         context={
             'profile_user': profile.user, 'post_content': page, 
-            'featured_album': featured_album, 'featured_photo': featured_photo}
+            'featured_album': featured_album, 'featured_photo': featured_photo,
+            'friendship_state': checkFriendship(profile, req.user.profile)}
     )

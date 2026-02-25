@@ -54,6 +54,12 @@
 .modal-container form.confirm-action {
     width: 488px;
     box-sizing: border-box;
+    gap: var(--form-gap);
+    padding: var(--form-padding-vertical) var(--form-padding-horizontal);
+}
+
+.modal-container form.confirm-action .btns-container {
+    align-self: flex-end;
 }
 
 .menu-container {

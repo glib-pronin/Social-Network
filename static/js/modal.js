@@ -1,6 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modals = document.querySelectorAll('.modal-container')
     const menus = document.querySelectorAll('.menu-container')
+    const confirmModal = document.getElementById('confirm-action-modal')
+    const cancelModalBtn = confirmModal?.querySelector('#cancel-action-btn')
+
+    cancelModalBtn?.addEventListener('click', () => {
+        confirmModal.classList.add('hidden')
+        callback = null
+    })
+
+    confirmModal?.querySelector('#accept-action-btn')?.addEventListener('click', async () => {
+        await confirmModal.callback?.()
+        cancelModalBtn.click()
+    })
+
 
     modals.forEach(modal => {
         const form = modal.querySelector('form')

@@ -25,10 +25,11 @@
             </div>
             <div class="vertical-line"></div>
             <div class="statistic">
-                <span class="statistic-data">222</span>
+                <span class="statistic-data" id="friends-count">{{ profile_user.profile.friends.count }}</span>
                 <span class="statistic-name">Друзі</span>
             </div>
         </div>
+        <div class="hidden" id="friendship-controls" data-profile-id="{{ profile_user.profile.id }}" data-initial-state="{{ friendship_state }}"></div>
     </div>
 </a>
 {% check_profile as my_profile %}

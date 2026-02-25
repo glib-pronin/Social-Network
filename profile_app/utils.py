@@ -1,5 +1,5 @@
 from django.utils import timezone
-from .models import Album, AlbumImage
+from .models import Album, AlbumImage, FriendRequest
 import re, os
 
 def str_to_bool(value: str):
@@ -69,3 +69,15 @@ def get_featured_album(profile):
     if not photo:
         return (None, None)
     return (photo.album, photo)
+
+def checkFriendship(user_profile, my_profile):
+    state = 'none'
+    if user_profile == my_profile:
+        state = 'self'
+    elif user_profile in my_profile.friends.all():
+        state = 'friend'
+    elif FriendRequest.objects.filter(from_profile=my_profile, to_profile=user_profile).exists():
+        state = 'outgoing'
+    elif FriendRequest.objects.filter(from_profile=user_profile, to_profile=my_profile).exists():
+        state = 'incoming'
+    return state

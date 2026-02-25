@@ -152,6 +152,11 @@
     color: var(--color-blue);
 }
 
+#friendship-controls {
+    display: flex;
+    gap: 16px;
+}
+
 @media (max-height: 715px) {
     .album-preview img {
         height: 142px;

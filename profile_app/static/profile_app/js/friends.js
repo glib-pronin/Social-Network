@@ -2,23 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const requestsContainer = document.getElementById('friends-request-preview')
     const recommendationContainer = document.getElementById('friends-recommendation-preview')
     const friendsContainer = document.getElementById('friends-preview')
-    const modal = document.getElementById('accept-cation-modal')
+    const modal = document.getElementById('confirm-action-modal')
     const cancelModalBtn = modal?.querySelector('#cancel-action-btn')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
-
-    const requestCountContainer = document.querySelectorAll('.request-count')
-    function changeRequestCount(count) {
-        requestCountContainer.forEach(container => {
-            if (!count) {
-                container.classList.add('hidden')
-                return
-            }
-            container.classList.remove('hidden')
-            container.textContent = count
-        })
-    }    
-
-    let callback = null
 
     const emptyMsgs = {
         request: {
@@ -34,13 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
             empty: 'У вас поки що немає друзів.'
         },
     }
-
-    cancelModalBtn?.addEventListener('click', () => {
-        modal.classList.add('hidden')
-        callback = null
-    })
-
-    modal?.querySelector('#accept-action-btn')?.addEventListener('click', () => callback?.())
 
     function showResultMsg(msgContainer, text) {
         msgContainer.textContent = text
@@ -83,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function handleRequestProcessing(card, profileId, action) {
-        const url = (action === 'accept') ? `/profile/friends/accept-friend-request/${profileId}?loaded=${getRecommendationCount(recommendationContainer)}` : `/profile/friends/cancel-friend-request/${profileId}?loaded=${getRecommendationCount(recommendationContainer)}`
+        const url = (action === 'accept') ? `/profile/friends/accept-friend-request/${profileId}?loaded=${getRecommendationCount(requestsContainer)}` : `/profile/friends/cancel-friend-request/${profileId}?loaded=${getRecommendationCount(requestsContainer)}`
         const res = await fetch(url, { method: 'POST', headers: {'X-CSRFToken': token} })
         const { success, has_more_rec, request_count } = await res.json()
         cancelModalBtn.click()
@@ -109,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (action === 'decline') {
             modal.classList.remove('hidden')
             modal.querySelector('p').textContent = 'Ви дійсно хочете відхилити запит?'
-            callback = () => handleRequestProcessing(card, profileId, action)
+            modal.callback = () => handleRequestProcessing(card, profileId, action)
         } else {
             handleRequestProcessing(card, profileId, action)
         } 
@@ -139,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isNaN(profileId)) return
         modal.classList.remove('hidden')
         modal.querySelector('p').textContent = 'Ви дійсно хочете видалити користувача?'
-        callback = async () => {
+        modal.callback = async () => {
             const res = await fetch(`/profile/friends/remove-friend/${profileId}?loaded=${getRecommendationCount(friendsContainer)}`, { method: 'POST', headers: {'X-CSRFToken': token} })
             const { success, has_more_rec } = await res.json()
             cancelModalBtn.click()

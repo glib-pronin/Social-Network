@@ -47,7 +47,7 @@ def add_friend(req: HttpRequest, id: int):
     if reverse_request:
         from_profile.friends.add(to_profile)
         reverse_request.delete()
-        return JsonResponse({'success': True, 'msg': 'created_friend'})
+        return JsonResponse({'success': True, 'msg': 'created_friend', 'friends_count': from_profile.friends.count()})
     
     try:
         FriendRequest.objects.create(from_profile=from_profile, to_profile=to_profile)
@@ -61,7 +61,7 @@ def add_friend(req: HttpRequest, id: int):
 def cancel_friends_request(req: HttpRequest, id: int):
     from_profile = get_object_or_404(Profile, pk=id)
     to_profile = req.user.profile
-    request = FriendRequest.objects.filter(to_profile=to_profile, from_profile=from_profile).first()
+    request = FriendRequest.objects.filter(to_profile=to_profile, from_profile=from_profile).first() or FriendRequest.objects.filter(to_profile=from_profile, from_profile=to_profile).first()
     if not request:
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     request.delete()
@@ -70,7 +70,7 @@ def cancel_friends_request(req: HttpRequest, id: int):
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
 def accept_friends_request(req: HttpRequest, id: int):
-    loaded_rec = req.GET.get('loaded')
+    loaded_rec = req.GET.get('loaded', 0)
     try:
         loaded_count = int(loaded_rec) + 1
     except (TypeError, ValueError):
@@ -83,12 +83,12 @@ def accept_friends_request(req: HttpRequest, id: int):
     from_profile.friends.add(to_profile)
     request.delete()
     has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=loaded_count)) >= loaded_count else 'False'
-    return JsonResponse({'success': True, 'has_more_rec': has_more_rec, 'request_count': to_profile.get_request_count()})
+    return JsonResponse({'success': True, 'has_more_rec': has_more_rec, 'request_count': to_profile.get_request_count(), 'friends_count': to_profile.friends.count()})
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
 def remove_friend(req: HttpRequest, id: int):
-    loaded_rec = req.GET.get('loaded')
+    loaded_rec = req.GET.get('loaded', 0)
     try:
         loaded_count = int(loaded_rec) + 1
     except (TypeError, ValueError):
@@ -99,4 +99,4 @@ def remove_friend(req: HttpRequest, id: int):
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     my_profile.friends.remove(friend)
     has_more_rec = 'True' if len(make_recommendation_list(req.user, limit=loaded_count)) >= loaded_count else 'False'
-    return JsonResponse({'success': True, 'has_more_rec': has_more_rec})
+    return JsonResponse({'success': True, 'has_more_rec': has_more_rec, 'friends_count': my_profile.friends.count()})
