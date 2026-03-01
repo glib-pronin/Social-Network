@@ -3,13 +3,16 @@ let pageNum = 2
 async function loadPost() {
     const postLoader = document.getElementById('post-loader')
     const postsContainer = document.getElementById('posts-container')
+    const profileId = +(postLoader.dataset.id)
 
+    
     if (postLoader && postLoader.dataset.hasMore === 'False') {
         postLoader.remove()
         return
     }
     
-    const res = await fetch(`/get-posts?page=${pageNum}`)
+    const url = isNaN(profileId) ? `/get-posts?page=${pageNum}` : `/get-posts?page=${pageNum}&id=${profileId}`
+    const res = await fetch(url)
     const { html_post, has_next } = await res.json()
     if (!has_next) {
         postLoader?.remove()

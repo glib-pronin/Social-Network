@@ -49,6 +49,11 @@
 
 @media (max-width: 900px) {
     .side-block {
-        display: none;
+        position: static;
+        width: 100%;
+    }
+    
+    .main-layout {
+        flex-direction: column;
     }
 }

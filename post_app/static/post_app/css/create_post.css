@@ -166,26 +166,24 @@ form#create-post .btns-container {
 
 .images-grid {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 16px;
     width: 100%;
 }
 
-.row {
-    display: flex;
-    height: 265px;
-    gap: 16px;
-}
-
 .image-item {
     position: relative;
-    flex: 1 1 0;
-    height: 100%;
+    height: 265px;
     cursor: grab;
 }
 
-.image-item:active {
-    cursor: grabbing;
+.image-item.row-3 {
+    flex: 0 0 calc((100% - 32px) / 3);
+}
+
+.image-item.row-2 {
+    flex: 0 0 calc((100% - 32px) / 2);
 }
 
 .image-item img {
@@ -242,13 +240,20 @@ form#create-post .send-btn {
         height: 140px;
     }
 
-    .row {
-        gap: 8px;
+    .image-item {
         height: 225px;
     }
 
     .images-grid {
         gap: 8px;
+    }
+
+    .image-item.row-3 {
+        flex: 0 0 calc((100% - 16px) / 3);
+    }
+
+    .image-item.row-2 {
+        flex: 0 0 calc((100% - 16px) / 2);
     }
 
     form#create-post .form-header .form-text {

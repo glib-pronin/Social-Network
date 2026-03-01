@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('first-entry-form')
-    const modal = form.parentElement
-    const token = form.elements.csrfmiddlewaretoken.value
+    const modal = form?.parentElement
+    const token = form?.elements.csrfmiddlewaretoken.value
     const generator = document.getElementById('generate-username')
-    const inputs = form.querySelectorAll('input')
-    const usernameInput = form.elements.username
+    const inputs = form?.querySelectorAll('input')
+    const usernameInput = form?.elements.username
     
     const url = new URL(location.href)
     url.searchParams.delete('first_entry')
@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const debounceCheck = debounce(async (input) => {
         isUsernameAvailable = await checkUsername(input)
     }, 500)
-    usernameInput.addEventListener('input', () => debounceCheck(usernameInput))
+    usernameInput?.addEventListener('input', () => debounceCheck(usernameInput))
     
-    inputs.forEach(input => input.addEventListener('input', () => input.nextElementSibling.classList.add('hidden')))
+    inputs?.forEach(input => input.addEventListener('input', () => input.nextElementSibling.classList.add('hidden')))
 
-    form.addEventListener('submit', async (e) => {
+    form?.addEventListener('submit', async (e) => {
         e.preventDefault()
         console.log('...');
         
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    generator.addEventListener('click', async () => {
+    generator?.addEventListener('click', async () => {
         const firstName = form.elements.firstName.value
         usernameInput.nextElementSibling.classList.add('hidden')
         if (!firstName) {
@@ -67,5 +67,5 @@ document.addEventListener('DOMContentLoaded', () => {
         usernameInput.value = username
     })
 
-    usernameInput.addEventListener('input', () => handleUsernameInput(usernameInput))
+    usernameInput?.addEventListener('input', () => handleUsernameInput(usernameInput))
 })

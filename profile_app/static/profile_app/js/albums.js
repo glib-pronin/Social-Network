@@ -136,11 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const section = e.target.closest('.section')
             section.querySelector('.menu-container').classList.remove('hidden')
         }
-
-        else if (e.target.closest('.close-menu')) {
-            const section = e.target.closest('.section')
-            section.querySelector('.menu-container').classList.add('hidden')
-        }
         
         else if (e.target.closest('.update-menu')) {   
             albumCb = handleUpdateAlbum(e, albumModal, token)

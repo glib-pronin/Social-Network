@@ -67,3 +67,38 @@ class PostImage(models.Model):
             img.close()
             super().save()
     
+class HiddenPost(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='hidden_posts')
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='hidden_by')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_hidden_post'
+            )
+        ]
+
+class PostLike(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='liked_posts')
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='likes')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_post_like'
+            )
+        ]
+
+class PostHeart(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='hearted_posts')
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='hearts')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_post_hearts'
+            )
+        ]

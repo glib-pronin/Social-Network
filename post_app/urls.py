@@ -9,4 +9,6 @@ urlpatterns = [
     path('get-tags', view=get_tags, name='get_tags'),
     path('create-post', view=create_post, name='create_post'),
     path('get-posts', view=get_post, name='get_post'),
+    path('hide-post/<int:post_id>', view=hide_post, name='hide_post'),
+    path('toggle-reaction/<int:post_id>', view=toggle_reaction, name='toggle_reaction'),
 ]

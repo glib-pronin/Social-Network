@@ -40,9 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.elements.content.addEventListener('input', () => {
         const textarea = form.elements.content
         textarea.style.height = '20px'
-        textarea.style.height = textarea.scrollHeight + 'px'
-        console.log(textarea.scrollHeight);
-        
+        textarea.style.height = textarea.scrollHeight + 'px'        
     })
 
     tagContainer.addEventListener('click', (e) => {
@@ -122,24 +120,18 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('links', links)
         formData.append('subject', form.elements.subject.value)
         formData.append('content', form.elements.content.value)
-        const rows = form.imagesState ?? []
-        console.log(rows);
+        const imagesState = form.imagesState ?? []
         
-        if (rows.length > 0) {
+        if (imagesState.length > 0) {
             const positions = []
-            rows.forEach((row, rowInd) => {
-                row.items.forEach((item, itemInd) => {
-                    console.log(item.file);
-                    if (item.file) {
-                        console.log('1');
-                        
-                        formData.append('images', item.file)
-                        positions.push({row: rowInd, col: itemInd})
-                    }
-                })
+            imagesState.forEach((item) => {
+                if (item.file) {
+                    formData.append('images', item.file)
+                    positions.push({row: item.row, col: item.col})
+                }
             })
             formData.append('positions', JSON.stringify(positions))
-        }        
+        }               
         const res = await fetch(`/create-post?my_profile=${addNewPostToDOM}`, {
             method: 'POST',
             headers: {'X-CSRFToken': token},

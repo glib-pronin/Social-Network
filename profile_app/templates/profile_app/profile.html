@@ -24,7 +24,7 @@
             <div class="posts" id="posts-container" data-my-profile="{{ my_profile }}">
                 {% include 'post_app/posts.html' %}
             </div>
-            <div id="post-loader" data-has-more="{{ post_content.has_next }}"></div>
+            <div id="post-loader" data-id="{{ profile_id }}" data-has-more="{{ post_content.has_next }}"></div>
         </div>
     </div>
     <div class="modal-container hidden" id="confirm-action-modal">
@@ -52,9 +52,7 @@
 {% block scripts %}
     <script src="{% static 'js/modal.js' %}"></script>
     <script src="{% static 'post_app/js/loadPost.js' %}"></script>
-    <script src="{% static 'post_app/js/debounce.js' %}"></script>
-    <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
-    <script src="{% static 'post_app/js/firstEntry.js' %}"></script>
+    <script src="{% static 'post_app/js/post.js' %}"></script>
     <script src="{% static 'profile_app/js/changeRequestIndicator.js' %}"></script>
     <script src="{% static 'profile_app/js/profileFriendship.js' %}"></script>
 {% endblock %}

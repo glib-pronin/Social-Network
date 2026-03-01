@@ -46,7 +46,7 @@
                         </div>
                         Друзі
                     </a>
-                    <a href="/" {% if request.path == "" %} class="selected" {% endif %}>
+                    <a href="{% url 'chat' %}" {% if request.path == "" %} class="selected" {% endif %}>
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M2.48535 10C2.48535 8.00689 3.27713 6.09538 4.6865 4.68601C6.09587 3.27664 8.00738 2.48486 10.0005 2.48486C11.9937 2.48486 13.9052 3.27664 15.3146 4.68601C16.7239 6.09538 17.5157 8.00689 17.5157 10V14.7816C17.5157 15.5782 17.5157 15.9746 17.3973 16.2931C17.3032 16.5454 17.156 16.7746 16.9655 16.965C16.7751 17.1555 16.5459 17.3027 16.2935 17.3969C15.9751 17.5152 15.5777 17.5152 14.7821 17.5152H10.0005C8.00738 17.5152 6.09587 16.7234 4.6865 15.3141C3.27713 13.9047 2.48535 11.9932 2.48535 10Z" stroke="#070A1C" stroke-width="1.66667"/>
                             <path d="M7.18262 9.06055H12.819M10.0008 12.8181H12.819" stroke="#070A1C" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
@@ -134,6 +134,7 @@
     {% endif %}
     <script src="https://unpkg.com/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
     <script src="https://unpkg.com/photoswipe@5/dist/umd/photoswipe-lightbox.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="{% static 'js/photos.js' %}"></script>
     <script src="{% static 'user_app/js/spinner.js' %}"></script>
     <script src="{% static 'post_app/js/cleanForm.js' %}"></script>

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'SocialNetwork.wsgi.application'
+ASGI_APPLICATION = 'SocialNetwork.asgi.application'
 
 
 # Database
@@ -140,3 +141,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = email
 EMAIL_HOST_PASSWORD = password
 DEFAULT_FROM_EMAIL = email
+
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    }
+}

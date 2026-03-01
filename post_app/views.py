@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.db import IntegrityError
+from django.db.models import Count, Q
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -17,10 +19,18 @@ def render_main(req: HttpRequest):
     first_entry = req.GET.get('first_entry')
     if first_entry == 'true' and not req.user.first_name:
         is_first_entry = True
+    hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
+    page_qs = Post.objects.exclude(id__in=hidden_ids)
+    page_qs = page_qs.annotate(
+        likes_count = Count('likes', distinct=True),
+        hearts_count = Count('hearts', distinct=True),
+        my_like = Count('likes', filter=Q(likes__user=req.user)),
+        my_heart = Count('hearts', filter=Q(hearts__user=req.user)),
+    ).order_by('-created_at').all()
     return render(
-        request=req,
+        request=req,    
         template_name='post_app/main.html',
-        context={'profile_user': req.user, 'first_entry': is_first_entry, 'post_content': get_page_data(Post.objects.all(), 1)}
+        context={'profile_user': req.user, 'first_entry': is_first_entry, 'post_content': get_page_data(page_qs, 1)}
     )
 
 @login_required(login_url='registration')
@@ -28,12 +38,20 @@ def get_post(req: HttpRequest):
     page_num = req.GET.get('page')
     profile_id = req.GET.get('id')
     if not profile_id:
-        page = get_page_data(Post.objects.all(), page_num)
+        hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
+        page_qs = Post.objects.exclude(id__in=hidden_ids)
     else:
         profile = Profile.objects.filter(pk=profile_id).first()
         if not profile:
             return JsonResponse({'success': False, 'error': 'invalid_id'})
-        page = get_page_data(Post.objects.filter(author=profile.user), page_num)
+        page_qs = Post.objects.filter(author=profile.user)
+    page_qs = page_qs.annotate(
+        likes_count = Count('likes', distinct=True),
+        hearts_count = Count('hearts', distinct=True),
+        my_like = Count('likes', filter=Q(likes__user=req.user)),
+        my_heart = Count('hearts', filter=Q(hearts__user=req.user)),
+    ).order_by('-created_at').all()
+    page = get_page_data(page_qs, page_num)
     return JsonResponse({
         'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}),
         'has_next': page.get('has_next')
@@ -106,5 +124,38 @@ def create_post(req: HttpRequest):
     return JsonResponse(
         {
             'success': True, 
-            'html': None if not my_profile else render_to_string(template_name='post_app/posts.html', context={'post_content': {'page': [post]}})})
+            'html': None if not my_profile else render_to_string(template_name='post_app/posts.html', context={'post_content': {'page': [post]}})
+        })
 
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def hide_post(req: HttpRequest, post_id: int):
+    post = Post.objects.filter(pk=post_id).first()
+    if not post:
+        return JsonResponse({'success': False, 'error': 'invalid_payload'})
+    try:
+        HiddenPost.objects.create(user=req.user, post=post)
+    except IntegrityError:
+        return JsonResponse({'success': False, 'error': 'contsraint_exists'})
+    return JsonResponse({'success': True})
+
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def toggle_reaction(req: HttpRequest, post_id: int):
+    post = Post.objects.filter(pk=post_id).first()
+    if not post:
+        return JsonResponse({'success': False, 'error': 'invalid_payload'})
+    data = get_data_from_json(req.body)
+    reaction_type = data.get('reaction_type')
+    if reaction_type not in ['like', 'heart']:
+        return JsonResponse({'success': False, 'error': 'invalid_reaction_type'})
+    if reaction_type == 'like':
+        model = PostLike
+    else:
+        model = PostHeart
+    reaction, created = model.objects.get_or_create(user=req.user, post=post)
+    if not created:
+        reaction.delete()
+    count = model.objects.filter(post=post).count()
+    return JsonResponse({'success': True, 'added': created, 'count': count})

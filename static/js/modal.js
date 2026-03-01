@@ -35,10 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     document.addEventListener('click', (e) => {
-       if (e.target.closest('.menu-container')) return
-       else {
+        if (e.target.closest('.close-menu')) {
+            const section = e.target.closest('.section') || e.target.closest('.post')
+            section.querySelector('.menu-container').classList.add('hidden')
+            return
+        }
+        if (e.target.closest('.menu-container')) return
+        else {
             const menus = document.querySelectorAll('.menu-container')
             menus.forEach(m => m.classList.add('hidden'))
-       }
+        }
     }, true)
 })
