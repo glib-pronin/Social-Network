@@ -11,4 +11,5 @@ urlpatterns = [
     path('get-posts', view=get_post, name='get_post'),
     path('hide-post/<int:post_id>', view=hide_post, name='hide_post'),
     path('toggle-reaction/<int:post_id>', view=toggle_reaction, name='toggle_reaction'),
+    path('add-post-view/<int:post_id>', view=add_post_view, name='add_post_view'),
 ]

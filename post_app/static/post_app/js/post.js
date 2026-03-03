@@ -35,8 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
         })    
         const { success, added, count } = await res.json()
         if (success) {
-            btn.classList.toggle('selected', added)
-            btn.closest('.info').querySelector('.count').textContent = count
+            const container = btn.closest('.info')
+            container.querySelector('.count').textContent = count
+            container.querySelector(`.${reaction}.selected`).classList.toggle('hidden', !added)
+            container.querySelector(`.${reaction}`).classList.toggle('hidden', added)
         }
     }
 })

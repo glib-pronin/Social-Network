@@ -129,7 +129,7 @@
     transition: all 0.25s ease;
 }
 
-.post-info .info svg.cursor-pointer:hover path, .post-info .info svg.selected path  {
+.post-info .info svg.cursor-pointer:hover path  {
     fill: #3E2D3C;
 }
 

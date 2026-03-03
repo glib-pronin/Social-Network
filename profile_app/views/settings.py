@@ -29,7 +29,6 @@ def update_credentials(req: HttpRequest):
     first_name = data.get('firstName')
     last_name = data.get('lastName')
     birth_date = data.get('birthDate')
-
     ev = getattr(req.user, 'email_verification', None)
     if ev and ev.is_verified:
         req.user.email = ev.new_email

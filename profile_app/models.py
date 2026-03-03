@@ -5,7 +5,8 @@ from django.utils import timezone
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill, ResizeToFit
 from PIL import Image
-import os, uuid
+from post_app.models import PostView
+import os, uuid, math
 
 # Create your models here.
 
@@ -41,7 +42,26 @@ class Profile(models.Model):
         if received_requests == 0:
             return ''
         return received_requests if self.received_requests.count() <= 9 else '9+'
-    
+
+    def total_post_views(self):
+        total_views = PostView.objects.filter(post__author=self.user).count()
+        suffix = ''
+        if total_views >= 1000000000:
+            total_views = total_views / 1000000000
+            suffix = 'B'
+        elif total_views >= 1000000:
+            total_views = total_views / 1000000
+            suffix = 'M'
+        elif total_views >= 1000:
+            total_views = total_views / 1000
+            suffix = 'K'
+        else:
+            return total_views
+        result = math.floor(total_views * 10) / 10
+        if result.is_integer():
+            result = int(result)
+        return f'{result}{suffix}'
+
 class FriendRequest(models.Model):
     from_profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='sent_requests')
     to_profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='received_requests')

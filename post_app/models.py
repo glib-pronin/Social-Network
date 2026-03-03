@@ -51,9 +51,9 @@ class PostImage(models.Model):
     image = models.ImageField(upload_to=upload_image)
     image_webp = ImageSpecField(source='image', format='WEBP', processors=[ResizeToFit(width=400, height=400)], options={'quality': 75})
     row = models.IntegerField()
+    column = models.IntegerField()
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
-    column = models.IntegerField()
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='images')
 
     def __str__(self):
@@ -100,5 +100,17 @@ class PostHeart(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'post'],
                 name='unique_post_hearts'
+            )
+        ]
+
+class PostView(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='viewed_posts')
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='views')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_post_view'
             )
         ]

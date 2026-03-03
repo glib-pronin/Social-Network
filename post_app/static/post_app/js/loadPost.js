@@ -22,7 +22,10 @@ async function loadPost() {
         postsContainer.parentElement.append(div)
         setObserver(div)
     }
-    postsContainer.innerHTML += html_post
+    const wrapper = document.createElement('div')
+    wrapper.innerHTML = html_post
+    observeNewPosts(wrapper)
+    postsContainer.append(...wrapper.children)
     pageNum++
 }
 
@@ -31,12 +34,34 @@ function setObserver(elem) {
         if (entries[0].isIntersecting){
             loadPost()
         }
-    }, options = {rootMargin: '250px'})
+    },{rootMargin: '250px'})
 
     observer.observe(elem)
 }
 
+const viewsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const postId = entry.target.dataset.postId
+
+            fetch(`/add-post-view/${postId}`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value }
+            })
+
+            entry.target.dataset.viewed = 'true'
+            viewsObserver.unobserve(entry.target)
+        }
+    })
+}, { threshold: 0.3 })
+
+function observeNewPosts(container) {
+    const posts = container.querySelectorAll('.post:not([data-viewed="true"])')
+    posts.forEach(post => viewsObserver.observe(post))
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const postLoader = document.getElementById('post-loader')
-   setObserver(postLoader)
+    setObserver(postLoader)
+    observeNewPosts(document.getElementById('posts-container'))
 })

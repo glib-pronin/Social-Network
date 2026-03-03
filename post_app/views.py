@@ -24,8 +24,10 @@ def render_main(req: HttpRequest):
     page_qs = page_qs.annotate(
         likes_count = Count('likes', distinct=True),
         hearts_count = Count('hearts', distinct=True),
-        my_like = Count('likes', filter=Q(likes__user=req.user)),
-        my_heart = Count('hearts', filter=Q(hearts__user=req.user)),
+        views_count = Count('views', distinct=True),
+        my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
+        my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
+        is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
     ).order_by('-created_at').all()
     return render(
         request=req,    
@@ -48,12 +50,14 @@ def get_post(req: HttpRequest):
     page_qs = page_qs.annotate(
         likes_count = Count('likes', distinct=True),
         hearts_count = Count('hearts', distinct=True),
-        my_like = Count('likes', filter=Q(likes__user=req.user)),
-        my_heart = Count('hearts', filter=Q(hearts__user=req.user)),
+        views_count = Count('views', distinct=True),
+        my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
+        my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
+        is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
     ).order_by('-created_at').all()
     page = get_page_data(page_qs, page_num)
     return JsonResponse({
-        'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}),
+        'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}, request=req),
         'has_next': page.get('has_next')
     })
 
@@ -133,10 +137,7 @@ def hide_post(req: HttpRequest, post_id: int):
     post = Post.objects.filter(pk=post_id).first()
     if not post:
         return JsonResponse({'success': False, 'error': 'invalid_payload'})
-    try:
-        HiddenPost.objects.create(user=req.user, post=post)
-    except IntegrityError:
-        return JsonResponse({'success': False, 'error': 'contsraint_exists'})
+    HiddenPost.objects.get_or_create(user=req.user, post=post)
     return JsonResponse({'success': True})
 
 
@@ -159,3 +160,14 @@ def toggle_reaction(req: HttpRequest, post_id: int):
         reaction.delete()
     count = model.objects.filter(post=post).count()
     return JsonResponse({'success': True, 'added': created, 'count': count})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def add_post_view(req: HttpRequest, post_id: int):
+    post = Post.objects.filter(pk=post_id).first()
+    if not post:
+        return JsonResponse({'success': False, 'error': 'invalid_payload'})
+    if post.author == req.user:
+        return JsonResponse({'success': False, 'error': 'can`t_view_own_post'})
+    PostView.objects.get_or_create(user=req.user, post=post)
+    return JsonResponse({'success': True})
