@@ -10,10 +10,13 @@
     width: 100%;
 }
 
-#open-form {
+#open-form-container {
     position: absolute;
     bottom: 16px;
     right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
 }
 
 .standart-border {

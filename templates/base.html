@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
     <link rel="stylesheet" href="{% static 'css/input.css' %}">
     <link rel="stylesheet" href="{% static 'post_app/css/create_post.css' %}">
+    <link rel="stylesheet" href="{% static 'post_app/css/emoji_picker.css' %}">
     {% block links %} {% endblock %}
 </head>
 <body>
@@ -131,11 +132,15 @@
             </a>
         </footer>
         {% include 'post_app/create_post.html' %}
+        {% include 'post_app/emoji_picker.html' %}
     {% endif %}
     <script src="https://unpkg.com/photoswipe@5/dist/umd/photoswipe.umd.min.js"></script>
     <script src="https://unpkg.com/photoswipe@5/dist/umd/photoswipe-lightbox.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="{% static 'post_app/js/debounce.js' %}"></script>
     <script src="{% static 'js/photos.js' %}"></script>
+    <script src="{% static 'js/emojiData.js' %}"></script>
+    <script src="{% static 'js/emojiPicker.js' %}"></script>
     <script src="{% static 'user_app/js/spinner.js' %}"></script>
     <script src="{% static 'post_app/js/cleanForm.js' %}"></script>
     <script src="{% static 'post_app/js/createPost.js' %}"></script>

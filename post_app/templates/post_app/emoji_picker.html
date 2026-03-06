@@ -1,0 +1,35 @@
+<div class="menu-container hidden" id="emoji-picker">
+    <div class="input-container">
+        <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.91667 13.3333C6.40278 13.3333 5.12167 12.8089 4.07333 11.76C3.025 10.7111 2.50056 9.43 2.5 7.91667C2.49944 6.40333 3.02389 5.12222 4.07333 4.07333C5.12278 3.02444 6.40389 2.5 7.91667 2.5C9.42944 2.5 10.7108 3.02444 11.7608 4.07333C12.8108 5.12222 13.335 6.40333 13.3333 7.91667C13.3333 8.52778 13.2361 9.10417 13.0417 9.64583C12.8472 10.1875 12.5833 10.6667 12.25 11.0833L16.9167 15.75C17.0694 15.9028 17.1458 16.0972 17.1458 16.3333C17.1458 16.5694 17.0694 16.7639 16.9167 16.9167C16.7639 17.0694 16.5694 17.1458 16.3333 17.1458C16.0972 17.1458 15.9028 17.0694 15.75 16.9167L11.0833 12.25C10.6667 12.5833 10.1875 12.8472 9.64583 13.0417C9.10417 13.2361 8.52778 13.3333 7.91667 13.3333ZM7.91667 11.6667C8.95833 11.6667 9.84389 11.3022 10.5733 10.5733C11.3028 9.84444 11.6672 8.95889 11.6667 7.91667C11.6661 6.87444 11.3017 5.98917 10.5733 5.26083C9.845 4.5325 8.95944 4.16778 7.91667 4.16667C6.87389 4.16556 5.98861 4.53028 5.26083 5.26083C4.53306 5.99139 4.16833 6.87667 4.16667 7.91667C4.165 8.95667 4.52972 9.84222 5.26083 10.5733C5.99195 11.3044 6.87722 11.6689 7.91667 11.6667Z" fill="#81818D"/>
+        </svg>
+        <input type="text" placeholder="Пошук">
+    </div>
+    <div class="emoji-container"></div>
+    <div class="emoji-categories">
+        <div class="emoji-category used" data-category="used">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8ZM15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15C11.866 15 15 11.866 15 8ZM8.6665 2H7.6665V7.65625H4V8.65625H8.66667L8.6665 2Z" fill="#3C3C43" fill-opacity="0.6"/>
+            </svg>
+        </div>
+        <div class="emoji-category selected" data-category="default">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.75 5C11.1643 5 11.5 5.44767 11.5 6C11.5 6.55233 11.1643 7 10.75 7C10.3357 7 10 6.55233 10 6C10 5.44767 10.3357 5 10.75 5Z" fill="black"/>
+                <path d="M6.49667 6C6.49667 5.44733 6.16167 5 5.74833 5C5.335 5 5 5.44733 5 6C5 6.55267 5.33333 7 5.74833 7C6.16333 7 6.49667 6.55267 6.49667 6Z" fill="black"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.006 9.67567C9.4029 9.67567 10.666 9.3736 11.5733 9.15665C12.4594 8.94475 13.006 8.81404 13.006 9.12533C13.006 11.8868 10.7674 14.1253 8.006 14.1253C5.24458 14.1253 3.006 11.8868 3.006 9.12533C3.006 8.81404 3.55259 8.94475 4.43873 9.15665C5.34596 9.3736 6.6091 9.67567 8.006 9.67567ZM11.0959 10.1325C10.3975 10.3152 9.32697 10.5953 8 10.5953C6.67303 10.5953 5.60251 10.3152 4.90407 10.1325C4.32349 9.98055 4 9.89591 4 10.0953C4 12.0093 6.908 12.0953 8 12.0953C9.226 12.0953 12 12.009 12 10.0953C12 9.89591 11.6765 9.98055 11.0959 10.1325Z" fill="black"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16C12.4183 16 16 12.4183 16 8ZM15.0103 8C15.0103 4.13401 11.8763 1 8.01033 1C4.14434 1 1.01033 4.13401 1.01033 8C1.01033 11.866 4.14434 15 8.01033 15C11.8763 15 15.0103 11.866 15.0103 8Z" fill="black"/>
+            </svg>
+        </div>
+        <div class="emoji-category" data-category="animals">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <rect width="18" height="18" fill="url(#pattern0_1968_5463)"/>
+                <defs>
+                <pattern id="pattern0_1968_5463" patternContentUnits="objectBoundingBox" width="1" height="1">
+                <use xlink:href="#image0_1968_5463" transform="scale(0.0111111)"/>
+                </pattern>
+                <image id="image0_1968_5463" width="90" height="90" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
+                </defs>
+            </svg>
+        </div>
+    </div>
+</div>

@@ -152,18 +152,6 @@ form#create-post .btns-container {
     width: fit-content;
 }
 
-#add-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 100px;
-    border: 1px solid var(--color-purple);
-    background-color: var(--color-white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
 .images-grid {
     display: flex;
     flex-wrap: wrap;

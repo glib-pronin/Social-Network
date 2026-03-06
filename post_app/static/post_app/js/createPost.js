@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
         await cleanForm(modal)
         modal.classList.remove('hidden')
         const textarea = modal.querySelector('textarea') 
-        textarea.value = openForm?.previousElementSibling.value || ''
+        if (openForm) {
+            textarea.value = openForm.parentElement.previousElementSibling.value 
+            openForm.parentElement.previousElementSibling.value = '' 
+        } else textarea.value = ''
         textarea.style.height = '20px'
         if (openForm) openForm.previousElementSibling.value = '' 
         textForTagListSpan = []

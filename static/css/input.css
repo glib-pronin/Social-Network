@@ -19,7 +19,7 @@ textarea {
     font-size: 16px;
 }
 
-textarea::placeholder {
+textarea::placeholder, input::placeholder {
     font-size: 16px;
     font-family: 'GT Walsheim Pro';
 }
