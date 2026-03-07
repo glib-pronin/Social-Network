@@ -12,7 +12,7 @@ async function sendCode() {
         body: JSON.stringify()
     })
     console.log('sent');
-    console.log(res)1;
+    console.log(res);
     const { success } = await res.json()
     if (!success) {
         showError('Сталася помилка під час відправки коду, спробуйте пізніше!', true)
