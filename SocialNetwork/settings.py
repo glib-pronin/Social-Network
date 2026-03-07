@@ -26,6 +26,10 @@ SECRET_KEY = 'django-insecure-k=eqlpf2w6(5d85=pz0=)=pr(d@4x_t$l%$j*y+jzjdti3j6(p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-5b02f.up.railway.app'
+]
+
 ALLOWED_HOSTS = ['*']
 
 

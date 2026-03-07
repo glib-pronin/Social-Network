@@ -90,11 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     async function sendForm(url, bodyData, handleResult) {
         showSpinner(true, form)
+        console.log(token);
+        
         const res = await fetch(url, {
             method: 'POST',
             headers: {"Content-Type": "application/json", "X-CSRFToken": token},
             body: JSON.stringify(bodyData)
         })
+        console.log(res);
         const data = await res.json()
         console.log(data);
         handleResult(data)
