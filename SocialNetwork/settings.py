@@ -38,8 +38,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'daphne',
     'channels',
-    'cloudinary',
-    'cloudinary_storage',
+    # 'cloudinary',
+    # 'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -158,17 +158,17 @@ CHANNEL_LAYERS = {
     }
 }
 
-CLOUDINARY_STORAGE = {
-    'API_KEY': '614792237631319',
-    'API_SECRET': '-60tl-kQbSJ8_z4N2laSNFmgNM8',
-    'CLOUD_NAME': 'dobhivomf',
-}
+# CLOUDINARY_STORAGE = {
+#     'API_KEY': '614792237631319',
+#     'API_SECRET': '-60tl-kQbSJ8_z4N2laSNFmgNM8',
+#     'CLOUD_NAME': 'dobhivomf',
+# }
 
-STORAGES = {
-    'staticfiles': {
-        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'
-    },
-    'default': {
-        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    }
-}
+# STORAGES = {
+#     'staticfiles': {
+#         'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'
+#     },
+#     'default': {
+#         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#     }
+# }
