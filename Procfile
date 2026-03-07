@@ -1,1 +1,1 @@
-web: daphne -b 0.0.0.0 -p $PORT SocialNetwork.asgi:application
+web: python manage.py collectstatic --noiput && daphne -b 0.0.0.0 -p $PORT SocialNetwork.asgi:application
