@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-k=eqlpf2w6(5d85=pz0=)=pr(d@4x_t$l%$j*y+jzjdti3j6(p
 DEBUG = False
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://web-production-5b02f.up.railway.app'
+    'https://web-production-1d419.up.railway.app'
 ]
 
 ALLOWED_HOSTS = ['*']
@@ -38,6 +38,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'daphne',
     'channels',
+    'cloudinary',
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -155,3 +157,11 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     }
 }
+
+CLOUDINARY_STORAGE = {
+    'API_KEY': '614792237631319',
+    'API_SECRET': '-60tl-kQbSJ8_z4N2laSNFmgNM8',
+    'CLOUD_NAME': 'dobhivomf',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
