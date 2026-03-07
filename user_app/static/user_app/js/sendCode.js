@@ -6,7 +6,7 @@ function showError(msg, show=false) {
 
 async function sendCode() {
     console.log('...');
-    const res = await fetch('send-code', {
+    const res = await fetch('/send-code', {
         method: 'POST',
         headers: {"Content-Type": "application/json", "X-CSRFToken": document.getElementById('auth-form').elements.csrfmiddlewaretoken.value},
         body: JSON.stringify()
