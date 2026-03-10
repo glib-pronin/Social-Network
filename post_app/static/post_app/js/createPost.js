@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('create-post-modal')
-    const form = modal.querySelector('form')
+    const form = modal?.querySelector('form')
     const addTagBtn = document.getElementById('add-tag')
     const addTagContainer = document.getElementById('save-tag')
-    const saveBtn = addTagContainer.querySelector('button')
-    const newTagInput = saveBtn.previousElementSibling
+    const saveBtn = addTagContainer?.querySelector('button')
+    const newTagInput = saveBtn?.previousElementSibling
     let tagList = document.querySelectorAll('.tag')
     const tagContainer = document.querySelector('.tags-container')
     const tagListSpan = document.querySelector('.selected-tags-list')
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const linksContainer = document.getElementById('links')
     const addLinkBtn = document.getElementById('add-link')
     const removeLinkBtn = document.getElementById('remove-link')
-    const firstInput = addLinkBtn.previousElementSibling
+    const firstInput = addLinkBtn?.previousElementSibling
 
     const openForm = document.getElementById('open-form')
     const openFormMobile = document.getElementById('open-create-post-mobile')
@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     openForm?.addEventListener('click', openCreatePost)
-    openFormMobile.addEventListener('click', openCreatePost)
+    openFormMobile?.addEventListener('click', openCreatePost)
 
-    form.elements.content.addEventListener('input', () => {
+    form?.elements.content.addEventListener('input', () => {
         const textarea = form.elements.content
         textarea.style.height = '20px'
         textarea.style.height = textarea.scrollHeight + 'px'        
     })
 
-    tagContainer.addEventListener('click', (e) => {
+    tagContainer?.addEventListener('click', (e) => {
         if (e.target.classList.contains('tag')) {
             const tag = e.target
             tag.classList.toggle('selected')
@@ -62,12 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    addTagBtn.addEventListener('click', () => {
+    addTagBtn?.addEventListener('click', () => {
         addTagBtn.classList.add('hidden')
         addTagContainer.classList.remove('hidden')
     })
     
-    saveBtn.addEventListener('click', async () => {
+    saveBtn?.addEventListener('click', async () => {
         const tagName = newTagInput.value
         addTagBtn.classList.remove('hidden')
         addTagContainer.classList.add('hidden')
@@ -85,13 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
         newTagInput.value = '#'
     })
 
-    newTagInput.addEventListener('input', () => {
+    newTagInput?.addEventListener('input', () => {
         let value = newTagInput.value
         value = value.replaceAll(/[^a-z\u0400-\u04FF]/g, '')
         newTagInput.value = '#' + value
     })
 
-    addLinkBtn.addEventListener('click', () => {
+    addLinkBtn?.addEventListener('click', () => {
         const input = document.createElement('input')
         input.name = 'link'
         input.placeholder = 'Введіть посилання'
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         removeLinkBtn.classList.remove('hidden')
     })
 
-    removeLinkBtn.addEventListener('click', () => {
+    removeLinkBtn?.addEventListener('click', () => {
         const inputs = linksContainer.querySelectorAll(':scope > input')
         if (inputs.length > 0) {
             firstInput.value = inputs[inputs.length-1].value 
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    form.addEventListener('submit', async (e) => {
+    form?.addEventListener('submit', async (e) => {
         e.preventDefault()
         const formData = new FormData()
         const title = form.elements.title.value
@@ -150,5 +150,5 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     const textarea = document.getElementById('content')
-    textarea.parentElement.addEventListener('click', () => textarea.focus())
+    textarea?.parentElement.addEventListener('click', () => textarea.focus())
 })

@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('emoji-picker')
     const emojiBtns = document.querySelectorAll('.emoji-btn')
-    const emojiContainer = modal.querySelector('.emoji-container')
-    const emojiSearchInput = modal.querySelector('input')
+    const emojiContainer = modal?.querySelector('.emoji-container')
+    const emojiSearchInput = modal?.querySelector('input')
 
     let currentCategory = 'default'
     let searchValue = ''
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderEmoji()
     }, 300)
 
-    emojiSearchInput.addEventListener('input', (e) => handleSearch(e.target.value))
+    emojiSearchInput?.addEventListener('input', (e) => handleSearch(e.target.value))
 
     function renderEmoji() {
         emojiContainer.innerHTML = ''
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    modal.addEventListener('click', (e) => {
+    modal?.addEventListener('click', (e) => {
         const emoji = e.target.closest('.emoji-item')
         if (emoji) {
             insertEmoji(emoji)

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pattern = [3, 2]
     let imagesState = []
 
-    fileInput.addEventListener('change', (e) => {
+    fileInput?.addEventListener('change', (e) => {
         const files = Array.from(e.target.files)
         files.forEach(file => addImage(file))
         fileInput.value = ''
