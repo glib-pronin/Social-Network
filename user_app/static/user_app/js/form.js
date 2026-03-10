@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     emailField.addEventListener('input', () => {
         emailField.nextElementSibling.classList.add('hidden')
-        if (!/^[a-zA-Z0-9+_%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailField.value) && emailField.value){
+        if (!/^[a-zA-Z0-9+_.%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailField.value) && emailField.value){
             emailField.nextElementSibling.classList.remove('hidden')
         }
     })

@@ -4,7 +4,7 @@ function validateFields(email, password, confirmPassword, errorContainer, checkC
         errorContainer.textContent = 'Заповінть усі поля'
         return false
     }
-    if (!/^[a-zA-Z0-9+_%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+    if (!/^[a-zA-Z0-9+_%.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
         return false
     }
     if (password.length < 6) {
