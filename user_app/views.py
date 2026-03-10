@@ -6,6 +6,7 @@ from profile_app.models import Profile, Album
 from django.contrib.auth import login, logout
 from .utils import *
 from .decorators import anonymous_required
+import threading
 
 # Create your views here.
 
@@ -68,7 +69,7 @@ def handle_sending_code(req: HttpRequest):
     code = rand_code()
     user.email_verification.set_code(code)
     try:
-        send_code(code, user.email)
+        threading.Thread(target=send_code, args=(code, user.email)).start()
     except Exception:
         return JsonResponse(data={'success': False, 'error': 'smtp_error'})
     return JsonResponse(data={'success': True})

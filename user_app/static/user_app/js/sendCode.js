@@ -13,8 +13,10 @@ async function sendCode() {
     })
     console.log('sent');
     console.log(res);
-    const { success } = await res.json()
-    if (!success) {
+    const data = await res.json()
+    console.log(data);
+    
+    if (!data.success) {
         showError('Сталася помилка під час відправки коду, спробуйте пізніше!', true)
     }
 }
