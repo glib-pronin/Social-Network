@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
 import os
 
 load_dotenv()
@@ -147,18 +148,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')
-
-print("EMAIL USER:", EMAIL_HOST_USER)
-print("EMAIL USER:", DEFAULT_FROM_EMAIL)
-print("EMAIL PASSWORD:", EMAIL_HOST_PASSWORD)
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+SENDGRID_CLIENT = SendGridAPIClient(SENDGRID_API_KEY)
+print('SENDGRID_API_KEY', SENDGRID_API_KEY)
+print('DEFAULT_FROM_EMAIL', DEFAULT_FROM_EMAIL)
 
 
 CHANNEL_LAYERS = {

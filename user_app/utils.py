@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from sendgrid.helpers.mail import Mail
+from django.conf import settings
 import json, random, re
 
 def get_data_from_json(data)->dict:
@@ -24,14 +25,14 @@ def make_response_with_cookie(key, value, data):
 def send_code(code, email):
     html_content = render_to_string('user_app/verify_email.html', context={'code': code, 'user_email': email})
     text_content = f'Ваш код підтвердження: {code}'
-    send_mail(
-        subject="Підтвердження email - World IT",
-        message=text_content,
-        recipient_list=[email],
-        fail_silently=False,
-        from_email=None,
-        html_message=html_content
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=email,
+        subject='Підтвердження email - World IT',
+        plain_text_content=text_content,
+        html_content=html_content
     )
+    settings.SENDGRID_CLIENT.send(message)
 
 def check_email(email):
     return re.match(r'^[\w+._%-]+@[\w.-]+\.[a-zA-Z]{2,}$', email)

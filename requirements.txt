@@ -18,6 +18,7 @@ django-imagekit==6.0.0
 hyperlink==21.0.0
 idna==3.11
 Incremental==24.11.0
+MarkupSafe==3.0.3
 msgpack==1.1.2
 packaging==26.0
 pilkit==3.0
@@ -28,7 +29,9 @@ pyasn1_modules==0.4.2
 pycparser==3.0
 pyOpenSSL==25.3.0
 python-dotenv==1.2.1
+python-http-client==3.3.7
 requests==2.32.5
+sendgrid==6.12.5
 service-identity==24.2.0
 six==1.17.0
 sqlparse==0.5.5
@@ -39,5 +42,6 @@ tzdata==2025.3
 ujson==5.11.0
 Unidecode==1.4.0
 urllib3==2.6.3
+Werkzeug==3.1.6
 whitenoise==6.12.0
 zope.interface==8.2
