@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
-import os
+import os, cloudinary
 
 load_dotenv()
 
@@ -29,7 +29,6 @@ SECRET_KEY = 'django-insecure-k=eqlpf2w6(5d85=pz0=)=pr(d@4x_t$l%$j*y+jzjdti3j6(p
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-print(DEBUG)
 
 CSRF_TRUSTED_ORIGINS = [
     'https://web-production-1d419.up.railway.app'
@@ -43,8 +42,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'daphne',
     'channels',
-    # 'cloudinary',
-    # 'cloudinary_storage',
+    'cloudinary',
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -151,9 +150,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 SENDGRID_CLIENT = SendGridAPIClient(SENDGRID_API_KEY)
-print('SENDGRID_API_KEY', SENDGRID_API_KEY)
-print('DEFAULT_FROM_EMAIL', DEFAULT_FROM_EMAIL)
-
 
 CHANNEL_LAYERS = {
     'default': {
@@ -161,17 +157,18 @@ CHANNEL_LAYERS = {
     }
 }
 
-# CLOUDINARY_STORAGE = {
-#     'API_KEY': '614792237631319',
-#     'API_SECRET': '-60tl-kQbSJ8_z4N2laSNFmgNM8',
-#     'CLOUD_NAME': 'dobhivomf',
-# }
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
 
-# STORAGES = {
-#     'staticfiles': {
-#         'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'
-#     },
-#     'default': {
-#         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
-#     }
-# }
+
+STORAGES = {
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    },
+    'default': {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    }
+}

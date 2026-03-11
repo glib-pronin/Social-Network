@@ -75,6 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
     new Sortable(imageGrid, {
         animation: 150,
         ghostClass: 'dragging',
-        onEnd: () => normalizePattern()
+        onEnd: () => normalizePattern(),
     })
 })

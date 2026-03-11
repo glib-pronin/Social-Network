@@ -7,6 +7,7 @@ from django.db.models import Prefetch
 from ..models import Album, AlbumImage, Profile
 from ..utils import is_valid_album_data, delete_webp
 from user_app.utils import get_data_from_json
+from cloudinary.utils import cloudinary_url
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
@@ -37,7 +38,8 @@ def add_photo(req: HttpRequest):
     created = []
     for file in photo_files:
         photo = AlbumImage.objects.create(album=album, image=file, is_shown=not album.is_default)
-        created.append({'photoUrlWebp': photo.image_webp.url, 'photoId': photo.id, 'isShown': photo.is_shown, 'width': photo.width, 'height': photo.height, 'photoUrl': photo.image.url})
+        optimized_url, _ = cloudinary_url(source=photo.image.name, fetch_format='auto', quality='auto')
+        created.append({'photoUrlWebp': optimized_url, 'photoId': photo.id, 'isShown': photo.is_shown, 'width': photo.width, 'height': photo.height, 'photoUrl': photo.image.url})
     return JsonResponse({'success': True, 'photos': created})
 
 @login_required(login_url='registration')
@@ -48,7 +50,6 @@ def delete_photo(req: HttpRequest, photo_id: int):
         return JsonResponse({'success': False, 'error': 'invalid_payload'})
     if not photo.album or photo.album.profile != req.user.profile:
         return JsonResponse({'success': False, 'error': 'invalid_payload'})
-    delete_webp(photo)
     photo.image.delete(save=False)
     photo.delete()
     return JsonResponse({'success': True})
@@ -90,7 +91,6 @@ def delete_album(req: HttpRequest, album_id: int):
     if not album:
         return JsonResponse({'success': False, 'errors': 'invalid_payload'})
     for photo in album.images.all():
-        delete_webp(photo)
         photo.image.delete()
     album.delete()
     return JsonResponse({'success': True})

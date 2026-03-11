@@ -1,4 +1,5 @@
 {% load static %}
+{% load cloudinary %}
 {% for post in post_content.page %}
     <div class="post standart-border" data-post-id="{{ post.id }}" {% if post.is_viewed or post.author == user %} data-viewed="true" {% endif %}>
         {% if request.resolver_match.url_name == 'main' %}
@@ -24,7 +25,7 @@
                 <div class="author-info">
                     <div class="user-wrapper">
                         {% if post.author.profile.photo.image %}
-                            <img src="{{ post.author.profile.photo.image_webp.url }}" alt="" class="avatar">
+                            <img src="{% cloudinary_url post.author.profile.photo.image.name width=40  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}
@@ -74,7 +75,7 @@
                             {% for img in img_row %}
                             <a href="{{ img.image.url }}" data-pswp-width="{{ img.width }}" data-pswp-height="{{ img.height }}" >
                                 <div class="post-image-item">
-                                    <img src="{{ img.image_webp.url }}" alt="">
+                                    <img src="{% cloudinary_url img.image.name width=400  quality='auto' fetch_format='auto' %}" alt="">
                                 </div>
                             </a>
                             {% endfor %}

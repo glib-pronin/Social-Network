@@ -38,14 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
         editorBtns.classList.add('hidden')
         canvas.classList.add('hidden')
         image.src = originalSrc
-        image.classList.remove('not-saved')
-        console.log(originalSrc);
-        
+        image.classList.remove('not-saved')      
         if (originalSrc) image.classList.remove('hidden')
         if (!originalSrc) image.classList.add('hidden')
         signatureBlob = null
         msgError.classList.add('hidden')
         textCheckbox.checked = originalText
+        imageCheckbox.checked = originalImage
         if (signatureBlob) {
             URL.revokeObjectURL(tempObjectURL)
             tempObjectURL = null
@@ -74,11 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } 
         if (textCheckbox.checked !== originalText) formData.append('is_text_signature', textCheckbox.checked)
         if (imageCheckbox.checked !== originalImage) formData.append('is_image_signature', imageCheckbox.checked)
+        showSpinner(true, saveSignatureBtn.parentElement.parentElement)
+        saveSignatureBtn.parentElement.classList.add('hidden')
         const res = await fetch('/profile/settings/update-signature', {
             method: 'POST', 
             headers: {'X-CSRFToken': token},
             body: formData
         })
+        showSpinner(false, saveSignatureBtn.parentElement.parentElement)
+        saveSignatureBtn.parentElement.classList.remove('hidden')
         const { url, is_text_signature, is_image_signature, pseudonym } = await res.json()
         originalSrc = url
         originalImage = is_image_signature

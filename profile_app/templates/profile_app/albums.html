@@ -1,6 +1,7 @@
 {% extends 'profile_app/profile_layout.html' %}
 {% load static %}
 {% load profile_tags %}
+{% load cloudinary %}
 {% check_profile as my_profile %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
@@ -35,7 +36,7 @@
                     {% for photo in album.images.all %}
                         <div class="album-photo">
                         <a href="{{ photo.image.url }}" data-pswp-width="{{ photo.width }}" data-pswp-height="{{ photo.height }}" >
-                            <img src="{{ photo.image_webp.url }}" alt="">
+                            {% cloudinary photo.image.name width=400  quality="auto" fetch_format="auto" %}
                         </a>
                             <button class="delete-photo delete-default" data-photo-id="{{ photo.id }}">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

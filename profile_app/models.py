@@ -97,8 +97,7 @@ def upload_image(instance, filename):
     return os.path.join('albums/', new_filename)
 
 class AlbumImage(models.Model):
-    image = models.ImageField(upload_to=upload_image)
-    image_webp = ImageSpecField(processors=[ResizeToFit(width=400, height=400)], source='image', format='WEBP', options={'quality': 75})
+    image = models.ImageField(upload_to=upload_image, width_field='width', height_field='height')
     album = models.ForeignKey(to=Album, on_delete=models.CASCADE, related_name='images')
     is_shown = models.BooleanField(default=True)
     width = models.IntegerField(null=True, blank=True)
@@ -107,11 +106,3 @@ class AlbumImage(models.Model):
 
     def __str__(self):
         return f'Image - {self.id}, album - {self.album.name}, {self.album.year} year'
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.image and not self.width:
-            img = Image.open(self.image.path)
-            self.width, self.height = img.size
-            img.close()
-            super().save()

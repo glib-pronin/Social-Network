@@ -48,8 +48,7 @@ def upload_image(instance, filename):
     return os.path.join('posts/images/', new_filename)
 
 class PostImage(models.Model):
-    image = models.ImageField(upload_to=upload_image)
-    image_webp = ImageSpecField(source='image', format='WEBP', processors=[ResizeToFit(width=400, height=400)], options={'quality': 75})
+    image = models.ImageField(upload_to=upload_image, width_field='width', height_field='height')
     row = models.IntegerField()
     column = models.IntegerField()
     width = models.IntegerField(null=True, blank=True)
@@ -58,14 +57,6 @@ class PostImage(models.Model):
 
     def __str__(self):
         return f'Image from post "{self.post.title}", row - {self.row}, column - {self.column}'
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.image and not self.width:
-            img = Image.open(self.image.path)
-            self.width, self.height = img.size
-            img.close()
-            super().save()
     
 class HiddenPost(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='hidden_posts')
