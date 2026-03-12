@@ -77,15 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData()
         formData.append('username', usernameInput.value)
         if (selectedPhoto) formData.append('avatar', selectedPhoto)
-        showSpinner(true, saveBtn.parentElement.parentElement)
-        saveBtn.parentElement.classList.add('hidden')
+        showSpinner(true, saveBtn.parentElement.parentElement, saveBtn.parentElement)
         const res = await fetch('/profile/settings/update-personal-data', {
             method: 'POST',
             headers: {'X-CSRFToken': token},
             body: formData
         })
-        showSpinner(false, saveBtn.parentElement.parentElement)
-        saveBtn.parentElement.classList.remove('hidden')
+        showSpinner(false, saveBtn.parentElement.parentElement, saveBtn.parentElement)
         const { success, data } = await res.json()
         if (success) {
             initOriginalData({username: data.username, photoUrl: data.photo_url})

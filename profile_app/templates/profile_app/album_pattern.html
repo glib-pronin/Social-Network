@@ -3,6 +3,12 @@
 {% check_profile as my_profile %}
 <div class="section post-gallery" data-album-id="{{ album.id }}">
     {% if my_profile %} 
+        <div class="loading-block hidden">
+            <div class="loading">
+                <div class="spinner"></div>
+                <span></span>
+            </div>
+        </div>
         <div class="menu-container hidden">
             <button class="close-menu">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

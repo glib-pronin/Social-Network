@@ -26,6 +26,7 @@ async function loadPost() {
     wrapper.innerHTML = html_post
     observeNewPosts(wrapper)
     postsContainer.append(...wrapper.children)
+    initLightBox()
     pageNum++
 }
 

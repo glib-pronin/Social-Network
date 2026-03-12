@@ -21,6 +21,12 @@
     {% for album in albums %}
         {% if album.is_default %}
             <div class="section post-gallery">
+                <div class="loading-block hidden">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <span></span>
+                    </div>
+                </div>
                 <div class="first-line">
                     <span>{{ album.name }}</span>
                     <button id="add-photo-default" data-album-id="{{ album.id }}">
@@ -128,7 +134,7 @@
                 </div>
                 <div class="loading hidden">
                     <div class="spinner"></div>
-                    <span>Обробка даних...</span>
+                    <span>Видаляємо альбом...</span>
                 </div>
             </form>
         </div>

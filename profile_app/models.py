@@ -94,7 +94,7 @@ class Album(models.Model):
 def upload_image(instance, filename):
     ext = filename.split('.')[-1]
     new_filename = f'{uuid.uuid4()}.{ext}'
-    return os.path.join('albums/', new_filename)
+    return os.path.join('albums/', str(instance.album.id), new_filename)
 
 class AlbumImage(models.Model):
     image = models.ImageField(upload_to=upload_image, width_field='width', height_field='height')

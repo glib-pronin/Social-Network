@@ -5,8 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const addAlbumBlock = document.getElementById('add-new-album-block')
     const addAlbumBtn = addAlbumBlock.querySelector('#add-new-album')
     const albumModal = document.getElementById('album-modal')
+    const confirmModal = document.getElementById('confirm-delete-album-modal')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
+    confirmModal.showLoading = showLoading
+    confirmModal.hideLoading = hideLoading
     let imgContainer = null
     let albumType = null
     let albumCb = null
@@ -15,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.dataset.albumId = addDefaultPhoto.dataset.albumId
         imgContainer = addDefaultPhoto.parentElement.nextElementSibling
         albumType = 'default'
+        fileInput.triggeredBtn = addDefaultPhoto
         fileInput.click()
     })
     // Обробка завантаження фото
@@ -27,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('photos', file)
         }
         formData.append('album_id', fileInput.dataset.albumId)
+        showLoading(fileInput.triggeredBtn.closest('.section'), 'Додаємо фотографії до альбому')
         const res = await fetch('/profile/albums/add-photo', {
             method: 'POST',
             headers: {
@@ -34,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: formData
         })
+        hideLoading(fileInput.triggeredBtn.closest('.section'))
+        delete fileInput.triggeredBtn
         const {success, photos} = await res.json()
         if (success) {
             photos.forEach(({photoUrlWebp, photoId, isShown, width, height, photoUrl}) => {
@@ -89,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (success) {
                 addAlbumBlock.insertAdjacentHTML('beforebegin', html)
                 addAlbumBlock.querySelector('.msg-to-user').textContent = 'Створіть новий альбом'
+                initLightBox()
             }
             albumModal.querySelector('#album-modal-cancel-btn').click()
         }
@@ -105,7 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.closest('.delete-photo')) {
             const deleteBtn = e.target.closest('.delete-photo')
             const photoId = deleteBtn.dataset.photoId
+            showLoading(deleteBtn.closest('.section'), 'Видаляємо фотографію з альбому')
             const res = await fetch(`/profile/albums/delete-photo/${photoId}`, { method: 'POST', headers: {'X-CSRFToken': token} })
+            hideLoading(deleteBtn.closest('.section'))
             const {success} = await res.json()
             if (success) {
                 deleteBtn.parentElement.remove()
@@ -117,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fileInput.dataset.albumId = addBtn.dataset.albumId
             imgContainer = addBtn.parentElement.parentElement
             albumType = 'album'
+            fileInput.triggeredBtn = addBtn
             fileInput.click()
         }
 
@@ -143,10 +154,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         else if (e.target.closest('.delete-menu')) {   
             const section = e.target.closest('.section')
-            const confirmModal = document.getElementById('confirm-delete-album-modal')
             confirmModal.classList.remove('hidden')
             confirmModal.dataset.albumId = section.dataset.albumId
             confirmModal.sectionToDelete = section
         }
     })
+
+    function showLoading(album, msg) {
+        const loadingBlock = album.querySelector('.loading-block')
+        loadingBlock.querySelector('span').textContent = msg
+        loadingBlock.classList.remove('hidden')
+    }
+
+    function hideLoading(album) {
+        album.querySelector('.loading-block').classList.add('hidden')
+    }
 })

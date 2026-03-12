@@ -82,6 +82,24 @@
     cursor: pointer;
 }
 
+.loading-block {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.loading-block .loading span {
+    color: white;
+}
+
 @media (max-width: 680px) {
     #album-modal form {
         width: 370px;

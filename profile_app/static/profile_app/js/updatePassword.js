@@ -36,16 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
             passwordInput.nextElementSibling.classList.remove('hidden')
             return
         }
-        showSpinner(true, sendBtn.parentElement.parentElement)
-        sendBtn.parentElement.classList.add('hidden')
+        showSpinner(true, sendBtn.parentElement.parentElement, sendBtn.parentElement)
         const res = await fetch('/profile/settings/update-password', {
             method: 'PATCH',
             headers: {'Content-Type': 'application/json', 'X-CSRFToken': token},
             body: JSON.stringify({password, confirmPassword, oldPassword})
         })
         const { success } = await res.json()
-        showSpinner(false, sendBtn.parentElement.parentElement)
-        sendBtn.parentElement.classList.remove('hidden')
+        showSpinner(false, sendBtn.parentElement.parentElement, sendBtn.parentElement)
         if (!success) {
             oldPasswordInput.nextElementSibling.classList.remove('hidden')
             oldPasswordInput.nextElementSibling.textContent = 'Неправильний поточний пароль'

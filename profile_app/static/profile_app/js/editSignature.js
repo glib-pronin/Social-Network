@@ -73,15 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } 
         if (textCheckbox.checked !== originalText) formData.append('is_text_signature', textCheckbox.checked)
         if (imageCheckbox.checked !== originalImage) formData.append('is_image_signature', imageCheckbox.checked)
-        showSpinner(true, saveSignatureBtn.parentElement.parentElement)
-        saveSignatureBtn.parentElement.classList.add('hidden')
+        showSpinner(true, saveSignatureBtn.parentElement.parentElement, saveSignatureBtn.parentElement)
         const res = await fetch('/profile/settings/update-signature', {
             method: 'POST', 
             headers: {'X-CSRFToken': token},
             body: formData
         })
-        showSpinner(false, saveSignatureBtn.parentElement.parentElement)
-        saveSignatureBtn.parentElement.classList.remove('hidden')
+        showSpinner(false, saveSignatureBtn.parentElement.parentElement, saveSignatureBtn.parentElement)
         const { url, is_text_signature, is_image_signature, pseudonym } = await res.json()
         originalSrc = url
         originalImage = is_image_signature
