@@ -170,11 +170,12 @@ cloudinary.config(
     secure=True
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
 
 STORAGES = {
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage'
+        'BACKEND': 'whitenoise.storage.StaticFilesStorage'
     },
     'default': {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
