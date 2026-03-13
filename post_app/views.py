@@ -9,6 +9,7 @@ from user_app.utils import get_data_from_json, User
 from .utils import generate_username, get_page_data
 from .models import *
 from profile_app.models import *
+from asgiref.sync import sync_to_async
 import re
 
 # Create your views here.
@@ -109,7 +110,7 @@ def get_tags(req: HttpRequest):
 
 @login_required(login_url='registration')
 @require_http_methods(["POST"])
-def create_post(req: HttpRequest):
+async def create_post(req: HttpRequest):
     title = req.POST.get('title')
     my_profile = req.GET.get('my_profile') == 'true'
     if not title:
@@ -118,17 +119,17 @@ def create_post(req: HttpRequest):
     content = req.POST.get('content')
     links = req.POST.get('links')
     tags = get_data_from_json(req.POST.get('tags'))
-    post = Post.objects.create(title=title, subject=subject, content=content, links=links, author=req.user)
-    post.tags.set(tags or [])
+    post = await sync_to_async(Post.objects.create)(title=title, subject=subject, content=content, links=links, author=req.user)
+    await sync_to_async(post.tags.set)(tags or [])
     positions = get_data_from_json(req.POST.get('positions', '[]'))
     images = req.FILES.getlist('images')
     if len(images) == len(positions):
         for img, pos in zip(images, positions):
-            PostImage.objects.create(image=img, row=pos.get('row'), column=pos.get('col'), post=post)
+            await sync_to_async(PostImage.objects.create)(image=img, row=pos.get('row'), column=pos.get('col'), post=post)
     return JsonResponse(
         {
             'success': True, 
-            'html': None if not my_profile else render_to_string(template_name='post_app/posts.html', context={'post_content': {'page': [post]}})
+            'html': None if not my_profile else await sync_to_async(render_to_string)(template_name='post_app/posts.html', context={'post_content': {'page': [post]}})
         })
 
 @login_required(login_url='registration')
