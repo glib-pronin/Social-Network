@@ -134,17 +134,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             formData.append('positions', JSON.stringify(positions))
-        }               
+        }      
+        showSpinner(true, form, form.querySelector('.btns-container'))
+        showPostLoading()
         const res = await fetch(`/create-post?my_profile=${addNewPostToDOM}`, {
             method: 'POST',
             headers: {'X-CSRFToken': token},
             body: formData 
-        })
+        })        
+        showSpinner(false, form, form.querySelector('.btns-container'))
+        showPostSuccess()
         const data = await res.json()
         if (data.success) {
             modal.classList.add('hidden')
-            if (addNewPostToDOM ) {
+            if (addNewPostToDOM) {
                 postsContainer.insertAdjacentHTML('afterbegin', data.html)
+                initLightBox()
             }
         }
     })

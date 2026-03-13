@@ -116,6 +116,26 @@
     cursor: pointer;
 }
 
+#post-loading-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-silver);
+    border-radius: 10px;
+    width: fit-content;
+    position: fixed;
+    right: 20px;
+    bottom: calc(var(--footer-height) + 20px);
+    opacity: 1;
+    transition: opacity 2s ease;
+}
+
+#post-loading-modal.fade-out {
+    opacity: 0;
+}
+
 @media (max-width: 680px) {
     .modal-container form .form-text {
         font-size: 24px;

@@ -218,6 +218,10 @@ form#create-post .send-btn {
     padding: 10px 16px;
 }
 
+form#create-post .loading {
+    align-self: flex-end;
+}
+
 @media (max-width: 500px) {
     form#create-post .input-container, .first-input, .links-vertical, 
     form#create-post .input-container.full-width  {

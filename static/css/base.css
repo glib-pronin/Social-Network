@@ -52,6 +52,7 @@ font-face {
   --header-padding-horizontal: 80px;
   --form-radius: 20px;
   --form-gap: 36px;
+  --footer-height: 70px;
 }
 
 body {
@@ -196,7 +197,7 @@ h1, h2, h3, p {
 footer {
   display: none;
   box-sizing: border-box;
-  height: 70px;
+  height: var(--footer-height);
   padding-bottom: 16px;
   position: fixed;
   z-index: 10;

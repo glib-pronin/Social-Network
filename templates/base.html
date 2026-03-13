@@ -95,7 +95,25 @@
     <main>
         {% block content %}{% endblock %}
     </main>
-    {% if user.is_authenticated %}    
+    {% if user.is_authenticated %} 
+        <div id="post-loading-modal" class="hidden">
+            <div class="loading" id="post-loading-block">
+                <div class="spinner"></div>
+                <span>Створюємо пост...</span>
+            </div>
+            <div class="loading hidden" id="loading-success-block">
+                <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <rect width="35" height="35" fill="url(#pattern0_1984_8198)"/>
+                    <defs>
+                        <pattern id="pattern0_1984_8198" patternContentUnits="objectBoundingBox" width="1" height="1">
+                            <use xlink:href="#image0_1984_8198" transform="scale(0.0111111)"/>
+                        </pattern>
+                        <image id="image0_1984_8198" width="90" height="90" preserveAspectRatio="none" xlink:href="data:image/png;base64,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"/>
+                    </defs>
+                </svg>
+                <span>Пост успішно створено</span>
+            </div>
+        </div>   
         <footer>
             <a href="{% url 'main' %}" {% if request.resolver_match.url_name == "main" %} class="selected" {% endif %}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
