@@ -19,9 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const openFormMobile = document.getElementById('open-create-post-mobile')
     
     const postsContainer = document.getElementById('posts-container')
-    const addNewPostToDOM = postsContainer?.dataset.myProfile === 'True' ? true : false
+    const addNewPostToDOM = postsContainer?.dataset.myProfile === 'True' ? true : false 
     
-
     const openCreatePost = async (e) => {
         e.preventDefault()
         await cleanForm(modal)

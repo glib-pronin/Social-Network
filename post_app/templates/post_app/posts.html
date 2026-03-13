@@ -1,6 +1,6 @@
 {% load static %}
 {% load cloudinary %}
-{% for post in post_content.page %}
+{% for post in post_content.posts %}
     <div class="post standart-border" data-post-id="{{ post.id }}" {% if post.is_viewed or post.author == user %} data-viewed="true" {% endif %}>
         {% if request.resolver_match.url_name == 'main' %}
             <div class="menu-container hidden">

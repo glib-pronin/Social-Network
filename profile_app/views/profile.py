@@ -23,8 +23,8 @@ def render_profile(req: HttpRequest, profile_id: int):
         my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
         my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
         is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
-    ).order_by('-created_at').all()
-    page = get_page_data(page_qs, 1)
+    ).order_by('-id').all()
+    page = get_page_data(page_qs, None)
     featured_album, featured_photo = get_featured_album(profile)
     return render(
         request=req,

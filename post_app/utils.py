@@ -1,7 +1,6 @@
 from unidecode import unidecode
 from django.contrib.auth.models import User
 from django.db import models
-from django.core.paginator import Paginator
 import random
 
 MAX_ATTEMPTS = 30
@@ -25,8 +24,11 @@ def is_username_available(username, user=None):
         u = u.exclude(pk=user.id)
     return not u.exists()
 
-def get_page_data(queryset: models.QuerySet, current_page: int, count: int = 5):
-    print(queryset)
-    pages = Paginator(queryset, count)
-    page = pages.get_page(current_page)
-    return {'page': page, 'has_next': page.has_next(), 'current_page': page.number}        
+def get_page_data(queryset: models.QuerySet, cursor: int | None, count: int = 5):
+    if cursor:
+        queryset = queryset.filter(id__lt = cursor)
+    posts = list(queryset[:count + 1])
+    has_next = len(posts) > count
+    if has_next:
+        posts = posts[:-1]
+    return {'posts': posts, 'has_next': has_next, 'cursor': posts[-1].id if posts else None}        

@@ -29,16 +29,16 @@ def render_main(req: HttpRequest):
         my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
         my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
         is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
-    ).order_by('-created_at').all()
+    ).order_by('-id').all()
     return render(
         request=req,    
         template_name='post_app/main.html',
-        context={'profile_user': req.user, 'first_entry': is_first_entry, 'post_content': get_page_data(page_qs, 1)}
+        context={'profile_user': req.user, 'first_entry': is_first_entry, 'post_content': get_page_data(page_qs, None)}
     )
 
 @login_required(login_url='registration')
 def get_post(req: HttpRequest):
-    page_num = req.GET.get('page')
+    cursor = req.GET.get('cursor')
     profile_id = req.GET.get('id')
     if not profile_id:
         hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
@@ -55,11 +55,11 @@ def get_post(req: HttpRequest):
         my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
         my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
         is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
-    ).order_by('-created_at').all()
-    page = get_page_data(page_qs, page_num)
+    ).order_by('-id').all()
+    page = get_page_data(page_qs, cursor)
     return JsonResponse({
         'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}, request=req),
-        'has_next': page.get('has_next')
+        'has_next': page.get('has_next'), 'new_cursor': page.get('cursor')
     })
 
 @login_required(login_url='registration')
@@ -126,10 +126,11 @@ async def create_post(req: HttpRequest):
     if len(images) == len(positions):
         for img, pos in zip(images, positions):
             await sync_to_async(PostImage.objects.create)(image=img, row=pos.get('row'), column=pos.get('col'), post=post)
+    html = None if not my_profile else await sync_to_async(render_to_string)(template_name='post_app/posts.html', context={'post_content': {'posts': [post]}})          
     return JsonResponse(
         {
             'success': True, 
-            'html': None if not my_profile else await sync_to_async(render_to_string)(template_name='post_app/posts.html', context={'post_content': {'page': [post]}})
+            'html': html
         })
 
 @login_required(login_url='registration')

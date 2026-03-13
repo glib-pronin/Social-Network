@@ -27,7 +27,7 @@
             <div class="posts" id="posts-container">
                 {% include 'post_app/posts.html' %}
             </div>
-            <div id="post-loader" data-has-more="{{ post_content.has_next }}"></div>
+            <div id="post-loader" data-has-more="{{ post_content.has_next }}" data-cursor="{{ post_content.cursor }}"></div>
         </div>
     </div>
     {% if first_entry %}
