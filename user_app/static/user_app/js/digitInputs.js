@@ -22,6 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 digitInputs[ind+1].focus()
             } 
         })
+
+        digitInput.addEventListener('paste', (e) => {
+            e.preventDefault()
+            const paste = e.clipboardData.getData('text').trim()
+            paste.split('').forEach((char, i) => {
+                if (digitInputs[i]) {
+                    digitInputs[i].value = char
+                }
+            })
+        })
     })
 
     emailForm?.addEventListener('submit', async (e) => {
