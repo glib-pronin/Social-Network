@@ -113,13 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.closest('.delete-photo')) {
             const deleteBtn = e.target.closest('.delete-photo')
             const photoId = deleteBtn.dataset.photoId
-            showLoading(deleteBtn.closest('.section'), 'Видаляємо фотографію з альбому')
-            const res = await fetch(`/profile/albums/delete-photo/${photoId}`, { method: 'POST', headers: {'X-CSRFToken': token} })
-            hideLoading(deleteBtn.closest('.section'))
-            const {success} = await res.json()
-            if (success) {
-                deleteBtn.parentElement.remove()
-            }
+            deleteBtn.parentElement.remove()
+            await fetch(`/profile/albums/delete-photo/${photoId}`, { method: 'POST', headers: {'X-CSRFToken': token} })
         }
 
         else if (e.target.closest('.add-new-photo')) {

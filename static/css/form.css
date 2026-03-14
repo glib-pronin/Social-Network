@@ -58,6 +58,11 @@ form {
     color: var(--color-red);
 }
 
+.post .error-msg {
+    font-size: 16px;
+    font-weight: 500;
+}
+
 .success-msg {
     font-size: 16px;
     font-weight: 500;

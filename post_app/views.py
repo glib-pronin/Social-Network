@@ -173,3 +173,14 @@ def add_post_view(req: HttpRequest, post_id: int):
         return JsonResponse({'success': False, 'error': 'can`t_view_own_post'})
     PostView.objects.get_or_create(user=req.user, post=post)
     return JsonResponse({'success': True})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def delete_post(req: HttpRequest, post_id: int):
+    post = Post.objects.filter(pk=post_id).first()
+    if not post or post.author != req.user:
+        return JsonResponse({'success': False, 'error': 'invalid_payload'})
+    for image in post.images.all():
+        image.image.delete()
+    post.delete()
+    return JsonResponse({'success': True})
