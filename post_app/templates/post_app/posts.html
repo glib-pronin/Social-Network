@@ -37,7 +37,7 @@
                 <div class="author-info">
                     <div class="user-wrapper">
                         {% if post.author.profile.photo.image %}
-                            <img src="{% cloudinary_url post.author.profile.photo.image.name width=40  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+                            <img src="{% cloudinary_url post.author.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}

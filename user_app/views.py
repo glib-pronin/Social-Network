@@ -67,6 +67,7 @@ def handle_sending_code(req: HttpRequest):
     if not user or user.is_active:
         return JsonResponse(data={'success': False, 'error': 'user_not_found'})
     code = rand_code()
+    print(code)
     user.email_verification.set_code(code)
     try:
         threading.Thread(target=send_code, args=(code, user.email)).start()

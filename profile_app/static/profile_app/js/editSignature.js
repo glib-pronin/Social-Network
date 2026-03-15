@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             URL.revokeObjectURL(tempObjectURL)
             tempObjectURL = null
         } 
-        if (pseudonymInput.value !== originalPseudonym) {
+        if (pseudonymInput.value.trim() !== originalPseudonym) {
             if (!checkPseudonym()) return
             formData.append('pseudonym', pseudonymInput.value)
         } 
@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             value = value.slice(0, MAX_LENGTH)
         }
         pseudonymInput.value = value
-        console.log(checkPseudonym())
     })
 
     function checkPseudonym() {
