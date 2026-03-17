@@ -11,5 +11,9 @@ def profile_nav(request):
                 'profile_settings',
                 'albums'
             ],
+            'chats': [
+                'chat_lobby',
+                'chat',
+            ],
         }
     }

@@ -7,11 +7,11 @@
     gap: 16px;
 }
 
-#emoji-picker input:placeholder-shown {
+.search-input:placeholder-shown {
     padding-left: 46px;
 } 
 
-#emoji-picker:has(:placeholder-shown) .input-icon {
+.input-container:has(.search-input:placeholder-shown) .input-icon {
     display: block;
 } 
 

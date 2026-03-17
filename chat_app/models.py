@@ -15,6 +15,13 @@ class Chat(models.Model):
         users_names = ', '.join([ user.username for user in self.users.all()])
         return f'Group, name - {self.name}'  if self.is_group else f'Chat, {users_names}'
     
+    def get_initial(self):
+        words = self.name.split(' ')
+        name = ''
+        for word in words[:2]:
+            name += word[0]
+        return name.upper()
+    
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='messages', null=True, blank=True)
@@ -23,6 +30,20 @@ class Message(models.Model):
 
     def __str__(self):
         return f'Message from user {self.sender.username}, to chat {self.chat.id} - "{self.text[:15]}"'
+    
+    def get_short_text(self):
+        if len(self.text) <= 10:
+            return self.text
+        else:
+            return self.text[:10] + '...'
+        
+    def get_date(self):
+        now = timezone.localtime(timezone.now())
+        created = timezone.localtime(self.created_at)
+        if created.date() == now.date():
+             return created.strftime("%H:%M")
+        return created.strftime("%d.%m.%Y")
+
     
 class MessageImage(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='images')

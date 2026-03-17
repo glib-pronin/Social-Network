@@ -21,13 +21,6 @@
     flex-grow: 1;
 }
 
-.avatar {
-    height: 46px;
-    width: 46px;
-    border-radius: 100px;
-    object-fit: cover;
-}
-
 .signature {
     /* height: 49px;
     width: 220px; */
