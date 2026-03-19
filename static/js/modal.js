@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
 
-    modals.forEach(modal => {
+    modals.forEach(modal => {        
         const form = modal.querySelector('form')
-        const closeModal = form.querySelector('.close-modal')
-        closeModal.addEventListener('click', () => {
+        const closeModal = form.querySelector('.close-modal')        
+        closeModal.addEventListener('click', () => {            
             modal.classList.add('hidden')
             modal.querySelectorAll('input').forEach(inp => inp.value = '')
             modal.querySelectorAll('.error-msg').forEach(err => err.classList.add('hidden'))

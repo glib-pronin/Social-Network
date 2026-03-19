@@ -116,7 +116,7 @@
     cursor: pointer;
 }
 
-#post-loading-modal {
+#element-loading-modal {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,7 +132,7 @@
     transition: opacity 2s ease;
 }
 
-#post-loading-modal.fade-out {
+#element-loading-modal.fade-out {
     opacity: 0;
 }
 

@@ -3,7 +3,6 @@
 {% block links %}
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/friends.css' %}">
-    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
 {% endblock %}
 {% block navigation-links %}
@@ -83,7 +82,7 @@
                 <div class="friends-section-card" data-id="{{ friend.id }}"">
                     <div class="user-info">
                         {% if friend.photo.image %}
-                            <img src="{{ friend.photo.image_webp.url }}" alt="Profile photo" class="avatar">
+                            <img src="{{ friend.photo.image.url }}" alt="Profile photo" class="avatar">
                         {% else %}
                             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
                         {% endif %}
@@ -125,5 +124,4 @@
 {% block scripts %}
     <script src="{% static 'profile_app/js/changeRequestIndicator.js' %}"></script>
     <script src="{% static 'profile_app/js/friends.js' %}"></script>
-    <script src="{% static 'js/modal.js' %}"></script>
 {% endblock %}

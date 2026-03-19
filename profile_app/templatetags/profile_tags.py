@@ -9,6 +9,6 @@ def check_profile(context):
     req = context.get('request')
     user = req.user
     url = req.path
-    if "profile" in url and str(user.profile.id) not in url:
-        return False
-    return True
+    if ("profile" in url and str(user.profile.id) in url) or url == '/create-post':
+        return True
+    return False

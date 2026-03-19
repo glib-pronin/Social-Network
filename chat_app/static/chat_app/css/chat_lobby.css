@@ -88,13 +88,13 @@
     gap: 4px;
 }
 
-.without-time .chat-data span:first-child {
-    font-weight: 500;
-}
-
 .without-time .chat-data span:last-child {
     font-weight: 400;
     font-size: 14px;
+}
+
+.without-time .chat-data span:first-child {
+    font-weight: 500;
 }
 
 .msg-time {

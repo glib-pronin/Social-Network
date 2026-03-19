@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.db.models import Prefetch
 from ..models import Album, AlbumImage, Profile
-from ..utils import is_valid_album_data, delete_webp
+from ..utils import is_valid_album_data
 from user_app.utils import get_data_from_json
 from cloudinary.utils import cloudinary_url
 import cloudinary.api

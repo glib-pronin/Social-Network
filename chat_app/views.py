@@ -1,17 +1,24 @@
 from django.shortcuts import render, redirect
-from .models import *
+from django.http import HttpRequest, JsonResponse
 from django.db.models import Prefetch, Max, F
+from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
+from cloudinary.utils import cloudinary_url
+from .models import *
+from .utils import *
 
 
 # Create your views here.
 
-def render_chat(req, chat_id: int):
+def render_chat(req: HttpRequest, chat_id: int):
     chat = Chat.objects.filter(pk=chat_id).first()
     if not chat:
         return redirect('select_chat')
     return render(request=req, template_name='chat_app/chat.html', context={'chat': chat})
 
-def render_chat_lobby(req):
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def render_chat_lobby(req: HttpRequest):
     friends = req.user.profile.friends.select_related('user', 'photo').all()
     chats = req.user.chats.annotate(
         last_message_time = Max('messages__created_at')
@@ -25,3 +32,37 @@ def render_chat_lobby(req):
         to_attr='all_messages'
     ))
     return render(request=req, template_name='chat_app/chat_lobby.html', context={'friends': friends, 'chats': chats})
+
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def get_friends_list(req: HttpRequest):
+    friends = req.user.profile.friends.select_related('user', 'photo').all().order_by('user__first_name', 'user__last_name')
+    latin, cyrillic = group_friends_by_letter(friends, req)
+    return JsonResponse({'success': True, 'latin': latin, 'cyrillic': cyrillic})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def create_group(req: HttpRequest):
+    user = req.user
+    name = req.POST.get('name', '')
+    user_ids = req.POST.getlist('users')
+    avatar = req.FILES.get('avatar')
+
+    if len(name) < 3:
+        return JsonResponse({'success': False, 'error': 'invalid payload'})
+    if not user_ids:
+        return JsonResponse({'success': False, 'error': 'invalid payload'})
+    friend_ids = user.profile.friends.values_list('user_id', flat=True)
+    valid_users = User.objects.filter(id__in=user_ids).filter(id__in=friend_ids)
+    if not valid_users.exists():
+        return JsonResponse({'success': False, 'error': 'invalid payload'})
+
+    group = Chat.objects.create(name=name, is_group=True, admin=user, avatar=avatar)
+    group.users.add(user, *valid_users)
+    chat_data = {'id': group.id, 'name': group.name, 'shortName': group.get_initial()}
+    if avatar:
+        chat_data['hasAvatar'] = True
+        chat_data['avatarUrl'], _ = cloudinary_url(source=group.avatar.name, fetch_format='auto', quality='auto')
+    else:
+        chat_data['hasAvatar'] = False
+    return JsonResponse({'success': True, 'chatData': chat_data})

@@ -33,7 +33,7 @@
     </div>
 </a>
 {% check_profile as my_profile %}
-{% if my_profile %}
+{% if request.resolver_match.url_name == 'main' %}
     <div class="info-block standart-border">
         <div class="info-block-header">
             <div class="header-name">
@@ -78,7 +78,8 @@
             <span>Дивитись всі</span>
         </div>
     </div>
-{% else %}
+{% endif %}
+{% if request.resolver_match.url_name == 'profile_page' and not my_profile %}
     <div class="info-block standart-border">
         <div class="info-block-header">
             <div class="header-name">

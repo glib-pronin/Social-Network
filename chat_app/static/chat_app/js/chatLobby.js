@@ -45,8 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('.search-input')
     const contacts = document.querySelectorAll('.contact')
     const onInput = debounce(() => {
-        console.log(contacts);
-        
         const value = searchInput.value.trim()
 
         contacts.forEach(contact => {

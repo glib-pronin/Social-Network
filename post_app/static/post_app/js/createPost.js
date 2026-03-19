@@ -135,14 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('positions', JSON.stringify(positions))
         }      
         showSpinner(true, form, form.querySelector('.btns-container'))
-        showPostLoading()
+        showElementLoading('Створюємо пост...')
         const res = await fetch(`/create-post?my_profile=${addNewPostToDOM}`, {
             method: 'POST',
             headers: {'X-CSRFToken': token},
             body: formData 
         })        
         showSpinner(false, form, form.querySelector('.btns-container'))
-        showPostSuccess()
+        showElementSuccess('Пост успішно створено')
         const data = await res.json()
         if (data.success) {
             modal.classList.add('hidden')

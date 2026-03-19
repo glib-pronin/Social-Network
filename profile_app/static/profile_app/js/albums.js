@@ -65,10 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     hideBtn.classList.add('toggle-photo')
                     hideBtn.classList.toggle('hidden', !isShown)
                     hideBtn.append(createHideSVG())
+                    hideBtn.dataset.photoId = photoId
                     const showBtn = document.createElement('button')
                     showBtn.classList.add('toggle-photo')
                     showBtn.classList.toggle('hidden', isShown)
                     showBtn.append(createShowSVG())
+                    showBtn.dataset.photoId = photoId
                     imgWrapper.append(hideBtn, showBtn)
                     const child = imgContainer.querySelector('.add-new-block')
                     if (child) imgContainer.insertBefore(imgWrapper, child)

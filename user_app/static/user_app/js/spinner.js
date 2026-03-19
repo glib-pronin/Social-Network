@@ -6,21 +6,23 @@ function showSpinner(show, container, btnsContainer = null) {
     if (btnsContainer) btnsContainer.classList.toggle('hidden', show)
 }
 
-function showPostLoading() {
-    const modal = document.getElementById('post-loading-modal')
-    const loading = document.getElementById('post-loading-block')
+function showElementLoading(loadingText) {
+    const modal = document.getElementById('element-loading-modal')
+    const loading = document.getElementById('element-loading-block')
     const success = document.getElementById('loading-success-block')
     
+    loading.querySelector('span').textContent = loadingText
     success.classList.add('hidden')
     loading.classList.remove('hidden')
     modal.classList.remove('hidden')
 }
 
-function showPostSuccess() {
-    const modal = document.getElementById('post-loading-modal')
-    const loading = document.getElementById('post-loading-block')
+function showElementSuccess(successText) {
+    const modal = document.getElementById('element-loading-modal')
+    const loading = document.getElementById('element-loading-block')
     const success = document.getElementById('loading-success-block')
 
+    success.querySelector('span').textContent = successText
     success.classList.remove('hidden')
     loading.classList.add('hidden')
     setTimeout(() => {

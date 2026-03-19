@@ -4,7 +4,6 @@
 {% check_profile as my_profile %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
-    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile.css' %}">
 {% endblock %}
@@ -419,7 +418,6 @@
 {% block scripts %}
     {% if my_profile %}
         <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-        <script src="{% static 'js/modal.js' %}"></script>
         <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
         <script src="{% static 'user_app/js/password.js' %}"></script>
         <script src="{% static 'user_app/js/digitInputs.js' %}"></script>

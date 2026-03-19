@@ -1,0 +1,93 @@
+.modal-container form {
+    padding-top: 24px;
+    gap: 24px;
+    width: 490px;
+}
+
+.modal-container h3 {
+    font-weight: 500;
+}
+
+.selected-users {
+    color: var(--color-blue);
+    font-size: 14px;
+    font-weight: 500;
+    align-self: flex-start;
+}
+
+.all-users {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+#select-users-for-group-modal .all-users {
+    height: 40vh;
+    max-height: 432px;
+}
+
+.letter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.user {
+    box-sizing: border-box;
+    padding: 8px 16px;
+    border-top: 1px solid var(--color-plum);
+    border-bottom: 1px solid var(--color-plum);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+}
+
+.user.without-borders {
+    border: none;
+    padding: 0;
+}
+
+.user svg {
+    cursor: pointer;
+}
+
+.btns-container {
+    align-self: flex-end;
+}
+
+.group-photo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.photo-btns {
+    display: flex;
+    gap: 24px;
+}
+
+.photo-btns span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--color-purple);
+    cursor: pointer;
+}
+
+.selected-users-list {
+    height: 158px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.error-msg {
+    font-size: 14px;
+    font-weight: 500;
+}

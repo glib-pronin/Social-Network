@@ -52,14 +52,6 @@ def is_valid_album_data(name, theme, year):
         return False
     return True
 
-def delete_webp(photo):
-    if photo.image_webp:
-        webp_path = photo.image_webp.path
-        dir_path = os.path.dirname(webp_path)
-        if os.path.exists(webp_path):
-            os.remove(webp_path)
-            os.rmdir(dir_path)
-
 def get_featured_album(profile):
     photo = AlbumImage.objects.filter(
         album__profile=profile,

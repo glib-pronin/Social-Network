@@ -5,7 +5,6 @@
 {% check_profile as my_profile %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
-    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/form.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile.css' %}">
@@ -142,7 +141,6 @@
 {% endblock %}
 {% block scripts %}
     {% if my_profile %}
-        <script src="{% static 'js/modal.js' %}"></script>
         <script src="{% static 'profile_app/js/toggleAlbumElement.js' %}"></script>
         <script src="{% static 'profile_app/js/updateAlbum.js' %}"></script>
         <script src="{% static 'profile_app/js/albumFormValidation.js' %}"></script>
