@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.top = `${top}px`
 
         const container = btn.parentElement.parentElement
-        textarea = container.querySelector('textarea')
+        textarea = container.querySelector('.textarea')
     }
 
     const handleSearch = debounce((value) => {

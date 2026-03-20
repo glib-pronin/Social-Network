@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     function handleResize() {
-        if (window.innerWidth >= 1060) {
+        if (window.innerWidth >= 1100) {
             hideElments(false)
             createGroupBtns.find(btn => btn.id === 'mobile-btn')?.classList.add('hidden')
         } else {

@@ -1,0 +1,43 @@
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-plum);
+}
+
+.chat-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.chat-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-info div span:first-child {
+    font-weight: 500;
+    font-size: 24px;
+}
+
+.chat-body {
+    flex: 1 1 0;
+}
+
+.msg-sender-block {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.msg-sender-block .btns {
+    display: flex;
+    gap: 16px;
+}
+
+.msg-sender-block .btns #send-msg-btn {
+    background-color: var(--color-purple);
+}
