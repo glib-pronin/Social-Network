@@ -19,7 +19,7 @@ def render_registration(req: HttpRequest):
             return JsonResponse(data={'success': False, 'error': 'wrong_email'})
         password = data.get('password')
         confirm_password = data.get('confirmPassword')
-        if not email or not password or not confirm_password:
+        if not email or not password or not check_password(password) or not confirm_password:
             return JsonResponse(data={'success': False, 'error': 'missing_fields'})
         if password != confirm_password:
             return JsonResponse(data={'success': False, 'error': 'unmatched_password'})

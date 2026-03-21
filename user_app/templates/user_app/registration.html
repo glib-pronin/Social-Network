@@ -24,7 +24,7 @@
                 <div class="input-container password-container">
                     <label for="password">Пароль</label>
                     <input id="password" type="password" name="password" placeholder="Введи пароль">
-                    <p class="error-msg hidden">Пароль повинен складатися мінімум з 6 символів</p>
+                    <p class="error-msg hidden"></p>
                     <svg class="password-switcher password-shown hidden" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_1389_7434)">
                             <g clip-path="url(#clip1_1389_7434)">
@@ -125,8 +125,8 @@
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'user_app/js/sendCode.js' %}"></script>
-    <script src="{% static 'user_app/js/validation.js' %}"></script>
     <script src="{% static 'user_app/js/password.js' %}"></script>
+    <script src="{% static 'user_app/js/validation.js' %}"></script>
     <script src="{% static 'user_app/js/form.js' %}"></script>
     <script src="{% static 'user_app/js/digitInputs.js' %}"></script>
 {% endblock %}

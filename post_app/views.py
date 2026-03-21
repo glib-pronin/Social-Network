@@ -126,7 +126,7 @@ async def create_post(req: HttpRequest):
     if len(images) == len(positions):
         for img, pos in zip(images, positions):
             await sync_to_async(PostImage.objects.create)(image=img, row=pos.get('row'), column=pos.get('col'), post=post)
-    html = None if not my_profile else await sync_to_async(render_to_string)(template_name='post_app/posts.html', request=req, context={'post_content': {'posts': [post]}})          
+    html = None if not my_profile else await sync_to_async(render_to_string)(template_name='post_app/posts.html', request=req, context={'post_content': {'objects': [post]}})          
     return JsonResponse(
         {
             'success': True, 

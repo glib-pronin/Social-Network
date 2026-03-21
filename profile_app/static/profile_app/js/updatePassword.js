@@ -11,10 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     oldPasswordInput.addEventListener('input', () => oldPasswordInput.nextElementSibling.classList.add('hidden'))
     passwordInput.addEventListener('input', () => checkPasswords(passwordConfirmInput, passwordInput))
     passwordInput.addEventListener('input', () => {
-        if (passwordInput.value.length < 6) {
-            passwordInput.nextElementSibling.classList.remove('hidden')
+        const errorContainer = passwordInput.nextElementSibling
+        const error = validatePassword(passwordInput.value)
+        if (error) {
+            errorContainer.textContent = error
+            errorContainer.classList.remove('hidden')
         } else {
-            passwordInput.nextElementSibling.classList.add('hidden')
+            errorContainer.classList.add('hidden')
         }
     })
     passwordConfirmInput.addEventListener('input', () => checkPasswords(passwordConfirmInput, passwordInput))
@@ -28,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             oldPasswordInput.nextElementSibling.textContent = 'Введіть поточний пароль'
             return
         }
-        if (!password.trim() || password.length < 6) {
+        if (!password.trim() || validatePassword(password)) {
             passwordInput.nextElementSibling.classList.remove('hidden')
             return
         } 
@@ -51,6 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         cancleBtn.click()
         successMsg.classList.remove('hidden')
-        setTimeout(() => successMsg.classList.add('hidden'), 5000)
+        setTimeout(() => successMsg.classList.add('hidden'), 2000)
     })
 })

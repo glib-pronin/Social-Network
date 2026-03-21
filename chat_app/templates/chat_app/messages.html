@@ -1,0 +1,25 @@
+{% load cloudinary %}
+{% load static %}
+{% for msg in objects %}
+    {% if msg.sender == user %}
+        <div class="msg-container">
+            <div class="my-msg msg" data-date="{{ msg.get_date }}">
+                <span>{{ msg.text }}</span>
+                <span class="date">{{ msg.get_time }}</span>
+            </div>
+        </div>
+    {% else %}
+        <div class="msg-container">
+            {% if msg.sender.profile.photo %}
+                <img src="{% cloudinary_url msg.sender.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="">
+            {% else %}
+                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar">
+            {% endif %}
+            <div class="msg another-msg" data-date="{{ msg.get_date }}">
+                <span class="username">{{ msg.sender.first_name }} {{ msg.sender.last_name }}</span>
+                <span>{{ msg.text }}</span>
+                <span class="date">{{ msg.get_time }}</span>
+            </div>    
+        </div>
+    {% endif %}
+{% endfor %}

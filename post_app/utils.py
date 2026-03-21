@@ -24,11 +24,11 @@ def is_username_available(username, user=None):
         u = u.exclude(pk=user.id)
     return not u.exists()
 
-def get_page_data(queryset: models.QuerySet, cursor: int | None, count: int = 5):
+def get_page_data(queryset: models.QuerySet, cursor: int | None = None, count: int = 5):
     if cursor:
         queryset = queryset.filter(id__lt = cursor)
     posts = list(queryset[:count + 1])
     has_next = len(posts) > count
     if has_next:
         posts = posts[:-1]
-    return {'posts': posts, 'has_next': has_next, 'cursor': posts[-1].id if posts else None}        
+    return {'objects': posts, 'has_next': has_next, 'cursor': posts[-1].id if posts else None}        

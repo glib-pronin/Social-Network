@@ -154,6 +154,10 @@
     border-top: 2px solid var(--color-purple);
 }
 
+.chat-handler {
+    cursor: pointer;
+}
+
 @media (max-width: 1100px) {
     .block {
         max-width: none;

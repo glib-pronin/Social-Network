@@ -6,6 +6,14 @@ function checkPasswords(confirmPasswordField, passwordField) {
     }
 }
 
+function validatePassword(password) {
+    if (password.length < 8) return 'Пароль має бути не менше 8 символів'
+    if (!/[A-Z]/.test(password)) return'Додайте хоча б одну велику латинську літеру'
+    if (!/[a-z]/.test(password)) return 'Додайте хоча б одну маленьку латинську літеру'
+    if (!/[0-9]/.test(password)) return 'Додайте хоча б одну цифру'
+    return null
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const passworfContainers = document.querySelectorAll('.password-container')
 

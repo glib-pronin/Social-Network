@@ -37,13 +37,20 @@ class Message(models.Model):
         else:
             return self.text[:10] + '...'
         
-    def get_date(self):
+    def get_date_or_time(self):
         now = timezone.localtime(timezone.now())
         created = timezone.localtime(self.created_at)
         if created.date() == now.date():
              return created.strftime("%H:%M")
         return created.strftime("%d.%m.%Y")
 
+    def get_time(self):
+        created = timezone.localtime(self.created_at)
+        return created.strftime("%H:%M")
+
+    def get_date(self):
+        created = timezone.localtime(self.created_at)
+        return created.strftime("%d.%m.%Y")
     
 class MessageImage(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='images')

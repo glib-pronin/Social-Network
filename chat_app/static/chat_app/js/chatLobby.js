@@ -53,4 +53,38 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }, 300)
     searchInput.addEventListener('input', onInput)
+
+    const mainLayout = document.querySelector('.main-layout')
+    mainLayout.addEventListener('click', async (e) => {        
+        const chat = e.target.closest('.chat-handler')
+        if (!chat) return
+
+        const res = await fetch(`/chat/get-messages?id=${chat.dataset.id}&has_chat=${chat.classList.contains('chat')}`)
+        const data = await res.json()
+        secondBlock.querySelector('.welcome-block').classList.add('hidden')
+        const blocks = secondBlock.querySelectorAll('.chat-interface')
+        blocks.forEach(block => block.classList.remove('hidden'))
+        const msgsContainer = blocks[1]
+        msgsContainer.innerHTML = data.html
+
+        const msgs = msgsContainer.querySelectorAll('.msg')
+        msgs.forEach((m, ind) => {
+            const currentDate = m.dataset.date
+            const nextMsg = msgs[ind+1]
+            if (!nextMsg && !msgs[ind-1]) {
+                const dateEl = document.createElement('span')
+                dateEl.classList.add('date')
+                dateEl.textContent = currentDate
+                msgsContainer.insertBefore(dateEl, m.parentElement)
+            } else if (nextMsg) {
+                const nextDate = nextMsg.dataset.date
+                if (new Date(nextDate.split('.').toReversed().join('-')) > new Date(currentDate.split('.').toReversed().join('-'))) {
+                    const dateEl = document.createElement('span')
+                    dateEl.classList.add('date')
+                    dateEl.textContent = nextDate
+                    msgsContainer.insertBefore(dateEl, nextMsg.parentElement)
+                }
+            }
+        })
+    })
 })

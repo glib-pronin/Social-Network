@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpRequest
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code
+from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code, check_password
 from post_app.utils import is_username_available
 from user_app.models import EmailVerification
 from profile_app.models import Profile, AlbumImage, Album
@@ -62,7 +62,7 @@ def update_passwords(req: HttpRequest):
     old_password = data.get('oldPassword')
     if not req.user.check_password(old_password):
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
-    if not password or len(password) < 6 or password != confirm_password:
+    if not password or not check_password(password) or password != confirm_password:
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     req.user.set_password(password)
     req.user.save()

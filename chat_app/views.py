@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.http import HttpRequest, JsonResponse
 from django.db.models import Prefetch, Max, F
 from django.views.decorators.http import require_http_methods
@@ -6,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from cloudinary.utils import cloudinary_url
 from .models import *
 from .utils import *
+from post_app.utils import get_page_data
 
 
 # Create your views here.
@@ -66,3 +68,26 @@ def create_group(req: HttpRequest):
     else:
         chat_data['hasAvatar'] = False
     return JsonResponse({'success': True, 'chatData': chat_data})
+
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def get_messages(req: HttpRequest):
+    id = req.GET.get('id')
+    has_chat = req.GET.get('has_chat') == 'true'
+    print(id, has_chat)
+    chat = None
+    if has_chat:
+        chat = Chat.objects.filter(pk=int(id)).first()
+    else:
+        user = User.objects.filter(pk=int(id)).first()
+        if not user:
+            return JsonResponse({'succes': False, 'error': 'not_found_user'})
+        chat = Chat.objects.filter(users=user, is_group=False).filter(users=req.user).first()
+        print(chat)
+        if not chat:
+            chat = Chat.objects.create(is_group=False)
+            chat.users.add(user, req.user)
+    if chat:
+        data = get_page_data(chat.messages.all().order_by('created_at'))
+        return JsonResponse({ 'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data) })
+    return JsonResponse({'succes': False, 'error': 'not_found_chat'})

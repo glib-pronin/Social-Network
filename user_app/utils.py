@@ -35,4 +35,15 @@ def send_code(code, email):
     settings.SENDGRID_CLIENT.send(message)
 
 def check_email(email):
-    return re.match(r'^[\w+._%-]+@[\w.-]+\.[a-zA-Z]{2,}$', email)
+    return re.match(r'^[a-zA-Z0-9+_%.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email)
+
+def check_password(password):
+    if len(password) < 8:
+        return False
+    if not re.search(r'[A-Z]', password):
+        return False
+    if not re.search(r'[a-z]', password):
+        return False
+    if not re.search(r'[0-9]', password):
+        return False
+    return True

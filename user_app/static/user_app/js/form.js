@@ -27,10 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     passwordField.addEventListener('input', () => {
-        if (passwordField.value.length < 6 && passwordField.value && switcherType === 'registration') {
-            passwordField.nextElementSibling.classList.remove('hidden')
+        const errorField = passwordField.nextElementSibling
+        const error = validatePassword(passwordField.value, errorField)
+        if (error && passwordField.value && switcherType === 'registration') {
+            errorField.textContent = error
+            errorField.classList.remove('hidden')
         } else {
-            passwordField.nextElementSibling.classList.add('hidden')
+            errorField.classList.add('hidden')
         }
     })
     passwordField.addEventListener('input', () => checkPasswords(confirmPasswordField, passwordField))

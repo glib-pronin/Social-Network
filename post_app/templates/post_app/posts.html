@@ -2,7 +2,7 @@
 {% load cloudinary %}
 {% load profile_tags %}
 {% check_profile as my_profile %}
-{% for post in post_content.posts %}
+{% for post in post_content.objects %}
     <div class="post standart-border" data-post-id="{{ post.id }}" {% if post.is_viewed or post.author == user %} data-viewed="true" {% endif %}>
         {% if request.resolver_match.url_name == 'main' or my_profile %}        
             <div class="menu-container hidden">
