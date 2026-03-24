@@ -39,7 +39,10 @@ def render_main(req: HttpRequest):
 @login_required(login_url='registration')
 def get_post(req: HttpRequest):
     cursor = req.GET.get('cursor')
+    if not cursor:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
     profile_id = req.GET.get('id')
+    new_posts = req.GET.get('new_posts', '') == 'true'
     if not profile_id:
         hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
         page_qs = Post.objects.exclude(id__in=hidden_ids)
@@ -56,8 +59,9 @@ def get_post(req: HttpRequest):
         my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
         is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
     ).order_by('-id').all()
-    page = get_page_data(page_qs, cursor)
+    page = get_page_data(page_qs, cursor, new_posts=new_posts)
     return JsonResponse({
+        'success': True,
         'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}, request=req),
         'has_next': page.get('has_next'), 'new_cursor': page.get('cursor')
     })

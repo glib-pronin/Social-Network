@@ -32,10 +32,19 @@
     {% if first_entry %}
         {% include 'post_app/first_entry.html' %}
     {% endif %}
+    <div id="check-new-posts" class="">
+        <div class="loading">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 17.5C11 18.0523 10.5523 18.5 10 18.5C9.44772 18.5 9 18.0523 9 17.5H10H11ZM9.29289 1.79289C9.68342 1.40237 10.3166 1.40237 10.7071 1.79289L17.0711 8.15685C17.4616 8.54738 17.4616 9.18054 17.0711 9.57107C16.6805 9.96159 16.0474 9.96159 15.6569 9.57107L10 3.91421L4.34315 9.57107C3.95262 9.96159 3.31946 9.96159 2.92893 9.57107C2.53841 9.18054 2.53841 8.54738 2.92893 8.15685L9.29289 1.79289ZM10 17.5H9V2.5H10H11V17.5H10Z" fill="#543C52"/>
+            </svg>
+            <span>Показати нові пости</span>
+        </div>
+    </div>
 {% endblock %}
 {% block scripts %}
     <script src="{% static 'post_app/js/loadPost.js' %}"></script>
     <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
     <script src="{% static 'post_app/js/firstEntry.js' %}"></script>
     <script src="{% static 'post_app/js/post.js' %}"></script>
+    <script src="{% static 'post_app/js/postsScroll.js' %}"></script>
 {% endblock %}

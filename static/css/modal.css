@@ -116,7 +116,7 @@
     cursor: pointer;
 }
 
-#element-loading-modal {
+#element-loading-modal, #check-new-posts {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,7 +129,14 @@
     right: 20px;
     bottom: calc(var(--footer-height) + 20px);
     opacity: 1;
+    z-index: 10;
     transition: opacity 2s ease;
+}
+
+#check-new-posts {
+    transition: opacity 0.5s ease;
+    z-index: 5;
+    cursor: pointer;
 }
 
 #element-loading-modal.fade-out {

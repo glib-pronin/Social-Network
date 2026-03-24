@@ -12,21 +12,23 @@ async function loadPost() {
 
     const url = isNaN(profileId) ? `/get-posts?cursor=${cursor}` : `/get-posts?cursor=${cursor}&id=${profileId}`
     const res = await fetch(url)
-    const { html_post, has_next, new_cursor } = await res.json()
-    if (!has_next) {
-        postLoader?.remove()
-    } else if (has_next && !postLoader) {
-        const div = document.createElement('div')
-        div.id = 'post-loader'
-        postsContainer.parentElement.append(div)
-        setObserver(div)
+    const { success, html_post, has_next, new_cursor } = await res.json()
+    if (success) {
+        if (!has_next) {
+            postLoader?.remove()
+        } else if (has_next && !postLoader) {
+            const div = document.createElement('div')
+            div.id = 'post-loader'
+            postsContainer.parentElement.append(div)
+            setObserver(div)
+        }
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = html_post
+        observeNewPosts(wrapper)
+        postsContainer.append(...wrapper.children)
+        initLightBox()
+        cursor = new_cursor
     }
-    const wrapper = document.createElement('div')
-    wrapper.innerHTML = html_post
-    observeNewPosts(wrapper)
-    postsContainer.append(...wrapper.children)
-    initLightBox()
-    cursor = new_cursor
 }
 
 function setObserver(elem) {
@@ -63,7 +65,6 @@ function observeNewPosts(container) {
 document.addEventListener('DOMContentLoaded', () => {
     const postLoader = document.getElementById('post-loader')
     cursor = postLoader.dataset.cursor
-    console.log(cursor);
     
     setObserver(postLoader)
     observeNewPosts(document.getElementById('posts-container'))

@@ -54,6 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300)
     searchInput.addEventListener('input', onInput)
 
+
+
+
+    
     const mainLayout = document.querySelector('.main-layout')
     mainLayout.addEventListener('click', async (e) => {        
         const chat = e.target.closest('.chat-handler')
