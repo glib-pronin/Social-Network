@@ -1,3 +1,30 @@
+function createChat(chatData, selector) {
+    const group = document.createElement('div')
+    group.classList.add('chat', 'chat-handler')
+    group.dataset.id = chatData.id
+    const groupData = document.createElement('div')
+    groupData.classList.add('without-time')
+    let img
+    if (chatData.chatAvatar) {
+        img = document.createElement('img')
+        img.classList.add('avatar')
+        img.src = chatData.chatAvatar
+    } else {
+        img = document.createElement('span')
+        img.classList.add('avatar-default')
+        img.textContent = chatData.shortName
+    }
+    const extraContainer = document.createElement('div')
+    extraContainer.classList.add('chat-data')
+    const span = document.createElement('span')
+    span.textContent = chatData.chatName
+    extraContainer.append(span)
+    groupData.append(img, extraContainer)
+    group.append(groupData)
+    document.querySelector(selector).prepend(group)
+    return group
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const openBtns = document.querySelectorAll('.create-group')
     const selectUsersModal = document.getElementById('select-users-for-group-modal')
@@ -200,7 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (success) {
             resetCreateGroupModal()
             createGroupModal.classList.add('hidden')
-            createGroup(chatData)
+            const group = createChat(chatData, '.groups-all')
+            const event = new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true
+            })
+            group.dispatchEvent(event)
         }
     })
 
@@ -215,31 +247,5 @@ document.addEventListener('DOMContentLoaded', () => {
         avatarFile = null
         avatarDefault.textContent = ''
         selectedUsersCount.textContent = '0'
-    }
-
-    function createGroup(chatData) {
-        const group = document.createElement('div')
-        group.classList.add('chat')
-        group.dataset.id = chatData.id
-        const groupData = document.createElement('div')
-        groupData.classList.add('without-time')
-        let img
-        if (chatData.hasAvatar) {
-            img = document.createElement('img')
-            img.classList.add('avatar')
-            img.src = chatData.avatarUrl
-        } else {
-            img = document.createElement('span')
-            img.classList.add('avatar-default')
-            img.textContent = chatData.shortName
-        }
-        const extraContainer = document.createElement('div')
-        extraContainer.classList.add('chat-data')
-        const span = document.createElement('span')
-        span.textContent = chatData.name
-        extraContainer.append(span)
-        groupData.append(img, extraContainer)
-        group.append(groupData)
-        document.querySelector('.groups-all').prepend(group)
     }
 })

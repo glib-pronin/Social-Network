@@ -16,11 +16,13 @@ class Chat(models.Model):
         return f'Group, name - {self.name}'  if self.is_group else f'Chat, {users_names}'
     
     def get_initial(self):
-        words = self.name.split(' ')
-        name = ''
-        for word in words[:2]:
-            name += word[0]
-        return name.upper()
+        if self.name:
+            words = self.name.split(' ')
+            name = ''
+            for word in words[:2]:
+                name += word[0]
+            return name.upper()
+        return ''
     
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')

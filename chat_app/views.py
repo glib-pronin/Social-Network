@@ -4,6 +4,7 @@ from django.http import HttpRequest, JsonResponse
 from django.db.models import Prefetch, Max, F
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.templatetags.static import static
 from cloudinary.utils import cloudinary_url
 from .models import *
 from .utils import *
@@ -61,33 +62,46 @@ def create_group(req: HttpRequest):
 
     group = Chat.objects.create(name=name, is_group=True, admin=user, avatar=avatar)
     group.users.add(user, *valid_users)
-    chat_data = {'id': group.id, 'name': group.name, 'shortName': group.get_initial()}
+    chat_data = {'id': group.id, 'chatName': group.name, 'shortName': group.get_initial()}
     if avatar:
-        chat_data['hasAvatar'] = True
-        chat_data['avatarUrl'], _ = cloudinary_url(source=group.avatar.name, fetch_format='auto', quality='auto')
+        chat_data['chatAvatar'], _ = cloudinary_url(source=group.avatar.name, fetch_format='auto', quality='auto')
     else:
-        chat_data['hasAvatar'] = False
+        chat_data['chatAvatar'] = ''
     return JsonResponse({'success': True, 'chatData': chat_data})
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
-def get_messages(req: HttpRequest):
+def open_chat(req: HttpRequest):
     id = req.GET.get('id')
-    has_chat = req.GET.get('has_chat') == 'true'
-    print(id, has_chat)
+    has_chat = req.GET.get('has_chat', '') == 'true'
     chat = None
+    is_created_chat = False
     if has_chat:
-        chat = Chat.objects.filter(pk=int(id)).first()
+        chat = Chat.objects.filter(pk=int(id)).prefetch_related('users').first()
     else:
-        user = User.objects.filter(pk=int(id)).first()
+        user = User.objects.filter(pk=int(id)).select_related('profile__photo').first()
         if not user:
             return JsonResponse({'succes': False, 'error': 'not_found_user'})
-        chat = Chat.objects.filter(users=user, is_group=False).filter(users=req.user).first()
-        print(chat)
+        chat = Chat.objects.filter(users=user, is_group=False).filter(users=req.user).prefetch_related('users').first()
         if not chat:
             chat = Chat.objects.create(is_group=False)
             chat.users.add(user, req.user)
+            is_created_chat = True
     if chat:
-        data = get_page_data(chat.messages.all().order_by('created_at'))
-        return JsonResponse({ 'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data) })
+        chat_avatar = None
+        if chat.is_group:
+            chat_avatar = chat.avatar.url if chat.avatar else None
+        else:
+            user = chat.users.exclude(pk=req.user.id).first()
+            chat_avatar = user.profile.photo.image.url if user.profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
+        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).order_by('created_at')
+        data = get_page_data(queryset)
+        return JsonResponse({ 
+            'success': True,
+            'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data),
+            'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}', 
+            'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
+            'chatAvatar': chat_avatar, 'shortName': chat.get_initial(),
+            'isCreatedChat': is_created_chat, 'id': chat.id
+        })
     return JsonResponse({'succes': False, 'error': 'not_found_chat'})

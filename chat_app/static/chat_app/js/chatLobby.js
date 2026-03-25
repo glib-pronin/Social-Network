@@ -6,67 +6,111 @@ document.addEventListener('DOMContentLoaded', () => {
     const secondBlock = document.getElementById('second-block')
     const createGroupBtns = Array.from(document.querySelectorAll('.create-group'))
     const elements = [contactsBlock, contactsBlock.parentElement, messagesBlock, messagesBlock.parentElement, groupsBlock, secondBlock, ...createGroupBtns]
-    
-    subNav.addEventListener('click', (e) => {
-        const clickedSpan = e.target.closest('button')
-        if (!clickedSpan) return
+
+    function setTabOrChatInURL({ tab = null, chat = null }) {
+        const url = new URL(window.location)
+        if (tab) {
+            url.searchParams.set('tab', tab)
+            url.searchParams.delete('chat')
+        } else if (chat) {
+            url.searchParams.set('chat', chat)
+            url.searchParams.delete('tab')
+        }
+        if (url.toString() !== window.location.toString()) window.history.pushState({}, '', url)
+    }
+
+    function getStateFromURL() {
+        const params =  new URLSearchParams(window.location.search)
+        return { tab: params.get('tab'), chat: params.get('chat') }
+    }
+
+    function hideElments(hide = true) {
+        elements.forEach(el => el.classList.toggle('hidden', hide))
+    }
+
+    function openTab(type) {        
         subNav.querySelectorAll('button').forEach(bt => bt.classList.remove('selected'))
-        clickedSpan.classList.add('selected')
+        subNav.querySelector(`button[data-type="${type}"]`)?.classList.add('selected')
         hideElments()
-        if (clickedSpan.dataset.type === 'contacts') {
+        if (type === 'contacts') {
             contactsBlock.classList.remove('hidden')
             contactsBlock.parentElement.classList.remove('hidden')
-        } else if (clickedSpan.dataset.type === 'messages') {
+        } else if (type === 'messages') {
             messagesBlock.classList.remove('hidden')
             messagesBlock.parentElement.classList.remove('hidden')
-        } else if (clickedSpan.dataset.type === 'groups') {
-            groupsBlock.classList.remove('hidden')
+        } else if (type === 'groups') {
+            groupsBlock.classList.remove('hidden')    
             groupsBlock.parentElement.classList.remove('hidden')
             createGroupBtns.find(btn => btn.id === 'mobile-btn').classList.remove('hidden')
         }
+    }
+
+    function initTabsOrChat() {
+        const { tab, chat } = getStateFromURL()
+        if (window.innerWidth >= 1100 && !chat) return
+        if (chat) {
+            const el = document.querySelector(`.chat.chat-handler[data-id="${chat}"]`)
+            console.log(el);
+            
+            el?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+        } else {
+            openTab(tab || 'contacts')
+        }        
+    }
+
+    subNav.addEventListener('click', (e) => {
+        const btn = e.target.closest('button')
+        if (!btn) return
+        const type = btn.dataset.type
+        setTabOrChatInURL({ tab: type })
+        openTab(type)
     })
 
     function handleResize() {
         if (window.innerWidth >= 1100) {
             hideElments(false)
             createGroupBtns.find(btn => btn.id === 'mobile-btn')?.classList.add('hidden')
-        } else {
-            subNav.querySelector('button.selected')?.click()
         }
+        initTabsOrChat()
     }
-    handleResize()
-
-    function hideElments(hide = true) {
-        elements.forEach(el => el.classList.toggle('hidden', hide))
-    }
-
-    window.addEventListener('resize', () => handleResize())
-
-    const searchInput = document.querySelector('.search-input')
-    const contacts = document.querySelectorAll('.contact')
-    const onInput = debounce(() => {
-        const value = searchInput.value.trim()
-
-        contacts.forEach(contact => {
-            const name = contact.querySelector('span').textContent.toLowerCase()
-            contact.classList.toggle('hidden', !name.includes(value))
-        })
-    }, 300)
-    searchInput.addEventListener('input', onInput)
-
-
-
-
     
+    window.addEventListener('resize', handleResize)
+    window.addEventListener('popstate', initTabsOrChat)
+
+    secondBlock.querySelector('.back-btn')?.addEventListener('click', () => {
+        secondBlock.querySelectorAll('.chat-interface').forEach(block => block.classList.add('hidden'))
+        secondBlock.querySelector('.welcome-block').classList.remove('hidden')
+        secondBlock.dataset.selected = ''
+        if (window.innerWidth < 1100) {
+            history.back()
+        } else {
+            const url = new URL(window.location)
+            url.searchParams.delete('chat')
+            window.history.pushState({}, '', url)
+        }
+    })
+
     const mainLayout = document.querySelector('.main-layout')
-    mainLayout.addEventListener('click', async (e) => {        
+    mainLayout.addEventListener('click', async (e) => {            
         const chat = e.target.closest('.chat-handler')
         if (!chat) return
-
-        const res = await fetch(`/chat/get-messages?id=${chat.dataset.id}&has_chat=${chat.classList.contains('chat')}`)
+        if (window.innerWidth < 1100) hideElments()
+        if (secondBlock.dataset.selected === chat.dataset.id) {
+            secondBlock.classList.remove('hidden')
+            return
+        }
+        const res = await fetch(`/chat/open-chat?id=${chat.dataset.id}&has_chat=${chat.classList.contains('chat')}`)
+        
         const data = await res.json()
+        if (!data.success) return
+        setTabOrChatInURL({ chat: data.id })
+        
+        secondBlock.classList.remove('hidden')
+        secondBlock.dataset.selected = data.id
         secondBlock.querySelector('.welcome-block').classList.add('hidden')
-        const blocks = secondBlock.querySelectorAll('.chat-interface')
+        const blocks = secondBlock.querySelectorAll('.chat-interface')        
+        setChatInfo(blocks[0], data)
+        if (data.isCreatedChat) createChat(data, '.messages-all')
         blocks.forEach(block => block.classList.remove('hidden'))
         const msgsContainer = blocks[1]
         msgsContainer.innerHTML = data.html
@@ -77,18 +121,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const nextMsg = msgs[ind+1]
             if (!nextMsg && !msgs[ind-1]) {
                 const dateEl = document.createElement('span')
-                dateEl.classList.add('date')
-                dateEl.textContent = currentDate
+                dateEl.classList.add('msgs-group-date')
+                dateEl.textContent = formatDate(currentDate)
                 msgsContainer.insertBefore(dateEl, m.parentElement)
             } else if (nextMsg) {
                 const nextDate = nextMsg.dataset.date
                 if (new Date(nextDate.split('.').toReversed().join('-')) > new Date(currentDate.split('.').toReversed().join('-'))) {
                     const dateEl = document.createElement('span')
-                    dateEl.classList.add('date')
-                    dateEl.textContent = nextDate
+                    dateEl.classList.add('msgs-group-date')
+                    dateEl.textContent = formatDate(nextDate)
                     msgsContainer.insertBefore(dateEl, nextMsg.parentElement)
                 }
             }
         })
     })
+
+    const searchInput = document.querySelector('.search-input')
+    const contacts = document.querySelectorAll('.contact')
+    const onInput = debounce(() => {
+        const value = searchInput.value.trim()
+        contacts.forEach(contact => {
+            const name = contact.querySelector('span').textContent.toLowerCase()
+            contact.classList.toggle('hidden', !name.includes(value))
+        })
+    }, 300)
+    searchInput.addEventListener('input', onInput)
+
+    handleResize()
 })
