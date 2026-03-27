@@ -94,10 +94,11 @@ def open_chat(req: HttpRequest):
         else:
             user = chat.users.exclude(pk=req.user.id).first()
             chat_avatar = user.profile.photo.image.url if user.profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
-        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).order_by('created_at')
+        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).order_by('-created_at')
+        print(queryset)
         data = get_page_data(queryset)
         return JsonResponse({ 
-            'success': True,
+            'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
             'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data),
             'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}', 
             'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
@@ -105,3 +106,19 @@ def open_chat(req: HttpRequest):
             'isCreatedChat': is_created_chat, 'id': chat.id
         })
     return JsonResponse({'succes': False, 'error': 'not_found_chat'})
+
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def get_messages(req: HttpRequest, chat_id: int):
+    cursor = req.GET.get('cursor')
+    if not cursor:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    chat = Chat.objects.filter(pk=int(chat_id)).prefetch_related('users').first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).order_by('-created_at')
+    data = get_page_data(queryset, cursor=cursor)
+    return JsonResponse({ 
+        'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
+        'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data)
+    })

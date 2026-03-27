@@ -1,6 +1,6 @@
 {% load cloudinary %}
 {% load static %}
-{% for msg in objects %}
+{% for msg in objects reversed %}
     {% if msg.sender == user %}
         <div class="msg-container">
             <div class="my-msg msg" data-date="{{ msg.get_date }}">

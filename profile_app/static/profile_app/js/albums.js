@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обробка завантаження фото
     fileInput.addEventListener('change', async (e) => {
         const files = e.target.files
-        console.log((e.target));      
         if (!files.length) return
         const formData = new FormData()
         for (const file of files) {

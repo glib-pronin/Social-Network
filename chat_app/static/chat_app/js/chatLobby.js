@@ -50,8 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth >= 1100 && !chat) return
         if (chat) {
             const el = document.querySelector(`.chat.chat-handler[data-id="${chat}"]`)
-            console.log(el);
-            
             el?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
         } else {
             openTab(tab || 'contacts')
@@ -91,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     const mainLayout = document.querySelector('.main-layout')
+    let observer = null
+
     mainLayout.addEventListener('click', async (e) => {            
         const chat = e.target.closest('.chat-handler')
         if (!chat) return
@@ -99,41 +99,31 @@ document.addEventListener('DOMContentLoaded', () => {
             secondBlock.classList.remove('hidden')
             return
         }
+        const blocks = secondBlock.querySelectorAll('.chat-interface')        
+        const msgsContainer = blocks[1]
+        msgsContainer.innerHTML = ''
+        observer?.disconnect()
         const res = await fetch(`/chat/open-chat?id=${chat.dataset.id}&has_chat=${chat.classList.contains('chat')}`)
         
         const data = await res.json()
         if (!data.success) return
         setTabOrChatInURL({ chat: data.id })
-        
         secondBlock.classList.remove('hidden')
         secondBlock.dataset.selected = data.id
         secondBlock.querySelector('.welcome-block').classList.add('hidden')
-        const blocks = secondBlock.querySelectorAll('.chat-interface')        
         setChatInfo(blocks[0], data)
         if (data.isCreatedChat) createChat(data, '.messages-all')
         blocks.forEach(block => block.classList.remove('hidden'))
-        const msgsContainer = blocks[1]
-        msgsContainer.innerHTML = data.html
+        msgsContainer.innerHTML += data.html
 
-        const msgs = msgsContainer.querySelectorAll('.msg')
-        msgs.forEach((m, ind) => {
-            const currentDate = m.dataset.date
-            const nextMsg = msgs[ind+1]
-            if (!nextMsg && !msgs[ind-1]) {
-                const dateEl = document.createElement('span')
-                dateEl.classList.add('msgs-group-date')
-                dateEl.textContent = formatDate(currentDate)
-                msgsContainer.insertBefore(dateEl, m.parentElement)
-            } else if (nextMsg) {
-                const nextDate = nextMsg.dataset.date
-                if (new Date(nextDate.split('.').toReversed().join('-')) > new Date(currentDate.split('.').toReversed().join('-'))) {
-                    const dateEl = document.createElement('span')
-                    dateEl.classList.add('msgs-group-date')
-                    dateEl.textContent = formatDate(nextDate)
-                    msgsContainer.insertBefore(dateEl, nextMsg.parentElement)
-                }
-            }
-        })
+        if (data.hasNext) {
+            const loader = setMsgLoader(msgsContainer)
+            observer = setMessagesObserver(loader, data.cursor, data.hasNext)
+        }
+        setDates(msgsContainer, data.hasNext)
+        msgsContainer.scrollTop = msgsContainer.scrollHeight
+        console.log(msgsContainer.scrollHeight);
+        
     })
 
     const searchInput = document.querySelector('.search-input')
