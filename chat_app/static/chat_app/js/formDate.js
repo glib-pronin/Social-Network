@@ -19,9 +19,11 @@ function createDateEl(date) {
     return dateEl
 }
 
-function setDates(container, hasNew, extraMsg = null) {
+function setDates(container, hasNew, extraMsg = null, msgType = 'old') {
     const msgs = Array.from(container.querySelectorAll('.msg'))
-    if (extraMsg) msgs.push(extraMsg)
+    if (extraMsg) {
+        msgType === 'old' ? msgs.push(extraMsg) : msgs.unshift(extraMsg)
+    } 
     console.log(msgs);
     
     if (msgs.length && !hasNew) container.insertBefore(createDateEl(msgs[0].dataset.date), msgs[0].parentElement)

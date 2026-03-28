@@ -94,7 +94,7 @@ def open_chat(req: HttpRequest):
         else:
             user = chat.users.exclude(pk=req.user.id).first()
             chat_avatar = user.profile.photo.image.url if user.profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
-        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).order_by('-created_at')
+        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo').order_by('-created_at')
         print(queryset)
         data = get_page_data(queryset)
         return JsonResponse({ 

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const secondBlock = document.getElementById('second-block')
     const createGroupBtns = Array.from(document.querySelectorAll('.create-group'))
     const elements = [contactsBlock, contactsBlock.parentElement, messagesBlock, messagesBlock.parentElement, groupsBlock, secondBlock, ...createGroupBtns]
-
+    // Функція створення url
     function setTabOrChatInURL({ tab = null, chat = null }) {
         const url = new URL(window.location)
         if (tab) {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (url.toString() !== window.location.toString()) window.history.pushState({}, '', url)
     }
-
+    // Отримання інформації з url
     function getStateFromURL() {
         const params =  new URLSearchParams(window.location.search)
         return { tab: params.get('tab'), chat: params.get('chat') }
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideElments(hide = true) {
         elements.forEach(el => el.classList.toggle('hidden', hide))
     }
-
+    // Функція відкриття вкладки (мобілка)
     function openTab(type) {        
         subNav.querySelectorAll('button').forEach(bt => bt.classList.remove('selected'))
         subNav.querySelector(`button[data-type="${type}"]`)?.classList.add('selected')
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createGroupBtns.find(btn => btn.id === 'mobile-btn').classList.remove('hidden')
         }
     }
-
+    // Функція ініціалізації вкладки або чату
     function initTabsOrChat() {
         const { tab, chat } = getStateFromURL()
         if (window.innerWidth >= 1100 && !chat) return
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     window.addEventListener('resize', handleResize)
     window.addEventListener('popstate', initTabsOrChat)
-
+    // Обробник виходу з чату через кнопку Назад
     secondBlock.querySelector('.back-btn')?.addEventListener('click', () => {
         secondBlock.querySelectorAll('.chat-interface').forEach(block => block.classList.add('hidden'))
         secondBlock.querySelector('.welcome-block').classList.remove('hidden')
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const chat = e.target.closest('.chat-handler')
         if (!chat) return
         if (window.innerWidth < 1100) hideElments()
-        if (secondBlock.dataset.selected === chat.dataset.id) {
+        if (secondBlock.dataset.selected === chat.dataset.id) { // Перевіряємо, чи вибраний цей чат
             secondBlock.classList.remove('hidden')
             return
         }
@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const msgsContainer = blocks[1]
         msgsContainer.innerHTML = ''
         observer?.disconnect()
+        document.getElementById('msg-input').value = ''
         const res = await fetch(`/chat/open-chat?id=${chat.dataset.id}&has_chat=${chat.classList.contains('chat')}`)
         
         const data = await res.json()
@@ -122,8 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         setDates(msgsContainer, data.hasNext)
         msgsContainer.scrollTop = msgsContainer.scrollHeight
-        console.log(msgsContainer.scrollHeight);
+        console.log('connectWS');
         
+        connectWS(data.id)
     })
 
     const searchInput = document.querySelector('.search-input')

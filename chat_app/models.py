@@ -28,7 +28,8 @@ class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='messages', null=True, blank=True)
     text = models.TextField()
-    created_at = models.DateTimeField(default=timezone.now())
+    readers = models.ManyToManyField(to=User, related_name='read_msgs')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Message from user {self.sender.username}, to chat {self.chat.id} - "{self.text[:15]}"'
