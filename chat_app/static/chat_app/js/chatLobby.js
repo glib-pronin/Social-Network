@@ -103,12 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const msgsContainer = blocks[1]
         msgsContainer.innerHTML = ''
         observer?.disconnect()
-        document.getElementById('msg-input').value = ''
+        const input = document.getElementById('msg-input') 
+        input.value = ''
         const res = await fetch(`/chat/open-chat?id=${chat.dataset.id}&has_chat=${chat.classList.contains('chat')}`)
         
         const data = await res.json()
         if (!data.success) return
         setTabOrChatInURL({ chat: data.id })
+        input.value = getMessagesFromStorage()[data.id] ?? ''
         secondBlock.classList.remove('hidden')
         secondBlock.dataset.selected = data.id
         secondBlock.querySelector('.welcome-block').classList.add('hidden')
@@ -123,15 +125,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         setDates(msgsContainer, data.hasNext)
         msgsContainer.scrollTop = msgsContainer.scrollHeight
-        console.log('connectWS');
-        
         connectWS(data.id)
     })
 
     const searchInput = document.querySelector('.search-input')
     const contacts = document.querySelectorAll('.contact')
     const onInput = debounce(() => {
-        const value = searchInput.value.trim()
+        const value = searchInput.value.trim().toLowerCase()
         contacts.forEach(contact => {
             const name = contact.querySelector('span').textContent.toLowerCase()
             contact.classList.toggle('hidden', !name.includes(value))

@@ -1,10 +1,14 @@
 function debounce(func, delay) {
     let timeout
 
-    return (...args) => {
+    function debounced (...args) {
         clearTimeout(timeout)
         timeout = setTimeout(() => func(...args), delay)
     }
+
+    debounced.cancel = () => clearTimeout(timeout)
+    
+    return debounced
 }
 
 async function checkUsername(usernameInput) {

@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('check-new-posts')
   const defaultBlock = document.getElementById('show-new-posts')
   const loadingBlock = document.getElementById('searching-new-posts')
-  const successBlock = document.getElementById('success-searching')
   const failuretBlock = document.getElementById('failure-searching')
   const postsContainer = document.getElementById('posts-container')
   const firstPost = document.querySelector('.post:first-child')
@@ -22,9 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const res = await fetch(`get-posts?cursor=${cursor}&new_posts=${true}`)
     const { html_post, new_cursor } = await res.json()
     loadingBlock.classList.add('hidden')
-    new_cursor ? successBlock.classList.remove('hidden') : failuretBlock.classList.remove('hidden')    
+    if (!new_cursor) failuretBlock.classList.remove('hidden')    
     setTimeout(() => {
-      successBlock.classList.add('hidden')
       failuretBlock.classList.add('hidden')
       defaultBlock.classList.remove('hidden')
       btn.classList.add('cursor-pointer')

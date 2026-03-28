@@ -30,6 +30,7 @@
     height: 184px;
     overflow-y: auto;
     overflow-x: hidden;
+    align-content: flex-start;
 }
 
 .emoji-container::-webkit-scrollbar {

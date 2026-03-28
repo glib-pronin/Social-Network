@@ -5,8 +5,6 @@ function connectWS(chatId) {
     
     const protocol = window.location.protocol === 'https' ? 'wss' : 'ws'
     const url = `${protocol}://${window.location.host}/chat/${chatId}`
-    console.log(url);
-    
     websocket = new WebSocket(url)
 
     websocket.onmessage = async (e) => {        
@@ -31,5 +29,29 @@ msgBtn.addEventListener('click', () => {
     const value = input.value.trim()
     if (!value) return
     websocket.send(JSON.stringify({ msg: value }))
+    onMessageInput.cancel()
+    const data = getMessagesFromStorage()
+    const id = input.closest('.second-block').dataset.selected
+    delete data[id]
+    saveMessagesToStorage(data)
     input.value = ''
 })
+
+function getMessagesFromStorage() {
+    const data = localStorage.getItem('messages')
+    return JSON.parse(data) ?? {}
+}
+
+function saveMessagesToStorage(data) {
+    localStorage.setItem('messages', JSON.stringify(data))
+}
+
+const onMessageInput = debounce(() => {
+    const value = input.value.trim().toLowerCase()
+    const id = input.closest('.second-block').dataset.selected
+    const messages = getMessagesFromStorage()
+    messages[id] = value
+    saveMessagesToStorage(messages)
+}, 500)
+
+input.addEventListener('input', onMessageInput)

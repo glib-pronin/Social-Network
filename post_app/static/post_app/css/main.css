@@ -37,6 +37,15 @@
     height: fit-content;
 }
 
+#check-new-posts{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: 35px;
+    box-sizing: content-box;
+}
+
 @media (max-width: 1000px) {
     #textarea-container {
         display: none;

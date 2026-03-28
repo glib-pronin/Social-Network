@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         textarea.selectionStart = newPos
         textarea.selectionEnd = newPos
         textarea.focus()
-
+        textarea.dispatchEvent(new Event('input', { bubbles: true }))
         addUsedEmoji(emoji.dataset.symbol, emoji.dataset.keywords.split(','))
     }
 
