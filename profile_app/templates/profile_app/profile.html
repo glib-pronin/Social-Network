@@ -27,7 +27,7 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="posts" id="posts-container" data-my-profile="{{ my_profile }}">
+            <div class="posts" id="posts-container" data-my-profile="{{ my_profile }}" data-url-name="{{ request.resolver_match.url_name }}">
                 {% include 'post_app/posts.html' %}
             </div>
             <div id="post-loader" data-id="{{ profile_id }}" data-has-more="{{ post_content.has_next }}" data-cursor="{{ post_content.cursor }}"></div>

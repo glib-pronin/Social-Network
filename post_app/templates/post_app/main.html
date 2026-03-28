@@ -23,7 +23,7 @@
                     <button class="send-btn" id="open-form">Перейти до оформлення</button>
                 </div>
             </div>
-            <div class="posts" id="posts-container">
+            <div class="posts" id="posts-container" data-url-name="{{ request.resolver_match.url_name }}">
                 {% include 'post_app/posts.html' %}
             </div>
             <div id="post-loader" data-has-more="{{ post_content.has_next }}" data-cursor="{{ post_content.cursor }}"></div>
@@ -32,12 +32,40 @@
     {% if first_entry %}
         {% include 'post_app/first_entry.html' %}
     {% endif %}
-    <div id="check-new-posts" class="">
-        <div class="loading">
+    <div id="check-new-posts" class="cursor-pointer">
+        <div class="loading" id="show-new-posts">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11 17.5C11 18.0523 10.5523 18.5 10 18.5C9.44772 18.5 9 18.0523 9 17.5H10H11ZM9.29289 1.79289C9.68342 1.40237 10.3166 1.40237 10.7071 1.79289L17.0711 8.15685C17.4616 8.54738 17.4616 9.18054 17.0711 9.57107C16.6805 9.96159 16.0474 9.96159 15.6569 9.57107L10 3.91421L4.34315 9.57107C3.95262 9.96159 3.31946 9.96159 2.92893 9.57107C2.53841 9.18054 2.53841 8.54738 2.92893 8.15685L9.29289 1.79289ZM10 17.5H9V2.5H10H11V17.5H10Z" fill="#543C52"/>
             </svg>
             <span>Показати нові пости</span>
+        </div>
+        <div class="loading hidden" id="searching-new-posts">
+            <div class="spinner"></div>
+            <span>Шукаємо нові пости...</span>
+        </div>
+        <div class="loading hidden" id="success-searching">
+            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <rect width="35" height="35" fill="url(#pattern0_1984)"/>
+                <defs>
+                    <pattern id="pattern0_1984" patternContentUnits="objectBoundingBox" width="1" height="1">
+                        <use xlink:href="#image0_1984" transform="scale(0.0111111)"/>
+                    </pattern>
+                    <image id="image0_1984" width="90" height="90" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAFkUlEQVR4nO2dS4icRRDHOz4j8XERolEwop6FRE8qI5J1Z7qqZpPDKKgRn0FQ0BgkepDNTc0pBPQkePKSg09I3KkaB0RUdCWugUUPPg4+0Dw2ntyF3R2pbxY3WXY2szPdX/c3038oGGa/6a/7R29/XdXV/RmTlJSUlJSUlJSUlJSU1J1qR2oXI+OdJPZJEjiIAh+gwPck8BMxnEGxc2r6Wb/Tv2XXsH1Df1OtV+7QMrq83XCp3CzfSAIvoMDHJPAPCbT6MRQ4S2w/qgo8DwI3mGFW7YvaFdiwu1GAUexCv3A7Q7fzyFAnsY+UmqWNZlhUa9au1J6GYn/3BXcN+5sYDtR4xzVmULVncvulyPYlEjgdAPBK0zrs0zqZQRII3ENiT0QA+PxhheGHKsMOU3TpmEgCbxLDYmioHY1hEQUOl4+WLzdF1FhzdCsyfBUcpHQL3H5LTbrVFEn67+himkZ5DyU6LWxU7jNFEAjsIoZ/Q0OjnmHbOWR80MQsYtjjc05M+cFegDo8bWIUCu5U5yA0JHIIm+r2AROTdFwjgdnQcMg97Dls4P0mBkEdbivig4+6hg1ndzbKtwSFrHPPbFoUARDyaQyTQefZmTMSGoLk1rMPh3OrY/b4xHmvXsQ6lnKFXGqWLkG2U8EbL3mbPZFrIGopCtcaRkO2e3OLJ6PYU0MLWuwpZeAdNAnsD91YCm/7vIc9UeCPCBraCmoMf+pSnDfQwPBo8EZKHIZcecgbaF1IDd1AisRQ4Ji3lIBBiMxROyaz3zbtdWr6OcsTWTdoO7/r2Oj1zkFr3sUgQEapVFa2Ddm+3GN5zzkHvZTc0iqqYZbhhLR6J6LNPZXL9j0PaVp2ZhAhq6r16paeymU74zT9rJ0LFx4YORwuzhUxvNJr+fApbHcGeinhcCAho1Qq/SxaYAMfdwgaDkYAreVyuFBBHUYdLCS/5gw0sv0wNDiKE7LbB2LBQqKzvoeLFXbcGWhi+DUCgK2oevLyPX92BzqODNBWbJAzY3vSGeheXNShgCyZzcYJmu1nKPiMuq8o8E0Bx2SvoF2tqLxrWmbD+WuP8HaBITseOhh+cVGpsebo1pVlj4+PX9Qj7PCQXT8MXUzvUOxC7UjtstXK7wF2FJCdT+90H5+TSjU65x6vA3ZMkN06LA5d8B+xidf2ATsuyO19MK/HGlSa1pWNjjdrmQ0o9q3IpnBrmH0s2jApsp1aZ8+OricvdwDcFnvgf7qbnh1vT/YQ+Ffp3moPFZ26UM+GBtweY0/2spSl0m3FnnrF1Fqwo4WcDRuVZ92Drle3eNyjMr3mMBLRcLEM2c6vt85dq31KgLfKT3db8dCQvSbQZKAbdrfnBkxfCHYMkL2nhLWTHL0f/zDdCXYskL0nOeaVhI5ZbIU2n3tf4grGssUOGV80vlX9vHpVHisuKPAXMbyqnhcyvBNN3h/bkyMTI5tMHtJE7OANljCm01yTlzRgT2y/C91oGvTNQipkvDttf8tJuskxOADJx5DtIRN2izJMhoZA3s1+3Wl1KDfphvTs5JbB7ckzNEE3mxgEDPdG4UiIY8hZmkVlxMQkYjs2aAejVBtQMzFKj8eJxrGQviDPo1SeMjFLj/wp+DAyG90RP52kaQVFfEAi2xl93pgiyTbsTSjwZWh41K0xTAY/0qefeXbm1HDEHqR6fGwPBZ8nu3LXMcJdA1mdJip3mUFSqX1qzV4NM4YGrHXQKJzWyQyqRiZGNmUr6mx/y70Ht2PcB8pHy1ebYVGpWdoIDA+T2E98OjrtOTEc0zW+oTp6fjXpKQG6A4DYvr/0Noo+hwY4o2Vp3oW3lICiq6bpZ4LbqgxPaKamZgNpDnL2ehCB0/+/HqS9nKbfHddr9Frdxaq/Ta8HSUpKSkpKSkpKSkpKMt3rPwYZJ3bDwpATAAAAAElFTkSuQmCC"/>
+                </defs>
+            </svg>
+            <span>Нові пости додано</span>
+        </div>
+        <div class="loading hidden" id="failure-searching">
+            <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <rect width="35" height="35" fill="url(#pattern0_2147_5462)"/>
+                <defs>
+                    <pattern id="pattern0_2147_5462" patternContentUnits="objectBoundingBox" width="1" height="1">
+                    <use xlink:href="#image0_2147_5462" transform="scale(0.0111111)"/>
+                    </pattern>
+                    <image id="image0_2147_5462" width="90" height="90" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABaCAYAAAA4qEECAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE9UlEQVR4nO2dS48VRRTHKxFFA9GlKCRo0C/A6ErNJWbG6elzakYXrYloIr42kIxIzMiOncCKTOLX8AELCHwAiNGgsHGjceFbhxlX3knAv6nqjmHGnpm+c089urv+yUlubu6te+p3q6vrceq0UklJSUlJSUlJSUlJSUnNhKK4B8xPQ+u3QHQWRJ+B+QaYvwPzLRCtWjOvy/duVJ85Y78zM/OUKaPhz/VLyLJ9IHoPRBfA/BeYMaatgOg8iOZBtFf1WSiKB8D8OpivgOiOANx6I7oNosvI89cwGNyv+iIUxe6qpf3kDO7G9juITmFy8iHVVWFi4l4wfwDmpQCA19sSiE4Yn1SXBKLnwHwzAsDru5VvQTSp2i7TJ4LoYzD/ExzqxmZ8W0SW7VRtFObmHgPztQhAomHr/gpaP6HaJHM5Cg3T4NlWoPXzqg0C0Utg/jsCaNhmyzaToVdUzALRu07HxOwN9h0QvaNiFJhftJOD0JBYELbWL6uYZPo1MA+Dw2En3cgLKgaB6MmW3vjQ0FaQZQfCQs6ynXZYFB4GHNuXQcfZ1WQEPbHFkNPqmGd8EDZT14FfyIPBDhB9E0Hl4dluel2Iqlbh0FM77nM9+c8IKowgZupeFLvdgyZaCF5ZDg77hPvtJ6JfhZxdtX9anu+xVv6BkpOe4f/KLycgEmX/7HRbrNrjk2oVCzXlzwjBNmXM1JT/oaD/h12CviLmaJ7vqf0NoumxVv/KVqtry9b6YcEr5qIbyER7RReN8nrQY8HeBLItd3b2UeEVPvlQBht3IdcaYC7jTX9v9G6ktrtYV4eTonUgOuYC9AVh0MMtwTSHLVnWKKA/lQ/TIloWBo2tLvVG3YhEGdv3f1k0/MzGwkk7ySKtMUxLXgt7QhL02w5BY1utMmRLXmtH5ECbqE63zmIkcPFANn5/JAea+XPnDvNIXUHY7sLVDdHzkuhwK5DRQC7tuhxo5h88Oo4mXUPQ7mKtr99LgvYfAUqjwQ4CufTzDznQcqtecAE7GOTShgk0tw106jrgp+tIN0P4uRmm4R38DO/Kc3xRQEZsExbmTyRBpyk4+5iCmxOpsUDmMb7jwrR+Qw50WibFJnZQDnRa+IeXhf/K2fMRtWRE0rLlboR3gZ4Xbg0LwmCawJaL6yjtqDxos1Xf9nADLRjXYVhsUofxYJssAW0OoJkVjOtwFUBjHTWpGBzGdcB1SJhsXMerrnNs/CJ06a3aPnN6+hFrZf8pG+S4vnypVUiTAsN17o+eB6GjsvedQragp6Z2maXBCCqLTgeiW9gmqUh/Qc97gfzfYSHmr4NXmjt+WMjCZn42HX/zJJu5JTwAeLJzvrjWH1E2x3fDQ4BTI/oCRXFfMNAV7AP2YHp3IS9D68dVDALRoVZnneENIa9C6ykVk6D1XOcSoxAVKkaZ9DgdSfVz28SEq5hlU/60uxsZRpfiZ4vUPyutvPERHVJtEvJ8P4iuBofHI2WZCZvSZ8xx9mLkM0jj27ng42Sx6TpFmEjF+KT1M6pLQrkQdTyKJVbjg9lsHgx2qK4K5Xq22VH/MQDg32yi7ix7UPVFKFMeHwbzJacTnbLsi2aPr1ep5+tk9/SIjpmjZNXTKMYFfKsq66izkICOPB7kIIjeBPNpEw1kYpCrR4Es3fV4kKXqvevVZ8xnj9jvpseDJCUlJSUlJSUlJSUlqcb6F7sXDxtJe2N3AAAAAElFTkSuQmCC"/>
+                </defs>
+            </svg>
+            <span>Ще немає нових постів</span>
         </div>
     </div>
 {% endblock %}
@@ -46,5 +74,5 @@
     <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
     <script src="{% static 'post_app/js/firstEntry.js' %}"></script>
     <script src="{% static 'post_app/js/post.js' %}"></script>
-    <script src="{% static 'post_app/js/postsScroll.js' %}"></script>
+    <script src="{% static 'post_app/js/newPostsLoading.js' %}"></script>
 {% endblock %}

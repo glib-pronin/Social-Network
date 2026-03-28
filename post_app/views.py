@@ -43,6 +43,7 @@ def get_post(req: HttpRequest):
         return JsonResponse({'success': False, 'error': 'invalid_id'})
     profile_id = req.GET.get('id')
     new_posts = req.GET.get('new_posts', '') == 'true'
+    url_name = req.GET.get('url_name', '')
     if not profile_id:
         hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
         page_qs = Post.objects.exclude(id__in=hidden_ids)
@@ -62,7 +63,7 @@ def get_post(req: HttpRequest):
     page = get_page_data(page_qs, cursor, new_posts=new_posts)
     return JsonResponse({
         'success': True,
-        'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page}, request=req),
+        'html_post': render_to_string(template_name='post_app/posts.html', context={'post_content': page, 'url_name': url_name}, request=req),
         'has_next': page.get('has_next'), 'new_cursor': page.get('cursor')
     })
 

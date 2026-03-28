@@ -9,8 +9,8 @@ async function loadPost() {
         postLoader.remove()
         return
     }
-
-    const url = isNaN(profileId) ? `/get-posts?cursor=${cursor}` : `/get-posts?cursor=${cursor}&id=${profileId}`
+    const urlName = postsContainer.dataset.urlName
+    const url = isNaN(profileId) ? `/get-posts?cursor=${cursor}&url_name=${urlName}` : `/get-posts?cursor=${cursor}&id=${profileId}&url_name=${urlName}`
     const res = await fetch(url)
     const { success, html_post, has_next, new_cursor } = await res.json()
     if (success) {

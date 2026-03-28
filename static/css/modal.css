@@ -136,6 +136,9 @@
 #check-new-posts {
     transition: opacity 0.5s ease;
     z-index: 5;
+}
+
+.cursor-pointer {
     cursor: pointer;
 }
 
