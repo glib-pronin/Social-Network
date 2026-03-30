@@ -95,7 +95,6 @@ def open_chat(req: HttpRequest):
             user = chat.users.exclude(pk=req.user.id).first()
             chat_avatar = user.profile.photo.image.url if user.profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
         queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo').order_by('-created_at')
-        print(queryset)
         data = get_page_data(queryset)
         return JsonResponse({ 
             'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
@@ -103,7 +102,7 @@ def open_chat(req: HttpRequest):
             'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}', 
             'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
             'chatAvatar': chat_avatar, 'shortName': chat.get_initial(),
-            'isCreatedChat': is_created_chat, 'id': chat.id
+            'isCreatedChat': is_created_chat, 'id': chat.id, 'isAdmin': chat.admin == req.user
         })
     return JsonResponse({'succes': False, 'error': 'not_found_chat'})
 
@@ -122,3 +121,100 @@ def get_messages(req: HttpRequest, chat_id: int):
         'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
         'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data)
     })
+
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def get_group_data(req: HttpRequest, chat_id: int):
+    chat = Chat.objects.filter(pk=chat_id, is_group=True).first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    users = chat.users.select_related('profile', 'profile__photo').exclude(pk=req.user.id)
+    users_data = []
+    for us in users:
+        if us.profile.photo:
+            photo_url=us.profile.photo.image.url
+        else:
+            photo_url = req.build_absolute_uri(static('profile_app/img/default_photo.png'))
+        users_data.append({
+            'id': us.id,
+            'name': f'{us.first_name} {us.last_name}' if us.first_name and us.last_name else us.username,
+            'avatar': photo_url
+        })
+    return JsonResponse({
+        'success': True, 'name': chat.name,
+        'avatar': chat.avatar.url if chat.avatar else None,
+        'users': users_data
+    })
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def edit_group(req: HttpRequest, chat_id: int):
+    chat = Chat.objects.filter(pk=chat_id, is_group=True).first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    if req.user != chat.admin:
+        return JsonResponse({'success': False, 'error': 'forbidden'})
+    
+    name = req.POST.get('name', '')
+    user_ids = req.POST.getlist('users')
+    remove_avatar = req.POST.get('remove_avatar', '') == '1'
+    avatar = req.FILES.get('avatar')
+
+    if len(name) < 3:
+        return JsonResponse({'success': False, 'error': 'invalid_name'})
+    if not user_ids:
+        return JsonResponse({'success': False, 'error': 'invalid_payload'})
+    friend_ids = req.user.profile.friends.values_list('user_id', flat=True)
+    valid_users = User.objects.filter(id__in=user_ids).filter(id__in=friend_ids)
+    if not valid_users.exists():
+        return JsonResponse({'success': False, 'error': 'invalid_payload'})
+    
+    chat.name = name
+    chat.users.set([req.user, *valid_users])
+    if remove_avatar and chat.avatar:
+        chat.avatar.delete(save=False)
+    elif avatar:
+        if chat.avatar:
+            chat.avatar.delete(save=False)
+        chat.avatar = avatar
+    chat.save()
+    chat_data = {
+        'id': chat.id, 'chatName': chat.name, 
+        'shortName': chat.get_initial(), 'isAdmin': True,
+        'isGroup': True, 'chatMembersCount': chat.users.count()
+    }
+    if chat.avatar:
+        chat_data['chatAvatar'], _ = cloudinary_url(source=chat.avatar.name, fetch_format='auto', quality='auto')
+    else:
+        chat_data['chatAvatar'] = ''
+    return JsonResponse({'success': True, 'chatData': chat_data})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def leave_group(req: HttpRequest, chat_id: int):
+    chat = Chat.objects.filter(pk=chat_id, is_group=True).first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    if not chat.users.filter(pk=req.user.id).exists():
+        return JsonResponse({'success': False, 'error': 'forbidden'})
+    if chat.admin == req.user:
+        return JsonResponse({'success': False, 'error': 'admin_cannot_leave'})
+    chat.users.remove(req.user)
+    if chat.users.count() == 0:
+        chat.delete()
+    return JsonResponse({'success': True})
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def delete_group(req: HttpRequest, chat_id: int):
+    chat = Chat.objects.filter(pk=chat_id, is_group=True).first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    if chat.admin != req.user:
+        return JsonResponse({'success': False, 'error': 'forbidden'})
+    if chat.avatar:
+        chat.avatar.delete(save=False)
+    chat.delete()
+    return JsonResponse({'success': True})
+
+    

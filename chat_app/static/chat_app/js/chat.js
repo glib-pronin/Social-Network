@@ -13,9 +13,18 @@ function connectWS(chatId) {
         const container = document.createElement('div')
         container.innerHTML = data.html
         const hasMsgs = msgsContainer.querySelectorAll('.msg').length > 0
-        setDates(container, hasMsgs, msgsContainer.querySelector('.msg-container:last-child .msgx'), 'new')
+        setDates(container, hasMsgs, msgsContainer.querySelector('.msg-container:last-child .msg'), 'new')
         msgsContainer.append(...container.children)
         msgsContainer.scrollTop = msgsContainer.scrollHeight
+        console.log(data);
+        
+    }
+}
+
+function closeWS() {
+    if (websocket) {
+        websocket.close()
+        websocket = null
     }
 }
 

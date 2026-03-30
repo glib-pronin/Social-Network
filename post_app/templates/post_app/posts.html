@@ -3,7 +3,7 @@
 {% load profile_tags %}
 {% check_profile as my_profile %}
 {% for post in post_content.objects %}
-    <div class="post standart-border" data-post-id="{{ post.id }}" {% if post.is_viewed or post.author == user %} data-viewed="true" {% endif %}>
+    <div class="post standart-border has-menu" data-post-id="{{ post.id }}" {% if post.is_viewed or post.author == user %} data-viewed="true" {% endif %}>
         {% if request.resolver_match.url_name == 'main' or request.resolver_match.url_name == 'get_post' or my_profile %}        
             <div class="menu-container hidden">
                 <button class="close-menu">

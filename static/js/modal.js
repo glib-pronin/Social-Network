@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
         if (e.target.closest('.close-menu')) {
-            const section = e.target.closest('.section') || e.target.closest('.post')
+            const section = e.target.closest('.has-menu')
             section.querySelector('.menu-container').classList.add('hidden')
             return
         }

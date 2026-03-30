@@ -19,7 +19,11 @@
             {% endif %}
             <div class="msg another-msg" data-date="{{ msg.get_date }}">
                 <div class="msg-wrapper"> 
-                    <span class="username">{{ msg.sender.first_name }} {{ msg.sender.last_name }}</span>
+                    {% if msg.sender.first_name or msg.sender.lastst_name %}
+                        <span class="username">{{ msg.sender.first_name }} {{ msg.sender.last_name }}</span>
+                    {% else %}
+                        <span class="username">{{ msg.sender.username }}</span>
+                    {% endif %}
                     <span>{{ msg.text }}</span>
                 </div>
                 <span class="date">{{ msg.get_time }}</span>

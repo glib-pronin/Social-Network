@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.forEach(el => el.classList.toggle('hidden', hide))
     }
     // Функція відкриття вкладки (мобілка)
-    function openTab(type) {        
+    function openTab(type) {   
+        closeWS()     
         subNav.querySelectorAll('button').forEach(bt => bt.classList.remove('selected'))
         subNav.querySelector(`button[data-type="${type}"]`)?.classList.add('selected')
         hideElments()
@@ -73,11 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     window.addEventListener('resize', handleResize)
-    window.addEventListener('popstate', initTabsOrChat)
+    window.addEventListener('popstate', () => {
+        closeWS()
+        initTabsOrChat()
+    })
     // Обробник виходу з чату через кнопку Назад
     secondBlock.querySelector('.back-btn')?.addEventListener('click', () => {
         secondBlock.querySelectorAll('.chat-interface').forEach(block => block.classList.add('hidden'))
         secondBlock.querySelector('.welcome-block').classList.remove('hidden')
+        closeWS()
         secondBlock.dataset.selected = ''
         if (window.innerWidth < 1100) {
             history.back()
@@ -136,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = contact.querySelector('span').textContent.toLowerCase()
             contact.classList.toggle('hidden', !name.includes(value))
         })
-    }, 300)
+    }, 500)
     searchInput.addEventListener('input', onInput)
 
     handleResize()

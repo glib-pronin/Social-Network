@@ -7,5 +7,9 @@ urlpatterns = [
     path('create-group', create_group, name=''),
     path('open-chat', open_chat, name='open_chat'),
     path('get-messages/<int:chat_id>', get_messages, name='get_messages'),
+    path('get-group-data/<int:chat_id>', get_group_data, name='get_group_data'),
+    path('edit-group/<int:chat_id>', edit_group, name='edit_group'),
+    path('leave-group/<int:chat_id>', leave_group, name='leave_group'),
+    path('delete-group/<int:chat_id>', delete_group, name='delete_group'),
     path('', render_chat, name='chat'),
 ]

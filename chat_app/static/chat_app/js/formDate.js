@@ -24,7 +24,7 @@ function setDates(container, hasNew, extraMsg = null, msgType = 'old') {
     if (extraMsg) {
         msgType === 'old' ? msgs.push(extraMsg) : msgs.unshift(extraMsg)
     } 
-    console.log(msgs);
+    console.log(extraMsg);
     
     if (msgs.length && !hasNew) container.insertBefore(createDateEl(msgs[0].dataset.date), msgs[0].parentElement)
     msgs.forEach((m, ind) => {

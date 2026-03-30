@@ -22,6 +22,27 @@
     width: 100%;
 }
 
+.all-users.with-border {
+    border: 1px solid var(--color-silver);
+    border-radius: 6px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.all-users.with-border div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.all-users.with-border div:first-child span:last-child {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-weight: 500;
+    color: var(--color-purple);
+}
+
 #select-users-for-group-modal .all-users {
     height: 40vh;
     max-height: 432px;
@@ -44,6 +65,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 16px;
+    margin-right: 5px;
 }
 
 .user.without-borders {
@@ -60,10 +82,27 @@
 }
 
 .group-photo-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 24px;
+}
+
+.avatar-overlay {
+    height: 46px;
+    width: 46px;
+    border-radius: 100px;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+}
+
+.group-photo-container .avatar:hover + .avatar-overlay, .avatar-overlay:hover {
+    display: flex;
 }
 
 .photo-btns {

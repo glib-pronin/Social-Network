@@ -1,7 +1,7 @@
 {% load profile_tags %}
 {% load cloudinary %}
 {% check_profile as my_profile %}
-<div class="section post-gallery" data-album-id="{{ album.id }}">
+<div class="section post-gallery has-menu" data-album-id="{{ album.id }}">
     {% if my_profile %} 
         <div class="loading-block hidden">
             <div class="loading">
