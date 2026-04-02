@@ -5,7 +5,18 @@
         <div class="msg-container">
             <div class="my-msg msg" data-date="{{ msg.get_date }}">
                 <div class="msg-wrapper">
-                    <span>{{ msg.text }}</span>
+                    {% if msg.images_sorted %}
+                        <div class="imgs-container post-gallery">
+                            {% for img in msg.images_sorted %}
+                                <a href="{{ img.image_url }}" data-pswp-width="{{ img.width }}" data-pswp-height="{{ img.height }}" >
+                                    <div class="msg-image-item">
+                                        <img src="{% cloudinary_url img.public_id width=400  quality='auto' fetch_format='auto' %}" alt="">
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <span class="msg-text">{{ msg.text }}</span>
                 </div>
                 <span class="date">{{ msg.get_time }}</span>
             </div>
@@ -24,7 +35,18 @@
                     {% else %}
                         <span class="username">{{ msg.sender.username }}</span>
                     {% endif %}
-                    <span>{{ msg.text }}</span>
+                    {% if msg.images_sorted %}
+                        <div class="imgs-container post-gallery">
+                            {% for img in msg.images_sorted %}
+                                <a href="{{ img.image_url }}" data-pswp-width="{{ img.width }}" data-pswp-height="{{ img.height }}" >
+                                    <div class="msg-image-item">
+                                        <img src="{% cloudinary_url img.public_id width=400  quality='auto' fetch_format='auto' %}" alt="">
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <span class="msg-text">{{ msg.text }}</span>
                 </div>
                 <span class="date">{{ msg.get_time }}</span>
             </div>    

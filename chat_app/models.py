@@ -27,7 +27,7 @@ class Chat(models.Model):
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='messages', null=True, blank=True)
-    text = models.TextField()
+    text = models.TextField(null=True, blank=True)
     readers = models.ManyToManyField(to=User, related_name='read_msgs')
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -57,9 +57,11 @@ class Message(models.Model):
     
 class MessageImage(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='chats/messages/', width_field='width', height_field='height')
-    width = models.ImageField()
-    height = models.ImageField()
+    image_url = models.URLField()
+    public_id = models.CharField(max_length=255)
+    width = models.IntegerField()
+    height = models.IntegerField()
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return f'Image {self.id} from {self.message}' 

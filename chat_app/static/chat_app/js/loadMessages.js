@@ -30,7 +30,7 @@ function setMessagesObserver(loader, cursor, hasNew) {
         messagesCursor = data.cursor
         hasNewMessages = data.hasNext
         const oldHeight = chatBody.scrollHeight
-        console.log(oldHeight);
+        initLightBox()
         
         setDates(container, hasNewMessages, chatBody.querySelector('.msg'))
         chatBody.insertBefore(container, loader.nextElementSibling)

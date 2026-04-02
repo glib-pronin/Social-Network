@@ -85,11 +85,11 @@
                     {% for img_row in post.get_images %}
                         <div class="post-image-row {% if forloop.counter|divisibleby:2 %}row-2{% else %}row-3{% endif %}">
                             {% for img in img_row %}
-                            <a href="{{ img.image.url }}" data-pswp-width="{{ img.width }}" data-pswp-height="{{ img.height }}" >
-                                <div class="post-image-item">
-                                    <img src="{% cloudinary_url img.image.name width=400  quality='auto' fetch_format='auto' %}" alt="">
-                                </div>
-                            </a>
+                                <a href="{{ img.image.url }}" data-pswp-width="{{ img.width }}" data-pswp-height="{{ img.height }}" >
+                                    <div class="post-image-item">
+                                        <img src="{% cloudinary_url img.image.name width=400  quality='auto' fetch_format='auto' %}" alt="">
+                                    </div>
+                                </a>
                             {% endfor %}
                         </div>
                     {% endfor %}

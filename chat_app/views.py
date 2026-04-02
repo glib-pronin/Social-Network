@@ -6,9 +6,10 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.templatetags.static import static
 from cloudinary.utils import cloudinary_url
+from post_app.utils import get_page_data
 from .models import *
 from .utils import *
-from post_app.utils import get_page_data
+import cloudinary.uploader
 
 
 # Create your views here.
@@ -94,7 +95,13 @@ def open_chat(req: HttpRequest):
         else:
             user = chat.users.exclude(pk=req.user.id).first()
             chat_avatar = user.profile.photo.image.url if user.profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
-        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo').order_by('-created_at')
+        queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo').prefetch_related(
+            Prefetch(
+                'images',
+                queryset=MessageImage.objects.all().order_by('order'),
+                to_attr='images_sorted'
+            )
+        ).order_by('-created_at')
         data = get_page_data(queryset)
         return JsonResponse({ 
             'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
@@ -115,7 +122,13 @@ def get_messages(req: HttpRequest, chat_id: int):
     chat = Chat.objects.filter(pk=int(chat_id)).prefetch_related('users').first()
     if not chat:
         return JsonResponse({'success': False, 'error': 'invalid_id'})
-    queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).order_by('-created_at')
+    queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo', ).prefetch_related(
+        Prefetch(
+            'images',
+            queryset=MessageImage.objects.all().order_by('order'),
+            to_attr='images_sorted'
+        )
+    ).order_by('-created_at')
     data = get_page_data(queryset, cursor=cursor)
     return JsonResponse({ 
         'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
@@ -217,4 +230,18 @@ def delete_group(req: HttpRequest, chat_id: int):
     chat.delete()
     return JsonResponse({'success': True})
 
-    
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def upload_image(req: HttpRequest, chat_id: int): 
+    chat = Chat.objects.filter(pk=chat_id).first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'invalid_id'})
+    file = req.FILES.get('image')
+    if not file: 
+        return JsonResponse({'success': False, 'error': 'missing_file'})
+    res = cloudinary.uploader.upload(file, folder=f'chats/{chat_id}')
+    return JsonResponse({
+        'success': True,
+        'url': res['secure_url'], 'publicId': res['public_id'],
+        'width': res['width'], 'height': res['height']
+    })

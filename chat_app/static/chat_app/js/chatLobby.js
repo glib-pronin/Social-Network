@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функція відкриття вкладки (мобілка)
     function openTab(type) {   
         closeWS()     
+        secondBlock.resetSelectedImages()
         subNav.querySelectorAll('button').forEach(bt => bt.classList.remove('selected'))
         subNav.querySelector(`button[data-type="${type}"]`)?.classList.add('selected')
         hideElments()
@@ -76,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', handleResize)
     window.addEventListener('popstate', () => {
         closeWS()
+        secondBlock.resetSelectedImages()
         initTabsOrChat()
     })
     // Обробник виходу з чату через кнопку Назад
@@ -83,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
         secondBlock.querySelectorAll('.chat-interface').forEach(block => block.classList.add('hidden'))
         secondBlock.querySelector('.welcome-block').classList.remove('hidden')
         closeWS()
+        secondBlock.resetSelectedImages()
         secondBlock.dataset.selected = ''
         if (window.innerWidth < 1100) {
             history.back()
@@ -104,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             secondBlock.classList.remove('hidden')
             return
         }
+        secondBlock.resetSelectedImages()
         const blocks = secondBlock.querySelectorAll('.chat-interface')        
         const msgsContainer = blocks[1]
         msgsContainer.innerHTML = ''
@@ -128,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const loader = setMsgLoader(msgsContainer)
             observer = setMessagesObserver(loader, data.cursor, data.hasNext)
         }
+        initLightBox()
         setDates(msgsContainer, data.hasNext)
         msgsContainer.scrollTop = msgsContainer.scrollHeight
         connectWS(data.id)

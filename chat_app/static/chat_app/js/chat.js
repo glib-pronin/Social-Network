@@ -17,7 +17,7 @@ function connectWS(chatId) {
         msgsContainer.append(...container.children)
         msgsContainer.scrollTop = msgsContainer.scrollHeight
         console.log(data);
-        
+        initLightBox()
     }
 }
 
@@ -32,12 +32,19 @@ function closeWS() {
 const input = document.getElementById('msg-input')
 const msgBtn = document.getElementById('send-msg-btn')
 
-msgBtn.addEventListener('click', () => {
+msgBtn.addEventListener('click', async () => {
     if (!websocket) return
 
     const value = input.value.trim()
-    if (!value) return
-    websocket.send(JSON.stringify({ msg: value }))
+    const secondBlock = input.closest('.second-block')
+    const hasImages = secondBlock.hasImages?.()
+
+    if (!value && !hasImages) return
+    
+    const uploadedImages = hasImages ? await secondBlock.uploadImages() : []
+
+    websocket.send(JSON.stringify({ msg: value, images: uploadedImages }))
+    
     onMessageInput.cancel()
     const data = getMessagesFromStorage()
     const id = input.closest('.second-block').dataset.selected
