@@ -170,10 +170,10 @@
                                             {% endif %}
                                             <div class="chat-data">
                                                 <span>{{ other.first_name }} {{ other.last_name }}</span>
-                                                {% if last_msg.text %}
-                                                    <span>{{ last_msg.get_short_text }}</span>
-                                                {% else %}    
+                                                {% if last_msg and not last_msg.text %}
                                                     <span>Фото</span>
+                                                {% else %}    
+                                                    <span>{{ last_msg.get_short_text }}</span>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -212,10 +212,10 @@
                                         {% endif %}
                                         <div class="chat-data">
                                             <span>{{ group.name }}</span>
-                                            {% if last_msg.text %}
-                                                <span>{{ last_msg.get_short_text }}</span>
-                                            {% else %}    
+                                            {% if last_msg and not last_msg.text %}
                                                 <span>Фото</span>
+                                            {% else %}    
+                                                <span>{{ last_msg.get_short_text }}</span>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -365,6 +365,7 @@
     <script src="{% static 'chat_app/js/groupExitAction.js' %}"></script>
     <script src="{% static 'chat_app/js/groupCRUD.js' %}"></script>
     <script src="{% static 'chat_app/js/messagePhotos.js' %}"></script>
+    <script src="{% static 'chat_app/js/createTempMsg.js' %}"></script>
     <script src="{% static 'chat_app/js/chat.js' %}"></script>
     <script src="{% static 'chat_app/js/chatLobby.js' %}"></script>
 {% endblock %}

@@ -32,12 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         imagesGrid.insertBefore(container, defaultPhoto)
     }
 
-    secondBlock.uploadImages = async function() {
-        const selectedImages = Array.from(imagesGrid.querySelectorAll('.img-container:not(.add-more)')).map((el, ind) => ({...el.imgObj, order: ind}))
+    secondBlock.uploadImages = async function(selectedImages = []) {
         const id = this.dataset.selected
-        const promises = selectedImages.map(im => upload(im.file, im.order, id))
+        const promises = selectedImages.map((im, ind) => upload(im.file, ind, id))
         const uploaded = await Promise.all(promises)
-        this.resetSelectedImages()
         return uploaded
     }
 

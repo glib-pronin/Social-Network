@@ -78,19 +78,27 @@
     max-width: 300px;
 }
 
-.imgs-container a {
-    height: 200px;
-    flex: 1 0 calc((100% - 8px) / 2);
-}
-
-.imgs-container .msg-image-item {
+.imgs-container .msg-image-item, .temp-image-item {
     width: 100%;
     height: 100%;
     overflow: hidden;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
-.msg-image-item img {
+.imgs-container a, .temp-image-item {
+    height: 200px;
+    flex: 1 0 calc((100% - 8px) / 2);
+}
+
+.temp-image-item .spinner {
+    position: absolute;
+}
+
+.msg-image-item img, .temp-image-item img {
     width: 100%;
     height: 100%;
     border-radius: 10px;

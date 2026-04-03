@@ -76,8 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const category = e.target.closest('.emoji-category')
         if (category) {
-            console.log('..');
-            
             changeCategory(category)
             return
         }

@@ -10,12 +10,17 @@ function connectWS(chatId) {
     websocket.onmessage = async (e) => {        
         const msgsContainer = document.getElementById('msgs-container')
         const data = JSON.parse(e.data)
-        const container = document.createElement('div')
-        container.innerHTML = data.html
-        const hasMsgs = msgsContainer.querySelectorAll('.msg').length > 0
-        setDates(container, hasMsgs, msgsContainer.querySelector('.msg-container:last-child .msg'), 'new')
-        msgsContainer.append(...container.children)
-        msgsContainer.scrollTop = msgsContainer.scrollHeight
+        if (data.tempId) {
+            const tempMsg = document.querySelector(`.my-msg[data-temp-id="${data.tempId}"]`)
+            if (tempMsg) {
+                const container = document.createElement('div')
+                container.innerHTML = data.html
+                tempMsg.closest('.msg-container').replaceWith(...container.children)
+                initLightBox()
+                return
+            }
+        }
+        setMessage(data, msgsContainer)
         console.log(data);
         initLightBox()
     }
@@ -37,13 +42,20 @@ msgBtn.addEventListener('click', async () => {
 
     const value = input.value.trim()
     const secondBlock = input.closest('.second-block')
+    const msgsContainer = secondBlock.querySelector('.chat-body')
     const hasImages = secondBlock.hasImages?.()
 
     if (!value && !hasImages) return
-    
-    const uploadedImages = hasImages ? await secondBlock.uploadImages() : []
 
-    websocket.send(JSON.stringify({ msg: value, images: uploadedImages }))
+    const tempId = 'temp-' + Date.now()
+    const imgsCopy = Array.from(document.querySelectorAll('.img-container:not(.add-more)')).map(el => ({...el.imgObj}))
+    const tempEl = createTempMsg({ text: value, images: imgsCopy, tempId }) 
+    setMessage({}, msgsContainer, tempEl)
+    secondBlock.resetSelectedImages()
+    
+    const uploadedImages = hasImages ? await secondBlock.uploadImages(imgsCopy) : []
+
+    websocket.send(JSON.stringify({ msg: value, images: uploadedImages, tempId }))
     
     onMessageInput.cancel()
     const data = getMessagesFromStorage()
@@ -52,6 +64,16 @@ msgBtn.addEventListener('click', async () => {
     saveMessagesToStorage(data)
     input.value = ''
 })
+
+function setMessage(data, msgsContainer, tempEl = null) {
+    const container = document.createElement('div')
+    if (tempEl) container.append(tempEl)
+    else container.innerHTML = data.html
+    const hasMsgs = msgsContainer.querySelectorAll('.msg').length > 0
+    setDates(container, hasMsgs, msgsContainer.querySelector('.msg-container:last-child .msg'), 'new')
+    msgsContainer.append(...container.children)
+    msgsContainer.scrollTop = msgsContainer.scrollHeight
+}
 
 function getMessagesFromStorage() {
     const data = localStorage.getItem('messages')

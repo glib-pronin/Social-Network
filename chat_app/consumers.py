@@ -21,7 +21,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name, 
             {
-                'type': 'send_msg', 'sender': self.user, 
+                'type': 'send_msg', 'sender': self.user, 'tempId': data.get('tempId'),
                 'html_my': render_to_string(template_name='chat_app/messages.html', context={'objects': msgs, 'user': self.user}), 
                 'html_another': render_to_string(template_name='chat_app/messages.html', context={'objects': msgs, 'user': None}), 
             }
@@ -29,9 +29,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def send_msg(self, data):
         if data.get('sender') == self.user:
-            await self.send(text_data=json.dumps({'html': data.get('html_my')}))
+            await self.send(text_data=json.dumps({'html': data.get('html_my'), 'tempId': data.get('tempId')}))
         else:
-            await self.send(text_data=json.dumps({'html': data.get('html_another')}))
+            await self.send(text_data=json.dumps({'html': data.get('html_another'), 'tempId': data.get('tempId')}))
 
     @database_sync_to_async
     def create_msg(self, text: str, images):
