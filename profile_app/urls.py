@@ -28,4 +28,5 @@ urlpatterns = [
     path('friends/add-friend/<int:id>', view=add_friend, name='friends_add'),
     path('friends/remove-friend/<int:id>', view=remove_friend, name='friends_remove'),
     path('<int:profile_id>', view=render_profile, name='profile_page'),
+    path('get-online-users', view=get_online_users, name='get_online_users'),
 ]

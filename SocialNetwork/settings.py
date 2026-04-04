@@ -154,9 +154,16 @@ SENDGRID_CLIENT = SendGridAPIClient(SENDGRID_API_KEY)
 
 # Channel layers for WS 
 
+REDIS_URL = os.getenv('REDIS_URL')
+
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [
+                REDIS_URL
+            ]
+        }
     }
 }
 

@@ -164,9 +164,9 @@
                                     {% with chat.chat_users|first as other  %}
                                         <div class="without-time">
                                             {% if other.profile.photo.image %}
-                                                <img src="{% cloudinary_url other.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+                                                <img src="{% cloudinary_url other.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar user-presence" data-id="{{ other.id }}">
                                             {% else %}
-                                                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar">
+                                                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar user-presence" data-id="{{ other.id }}">
                                             {% endif %}
                                             <div class="chat-data">
                                                 <span>{{ other.first_name }} {{ other.last_name }}</span>

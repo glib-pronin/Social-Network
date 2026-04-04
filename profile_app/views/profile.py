@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from post_app.utils import generate_username, get_page_data
 from post_app.models import Post
+from SocialNetwork.redis import redis_client
 from ..models import Profile
 from ..utils import get_featured_album, checkFriendship
 
@@ -34,3 +35,8 @@ def render_profile(req: HttpRequest, profile_id: int):
             'featured_album': featured_album, 'featured_photo': featured_photo,
             'friendship_state': checkFriendship(profile, req.user.profile), 'profile_id': profile.id}
     )
+
+@login_required(login_url='registration')
+async def get_online_users():
+    online_users = await redis_client.smembers('online_users')
+    return JsonResponse({'online_users': online_users})
