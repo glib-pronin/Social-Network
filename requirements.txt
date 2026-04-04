@@ -6,6 +6,7 @@ cbor2==5.8.0
 certifi==2026.2.25
 cffi==2.0.0
 channels==4.3.2
+channels_redis==4.3.0
 charset-normalizer==3.4.5
 cloudinary==1.44.1
 constantly==23.10.4
@@ -32,6 +33,7 @@ pycparser==3.0
 pyOpenSSL==25.3.0
 python-dotenv==1.2.1
 python-http-client==3.3.7
+redis==7.4.0
 requests==2.32.5
 sendgrid==6.12.5
 service-identity==24.2.0
