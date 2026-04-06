@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.db import IntegrityError
-from django.db.models import Count, Q
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from user_app.utils import get_data_from_json, User
-from .utils import generate_username, get_page_data
+from .utils import generate_username, get_page_data, get_optimized_posts
 from .models import *
 from profile_app.models import *
 from asgiref.sync import sync_to_async
@@ -22,14 +21,7 @@ def render_main(req: HttpRequest):
         is_first_entry = True
     hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
     page_qs = Post.objects.exclude(id__in=hidden_ids)
-    page_qs = page_qs.annotate(
-        likes_count = Count('likes', distinct=True),
-        hearts_count = Count('hearts', distinct=True),
-        views_count = Count('views', distinct=True),
-        my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
-        my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
-        is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
-    ).order_by('-id').all()
+    page_qs = get_optimized_posts(page_qs, req)
     return render(
         request=req,    
         template_name='post_app/main.html',
@@ -52,14 +44,7 @@ def get_post(req: HttpRequest):
         if not profile:
             return JsonResponse({'success': False, 'error': 'invalid_id'})
         page_qs = Post.objects.filter(author=profile.user)
-    page_qs = page_qs.annotate(
-        likes_count = Count('likes', distinct=True),
-        hearts_count = Count('hearts', distinct=True),
-        views_count = Count('views', distinct=True),
-        my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
-        my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
-        is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
-    ).order_by('-id').all()
+    page_qs = get_optimized_posts(page_qs, req)
     page = get_page_data(page_qs, cursor, new_posts=new_posts)
     return JsonResponse({
         'success': True,

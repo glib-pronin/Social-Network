@@ -3,11 +3,13 @@
 <a href="{% url 'profile_settings' profile_user.profile.id %}">
     <div class="user-bio standart-border">
         <div class="user-bio-info">
-            {% if profile_user.profile.photo.image %}
-                <img src="{{ profile_user.profile.photo.image.url }}" alt="" class="avatar">
-            {% else %}
-                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
-            {% endif %}
+            <div class="user-presence big-icon" data-id="{{ profile_user.id }}">
+                {% if profile_user.profile.photo.image %}
+                    <img src="{{ profile_user.profile.photo.image.url }}" alt="" class="avatar">
+                {% else %}
+                    <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                {% endif %}
+            </div>
             <div class="user-bio-name">
                 <span class="names">{{ profile_user.first_name }} {{ profile_user.last_name }}</span>
                 <span class="username">{{ profile_user.username }}</span>

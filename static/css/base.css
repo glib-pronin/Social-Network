@@ -262,6 +262,34 @@ footer a.selected {
   justify-content: center;
 }
 
+.user-presence {
+  position: relative;
+}
+
+.user-presence::before {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-silver);
+  position: absolute;
+  bottom: 1.5px;
+  right: 1.5px;
+  border-radius: 100px;
+  border: 2px solid var(--color-white);
+}
+
+.user-presence.big-icon::before {
+  width: 18px;
+  height: 18px;
+  bottom: 6.5px;
+  right: 6.5px;
+}
+
+.user-presence.online::before {
+  background-color: var(--color-orange);
+}
+
 @media (max-width: 1060px) {
   nav.desktop {
     display: none;

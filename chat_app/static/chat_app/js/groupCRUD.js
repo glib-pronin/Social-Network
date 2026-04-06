@@ -6,9 +6,13 @@ function createChat(chatData, selector) {
     groupData.classList.add('without-time')
     let img
     if (chatData.chatAvatar) {
-        img = document.createElement('img')
-        img.classList.add('avatar')
-        img.src = chatData.chatAvatar
+        img = document.createElement('div')
+        img.classList.toggle('user-presence', !chatData.isGroup)
+        img.dataset.id = chatData.userId
+        im = document.createElement('img')
+        im.classList.add('avatar')
+        im.src = chatData.chatAvatar
+        img.append(im)
     } else {
         img = document.createElement('span')
         img.classList.add('avatar-default')
@@ -22,6 +26,7 @@ function createChat(chatData, selector) {
     groupData.append(img, extraContainer)
     group.append(groupData)
     document.querySelector(selector).prepend(group)
+    registerIndicators(group)
     return group
 }
 

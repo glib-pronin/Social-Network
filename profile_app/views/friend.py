@@ -9,22 +9,28 @@ from ..utils import make_recommendation_list
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
 def render_friends(req: HttpRequest):
-    recommendation_list = make_recommendation_list(req.user, limit=6)
     my_profile = req.user.profile
+    received_requests = FriendRequest.objects.filter(to_profile=my_profile).select_related('from_profile__user', 'from_profile__photo')
+    recommendation_list = make_recommendation_list(req.user, limit=6)
+    friends = my_profile.friends.select_related('user', 'photo')
     return render(request=req, template_name='profile_app/friends.html', context={
-        'recommendation_list': recommendation_list, 'has_more_requests': my_profile.received_requests.count() > 6,
+        'recommendation_list': recommendation_list, 'received_requests': received_requests[:6],
+        'friends': friends[:6], 
+        'has_more_requests': my_profile.received_requests.count() > 6,
         'has_more_recommendation': len(recommendation_list) > 6, 'has_more_friends': my_profile.friends.count() > 6,
         })
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
 def render_friends_all(req: HttpRequest):
-    return render(request=req, template_name='profile_app/friends_all.html')
+    friends = req.user.profile.friends.select_related('user', 'photo')
+    return render(request=req, template_name='profile_app/friends_all.html', context={'friends': friends})
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
 def render_friends_requests(req: HttpRequest):
-    return render(request=req, template_name='profile_app/requests_all.html')
+    received_requests = FriendRequest.objects.filter(to_profile=req.user.profile).select_related('from_profile__user', 'from_profile__photo')
+    return render(request=req, template_name='profile_app/requests_all.html', context={'received_requests': received_requests })
 
 @login_required(login_url='registration')
 @require_http_methods(["GET"])

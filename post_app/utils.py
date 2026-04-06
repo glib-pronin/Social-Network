@@ -1,6 +1,7 @@
 from unidecode import unidecode
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Count, Q
 import random
 
 MAX_ATTEMPTS = 30
@@ -36,3 +37,13 @@ def get_page_data(queryset: models.QuerySet, cursor: int | None = None, count: i
     else:
         cursor_new = None
     return {'objects': posts, 'has_next': has_next, 'cursor': cursor_new}        
+
+def get_optimized_posts(qs, req): 
+    return qs.select_related('author', 'author__profile', 'author__profile__photo').prefetch_related('tags', 'images').annotate(
+        likes_count = Count('likes', distinct=True),
+        hearts_count = Count('hearts', distinct=True),
+        views_count = Count('views', distinct=True),
+        my_like = Count('likes', filter=Q(likes__user=req.user), distinct=True),
+        my_heart = Count('hearts', filter=Q(hearts__user=req.user), distinct=True),
+        is_viewed = Count('views', filter=Q(views__user=req.user), distinct=True),
+    ).order_by('-id').all()

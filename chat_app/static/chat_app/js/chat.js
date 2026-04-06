@@ -3,7 +3,7 @@ let websocket = null
 function connectWS(chatId) {
     if (websocket) websocket.close()
     
-    const protocol = window.location.protocol === 'https' ? 'wss' : 'ws'
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
     const url = `${protocol}://${window.location.host}/chat/${chatId}`
     websocket = new WebSocket(url)
 

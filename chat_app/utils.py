@@ -12,7 +12,7 @@ def group_friends_by_letter(friends, req):
     latin = {}
     cyrillic = {}
     for f in friends:
-        name = f.user.first_name or f.user.last_name or f.username or ''
+        name = f.user.first_name or f.user.last_name or f.user.username or ''
         if not name:
             continue
 

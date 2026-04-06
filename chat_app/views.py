@@ -63,7 +63,7 @@ def create_group(req: HttpRequest):
 
     group = Chat.objects.create(name=name, is_group=True, admin=user, avatar=avatar)
     group.users.add(user, *valid_users)
-    chat_data = {'id': group.id, 'chatName': group.name, 'shortName': group.get_initial()}
+    chat_data = {'id': group.id, 'chatName': group.name, 'shortName': group.get_initial(), 'isGroup': group.is_group}
     if avatar:
         chat_data['chatAvatar'], _ = cloudinary_url(source=group.avatar.name, fetch_format='auto', quality='auto')
     else:
@@ -106,10 +106,10 @@ def open_chat(req: HttpRequest):
         return JsonResponse({ 
             'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
             'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data),
-            'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}', 
+            'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}' if user.first_name and user.last_name else user.username, 
             'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
             'chatAvatar': chat_avatar, 'shortName': chat.get_initial(),
-            'isCreatedChat': is_created_chat, 'id': chat.id, 'isAdmin': chat.admin == req.user
+            'isCreatedChat': is_created_chat, 'id': chat.id, 'isAdmin': chat.admin == req.user, 'userId': req.user.id
         })
     return JsonResponse({'succes': False, 'error': 'not_found_chat'})
 

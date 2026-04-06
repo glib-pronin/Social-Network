@@ -36,11 +36,13 @@
             <div class="author-line">
                 <div class="author-info">
                     <div class="user-wrapper">
-                        {% if post.author.profile.photo.image %}
-                            <img src="{% cloudinary_url post.author.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
-                        {% else %}
-                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
-                        {% endif %}
+                        <div class="user-presence" data-id="{{ post.author.id }}">
+                            {% if post.author.profile.photo.image %}
+                                <img src="{% cloudinary_url post.author.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+                            {% else %}
+                                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                            {% endif %}
+                        </div>
                         {% if post.author.profile.is_text_signature and post.author.profile.pseudonym %}
                             <span>{{ post.author.profile.pseudonym }}</span>
                         {% endif %}
@@ -80,7 +82,7 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            {% if post.images.count > 0 %}
+            {% if post.images.all %}
                 <div class="post-images post-gallery">
                     {% for img_row in post.get_images %}
                         <div class="post-image-row {% if forloop.counter|divisibleby:2 %}row-2{% else %}row-3{% endif %}">

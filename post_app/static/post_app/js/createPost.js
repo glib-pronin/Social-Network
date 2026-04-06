@@ -147,7 +147,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
             modal.classList.add('hidden')
             if (addNewPostToDOM) {
-                postsContainer.insertAdjacentHTML('afterbegin', data.html)
+                const tempContainer = document.createElement('div')
+                tempContainer.innerHTML = data.html
+                console.log(tempContainer);
+                
+                registerIndicators(tempContainer)
+                postsContainer.prepend(...tempContainer.children)
                 initLightBox()
             }
         }

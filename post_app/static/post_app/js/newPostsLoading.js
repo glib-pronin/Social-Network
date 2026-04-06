@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingBlock.classList.remove('hidden')
     isLoading = true
     const cursorPost = document.querySelector('.post:first-child')
-    const prevTop = cursorPost.getBoundingClientRect().top
+    const prevTop = cursorPost?.getBoundingClientRect().top ?? 0
     
     const res = await fetch(`get-posts?cursor=${cursor}&new_posts=${true}`)
     const { html_post, new_cursor } = await res.json()
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.createElement('div')
     wrapper.innerHTML = html_post
     observeNewPosts(wrapper)
+    registerIndicators(wrapper)
     postsContainer.prepend(...wrapper.children)
     initLightBox()
     

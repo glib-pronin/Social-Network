@@ -1,5 +1,6 @@
 {% extends 'profile_app/profile_layout.html' %}
 {% load static %}
+{% load cloudinary %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/friends.css' %}">
@@ -19,15 +20,17 @@
         </div>
         <p class="result-msg hidden"></p>
         <div class="friends-section-content">
-            <h3 class="empty-msg {% if user.profile.friends.exists %} hidden {% endif %}">У вас поки що немає друзів.</h3>
-            {% for friend in user.profile.friends.all reversed  %}
+            <h3 class="empty-msg {% if friends %} hidden {% endif %}">У вас поки що немає друзів.</h3>
+            {% for friend in friends reversed %}
                 <div class="friends-section-card" data-id="{{ friend.id }}"">
                     <div class="user-info">
-                        {% if friend.photo.image %}
-                            <img src="{{ friend.photo.image.url }}" alt="Profile photo" class="avatar">
-                        {% else %}
-                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
-                        {% endif %}
+                        <div class="user-presence big-icon" data-id="{{ friend.user.id }}">
+                            {% if friend.photo.image %}
+                                <img src="{% cloudinary_url friend.photo.image.name width=200  quality='auto' fetch_format='auto' %}" alt="Profile photo" class="avatar">
+                            {% else %}
+                                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                            {% endif %}
+                        </div>
                         <div class="user-names">
                             <p>{{ friend.user.first_name }} {{ friend.user.last_name }}</p>
                             <p>{{ friend.user.username }}</p>

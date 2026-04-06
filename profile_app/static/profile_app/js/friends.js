@@ -47,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function changeRecommendationHasMore(container, hasMore) {
         if (container.dataset.mode === 'fullscreen') return
         recommendationContainer.dataset.hasMore = hasMore
-        isEmptySection(container, 'recommendation')
-        console.log(hasMore);
+        isEmptySection(recommendationContainer, 'recommendation')
     }
 
     function checkFriends(card) {

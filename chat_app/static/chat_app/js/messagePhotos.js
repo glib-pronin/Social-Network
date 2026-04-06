@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewPhotosModal = document.getElementById('preview-photos-modal')
     const defaultPhoto = document.querySelector('.add-more.img-container')
     const imagesGrid = previewPhotosModal.querySelector('.imgs-grid')
+    const imagesIndicator = document.getElementById('selected-images-indicator')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value
 
     triggerBtns.forEach(btn => btn.addEventListener('click', () => fileInput.click()))
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const files = Array.from(e.target.files)
         files.forEach(file => createPreviewImage(file))
         previewPhotosModal.classList.remove('hidden')
+        updateImagesIndicator()
         fileInput.value = ''
     })
 
@@ -57,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (container.imgObj?.previewUrl) URL.revokeObjectURL(container.imgObj.previewUrl)
             container.remove()
         })
+        updateImagesIndicator()
     }
 
     secondBlock.hasImages = () => {
@@ -69,8 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = deleteBtn.closest('.img-container')
             if (container.imgObj?.previewUrl) URL.revokeObjectURL(container.imgObj.previewUrl)
             container.remove()
+            updateImagesIndicator()
         }
     })
+    
+    function updateImagesIndicator() {
+        const imagesCount = imagesGrid.querySelectorAll('.img-container:not(.add-more)').length
+        if (imagesCount > 0) {
+            imagesIndicator.textContent = imagesCount
+            imagesIndicator.classList.remove('hidden')
+        } else {
+            imagesIndicator.classList.add('hidden')
+        }
+    }
 
     new Sortable(imagesGrid, {
         animation: 150,

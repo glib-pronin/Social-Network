@@ -1,5 +1,6 @@
 {% extends 'profile_app/profile_layout.html' %}
 {% load static %}
+{% load cloudinary %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/friends.css' %}">
@@ -22,11 +23,13 @@
             {% for potential_friend in recommendation_list %}
                 <div class="friends-section-card" data-id="{{ potential_friend.id }}">
                     <div class="user-info">
-                        {% if potential_friend.photo.image %}
-                            <img src="{{ potential_friend.photo.image.url }}" alt="Profile photo" class="avatar">
-                        {% else %}
-                            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
-                        {% endif %}
+                        <div class="user-presence big-icon" data-id="{{ potential_friend.user.id }}">
+                            {% if potential_friend.photo.image %}
+                                <img src="{% cloudinary_url potential_friend.photo.image.name width=200  quality='auto' fetch_format='auto' %}" alt="Profile photo" class="avatar">
+                            {% else %}
+                                <img src="{% static 'profile_app/img/default_photo.png' %}" alt="Default profile photo" class="avatar">
+                            {% endif %}
+                        </div>
                         <div class="user-names">
                             <p>{{ potential_friend.user.first_name }} {{ potential_friend.user.last_name }}</p>
                             <p>{{ potential_friend.user.username }}</p>

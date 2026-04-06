@@ -25,6 +25,7 @@ async function loadPost() {
         const wrapper = document.createElement('div')
         wrapper.innerHTML = html_post
         observeNewPosts(wrapper)
+        registerIndicators(wrapper)
         postsContainer.append(...wrapper.children)
         initLightBox()
         cursor = new_cursor

@@ -150,6 +150,7 @@
     padding: 0;
     font-size: 14px;
     font-weight: 500;
+    color: var(--color-indigo);
 }
 
 .sub-navigation button.selected {
@@ -158,6 +159,13 @@
 
 .chat-handler {
     cursor: pointer;
+}
+
+.trigger-file-loader > div {
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
+    position: relative;
 }
 
 @media (max-width: 1100px) {

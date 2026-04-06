@@ -3,4 +3,4 @@ from .models import *
 
 # Register your models here.
 
-admin.site.register([Tag, Post, PostImage])
+admin.site.register([Tag, Post, PostImage, HiddenPost])

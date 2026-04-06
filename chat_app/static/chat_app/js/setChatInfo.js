@@ -32,7 +32,6 @@ function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, 
     }
 }
 
-
 function setGroupCount(count) {
     const lastDigit = count % 10
     const lastTwoDigits = count % 100
