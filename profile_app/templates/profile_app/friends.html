@@ -98,7 +98,9 @@
                         </div>
                     </div>
                     <div class="btns-container">
-                        <button class="friends-btn btn1">Повідомлення</button>
+                        <a href="{% url 'chat_lobby' %}?user={{ friend.user.id }}">
+                            <button class="friends-btn btn1">Повідомлення</button>
+                        </a>
                         <button class="friends-btn btn2 delete-btn">Видалити</button>
                     </div>
                 </div>

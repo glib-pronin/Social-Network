@@ -31,7 +31,7 @@
                 <span class="statistic-name">Друзі</span>
             </div>
         </div>
-        <div class="hidden" id="friendship-controls" data-profile-id="{{ profile_user.profile.id }}" data-initial-state="{{ friendship_state }}"></div>
+        <div class="hidden" id="friendship-controls" data-profile-id="{{ profile_user.profile.id }}" data-initial-state="{{ friendship_state }}" data-msg-url="{% url 'chat_lobby' %}?user={{ profile_user.id }}"></div>
     </div>
 </a>
 {% check_profile as my_profile %}
@@ -61,7 +61,7 @@
                         {% endif %}
                         <div class="data">
                             <p>{{ friend_request.from_profile.user.first_name }} {{ friend_request.from_profile.user.last_name }}</p>
-                            <p>0 підписників</p>
+                            <p>{{ friend_request.from_profile.friends.count }} підписників</p>
                         </div>
                     </div>
                 {% endfor %}

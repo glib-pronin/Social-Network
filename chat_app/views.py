@@ -81,7 +81,7 @@ def open_chat(req: HttpRequest):
         chat = Chat.objects.filter(pk=int(id)).prefetch_related('users').first()
     else:
         user = User.objects.filter(pk=int(id)).select_related('profile__photo').first()
-        if not user:
+        if not user or user.profile not in req.user.profile.friends.all():
             return JsonResponse({'succes': False, 'error': 'not_found_user'})
         chat = Chat.objects.filter(users=user, is_group=False).filter(users=req.user).prefetch_related('users').first()
         if not chat:
@@ -90,10 +90,12 @@ def open_chat(req: HttpRequest):
             is_created_chat = True
     if chat:
         chat_avatar = None
+        user_id = None
         if chat.is_group:
             chat_avatar = chat.avatar.url if chat.avatar else None
         else:
             user = chat.users.exclude(pk=req.user.id).first()
+            user_id = user.id
             chat_avatar = user.profile.photo.image.url if user.profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
         queryset = chat.messages.select_related('sender', 'sender__profile', 'sender__profile__photo').prefetch_related(
             Prefetch(
@@ -109,7 +111,8 @@ def open_chat(req: HttpRequest):
             'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}' if user.first_name and user.last_name else user.username, 
             'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
             'chatAvatar': chat_avatar, 'shortName': chat.get_initial(),
-            'isCreatedChat': is_created_chat, 'id': chat.id, 'isAdmin': chat.admin == req.user, 'userId': req.user.id
+            'isCreatedChat': is_created_chat, 
+            'id': chat.id, 'isAdmin': chat.admin == req.user, 'userId': user_id
         })
     return JsonResponse({'succes': False, 'error': 'not_found_chat'})
 

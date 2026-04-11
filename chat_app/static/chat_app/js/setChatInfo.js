@@ -1,4 +1,4 @@
-function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, chatAvatar, shortName, isAdmin }) {
+function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, chatAvatar, shortName, isAdmin, userId }) {
     if (!success) return
 
     const chatNameSpan = chatBlock.querySelector('.chat-name')
@@ -8,7 +8,10 @@ function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, 
     img.src = chatAvatar ?? ''
     span.textContent = shortName
     img.classList.toggle('hidden', !chatAvatar)
+    img.parentElement.classList.toggle('user-presence', !isGroup)
+    img.parentElement.classList.remove('online')
     span.classList.toggle('hidden', chatAvatar)
+    removeIndicator(img.parentElement)
 
     const menu = chatBlock.closest('.second-block').querySelector('.menu-container')
     const horizontalLine = menu.querySelector('.horizontal-line')
@@ -29,7 +32,11 @@ function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, 
         } else {
             leaveGroup.classList.remove('hidden')
         }
+    } else {
+        img.parentElement.dataset.id = userId
+        registerIndicators(img.parentElement.parentElement)
     }
+    console.log(userPresenceIndicators);
 }
 
 function setGroupCount(count) {

@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const controls = document.getElementById('friendship-controls')
     const profileId = controls.dataset.profileId
     let state = controls.dataset.initialState
+    const msgUrl = controls.dataset.msgUrl
     const friendsCountContainer = document.getElementById('friends-count')
     const modal = document.getElementById('confirm-action-modal')
     const modalText = modal.querySelector('p')
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cancelBtn) cancelBtn.addEventListener('click', handleCancel)
         if (acceptBtn) acceptBtn.addEventListener('click', handleAccept)
         if (removeBtn) removeBtn.addEventListener('click', handleRemove)
-        // if (messageBtn) messageBtn.addEventListener('click', handleMessage)
+        if (messageBtn) messageBtn.addEventListener('click', handleMessage)
     }
 
     async function handleAdd (e) {
@@ -123,5 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 render()
             }
         }
+    }
+
+    function handleMessage(e) {
+        e.preventDefault()
+        window.location.href = msgUrl
     }
 })

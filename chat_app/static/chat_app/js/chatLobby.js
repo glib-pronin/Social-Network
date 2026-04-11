@@ -16,12 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
             url.searchParams.set('chat', chat)
             url.searchParams.delete('tab')
         }
+        url.searchParams.delete('user')
         if (url.toString() !== window.location.toString()) window.history.pushState({}, '', url)
     }
     // Отримання інформації з url
     function getStateFromURL() {
         const params =  new URLSearchParams(window.location.search)
-        return { tab: params.get('tab'), chat: params.get('chat') }
+        return { tab: params.get('tab'), chat: params.get('chat'), user: params.get('user') }
     }
 
     function hideElments(hide = true) {
@@ -48,9 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Функція ініціалізації вкладки або чату
     function initTabsOrChat() {
-        const { tab, chat } = getStateFromURL()
-        if (window.innerWidth >= 1100 && !chat) return
-        if (chat) {
+        const { tab, chat, user } = getStateFromURL()
+        if (window.innerWidth >= 1100 && !chat && !user) return
+        if (user) {
+            const el = document.querySelector(`.contact.chat-handler[data-id="${user}"]`)
+            el?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+        } else if (chat) {
             const el = document.querySelector(`.chat.chat-handler[data-id="${chat}"]`)
             el?.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
         } else {

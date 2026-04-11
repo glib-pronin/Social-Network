@@ -41,6 +41,17 @@ function registerIndicators(root = document) {
     })
 }
 
+function removeIndicator(indicator) {
+    const id = indicator.dataset.id
+    if (!id) return
+    const list = userPresenceIndicators.get(id)
+    if (!list) return
+    const index = list.indexOf(indicator)
+    if(index !== -1) {
+        list.splice(index, 1)
+    }    
+}
+
 async function loadInitialOnlineUsers() {
     const res = await fetch('/profile/get-online-users')
     const data = await res.json()
