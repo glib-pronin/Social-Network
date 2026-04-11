@@ -31,5 +31,18 @@ function showElementSuccess(successText) {
             modal.classList.add('hidden')
             modal.classList.remove('fade-out')
         }, { once: true })
-    }, 2000);
+    }, 2000)
+}
+
+function showNotification(notification) {
+    const modal = document.getElementById('notification-modal')
+    modal.classList.remove('hidden')
+    modal.innerHTML = notification
+    setTimeout(() => {
+        modal.classList.add('fade-out')
+        modal.addEventListener('transitionend', () => {
+            modal.classList.add('hidden')
+            modal.classList.remove('fade-out')
+        }, { once: true })
+    }, 2000)
 }

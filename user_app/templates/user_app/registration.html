@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
 {% block links %}
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
 {% endblock %}
@@ -85,6 +86,9 @@
                 </div>
             </div>
             <button type="submit" id="send-button" class="send-btn">Створити акаунт</button>
+            <a href="{% provider_login_url 'google' %}">
+                <button>Увійти</button>
+            </a>
             <div class="loading hidden">
                 <div class="spinner"></div>
                 <span>Обробка даних...</span>

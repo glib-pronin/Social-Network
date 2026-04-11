@@ -98,7 +98,7 @@
         {% block content %}{% endblock %}
     </main>
     {% if user.is_authenticated %} 
-        <div id="element-loading-modal" class="hidden">
+        <div id="element-loading-modal" class="hidden element-loading-modal">
             <div class="loading" id="element-loading-block">
                 <div class="spinner"></div>
                 <span></span>
@@ -115,6 +115,8 @@
                 </svg>
                 <span></span>
             </div>
+        </div>   
+        <div id="notification-modal" class="hidden element-loading-modal">
         </div>   
         <footer>
             <a href="{% url 'main' %}" {% if request.resolver_match.url_name == "main" %} class="selected" {% endif %}>

@@ -1,0 +1,31 @@
+{% load cloudinary %}
+<div>
+    {% if msg.chat.is_group %}
+        {% if msg.chat.avatar %}
+            <img src="{% cloudinary_url msh.chat.avatar.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+        {% else %}
+            <span class="avatar-default">{{ msg.chat.get_initial }}</span>
+        {% endif %}
+    {% else %}
+        {% if msg.sender.profile.photo.image %}
+            <img src="{% cloudinary_url msg.sender.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+        {% else %}
+            <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar">
+        {% endif %}
+    {% endif %}
+    <div>
+        {% if msg.chat.is_group %}
+            <span>{{ msg.chat.name }}</span>
+            <p>
+                <b>{{ msg.sender.username }}</b>:
+                <span>{{ msg.get_short_text }}</span>
+            </p>
+        {% else %}
+            {% if msg.sender.first_name and msg.sender.last_name %}
+                <span>{{ msg.sender.first_name }} {{ msg.sender.last_name }}</span>
+            {% else %}
+                <span>{{ msg.sender.username }}</span>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

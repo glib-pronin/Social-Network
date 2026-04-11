@@ -7,20 +7,26 @@ let onlineUsers = new Set()
 
 presenceWs.onmessage = async (e) => {
     const data = JSON.parse(e.data)
-    const user_id = String(data.user_id)
+    const type = data.type
 
-    if (data.status === 'online') onlineUsers.add(user_id)
-    else onlineUsers.delete(user_id)    
-
-    const elements = userPresenceIndicators.get(user_id)
-    if (!elements) return
-
-    for (let i = elements.length - 1; i >= 0; i--) {
-        const el = elements[i]
-        if (el.isConnected) {
-            el.classList.toggle('online', data.status === 'online')
-        } else {
-            elements.splice(i, 1)
+    if (type === 'send_notif') {
+        showNotification(data.html_notification)
+    } else {
+        const user_id = String(data.user_id)
+    
+        if (data.status === 'online') onlineUsers.add(user_id)
+        else onlineUsers.delete(user_id)    
+    
+        const elements = userPresenceIndicators.get(user_id)
+        if (!elements) return
+    
+        for (let i = elements.length - 1; i >= 0; i--) {
+            const el = elements[i]
+            if (el.isConnected) {
+                el.classList.toggle('online', data.status === 'online')
+            } else {
+                elements.splice(i, 1)
+            }
         }
     }
 }

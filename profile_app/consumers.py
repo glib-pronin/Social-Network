@@ -9,6 +9,7 @@ class PresenceConsumer(AsyncWebsocketConsumer):
         if not self.user.is_authenticated: 
             return
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        await self.channel_layer.group_add(f'notification_user_{self.user.id}', self.channel_name)
         connections = await redis_client.incr(f'user_{self.user.id}_connections')
         print(connections)
         if connections == 1:
@@ -24,6 +25,9 @@ class PresenceConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def send_user_status(self, data):
+        await self.send(text_data=json.dumps(data))
+
+    async def send_notif(self, data):
         await self.send(text_data=json.dumps(data))
 
     async def disconnect(self, code):
