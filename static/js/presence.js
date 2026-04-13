@@ -8,9 +8,9 @@ let onlineUsers = new Set()
 presenceWs.onmessage = async (e) => {
     const data = JSON.parse(e.data)
     const type = data.type
-
     if (type === 'send_notif') {
-        showNotification(data.html_notification)
+        if (!data.isRequestNotification) addMsgToSideChat(data)
+        if (!data.isMyMsg || data.isRequestNotification) showNotification(data)
     } else {
         const user_id = String(data.user_id)
     

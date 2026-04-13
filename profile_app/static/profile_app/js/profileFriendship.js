@@ -68,8 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (msg === 'created_friend') {
                 state = 'friend'
                 friendsCountContainer.textContent = friends_count
-            }
-            else state = 'outgoing'
+            } else {
+                state = 'outgoing'
+                presenceWs.send(JSON.stringify({ profileId }))
+            } 
             render()
         }
     }

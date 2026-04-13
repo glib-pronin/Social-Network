@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'post_app/css/create_post.css' %}">
     <link rel="stylesheet" href="{% static 'post_app/css/emoji_picker.css' %}">
     <link rel="stylesheet" href="{% static 'css/scroll.css' %}">
+    <link rel="stylesheet" href="{% static 'chat_app/css/notification.css' %}">
     {% block links %} {% endblock %}
 </head>
 <body>
@@ -116,7 +117,7 @@
                 <span></span>
             </div>
         </div>   
-        <div id="notification-modal" class="hidden element-loading-modal">
+        <div id="notification-modal" class="hidden element-loading-modal cursor-pointer">
         </div>   
         <footer>
             <a href="{% url 'main' %}" {% if request.resolver_match.url_name == "main" %} class="selected" {% endif %}>
@@ -169,6 +170,7 @@
     <script src="{% static 'post_app/js/createPost.js' %}"></script>
     <script src="{% static 'post_app/js/photoGrid.js' %}"></script>
     <script src="{% static 'post_app/js/createBaseSVG.js' %}"></script>
+    <script src="{% static 'chat_app/js/addMsgToSideChat.js' %}"></script>
     <script src="{% static 'js/modal.js' %}"></script>
     {% block scripts %}{% endblock %}
 </body>

@@ -14,12 +14,6 @@ import cloudinary.uploader
 
 # Create your views here.
 
-def render_chat(req: HttpRequest, chat_id: int):
-    chat = Chat.objects.filter(pk=chat_id).first()
-    if not chat:
-        return redirect('select_chat')
-    return render(request=req, template_name='chat_app/chat.html', context={'chat': chat})
-
 @login_required(login_url='registration')
 @require_http_methods(["GET"])
 def render_chat_lobby(req: HttpRequest):
@@ -28,7 +22,7 @@ def render_chat_lobby(req: HttpRequest):
         last_message_time = Max('messages__created_at')
     ).order_by(F('last_message_time').desc(nulls_last=True)).prefetch_related(Prefetch(
         'users',
-        queryset=User.objects.exclude(pk=req.user.id).prefetch_related('profile__photo'),
+        queryset=User.objects.exclude(pk=req.user.id).select_related('profile__photo'),
         to_attr='chat_users'
     )).prefetch_related(Prefetch(
         'messages',
@@ -104,11 +98,11 @@ def open_chat(req: HttpRequest):
                 to_attr='images_sorted'
             )
         ).order_by('-created_at')
-        data = get_page_data(queryset)
+        data = get_page_data(queryset, count=10)
         return JsonResponse({ 
             'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
             'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data),
-            'chatName': chat.name if chat.name else f'{user.first_name} {user.last_name}' if user.first_name and user.last_name else user.username, 
+            'chatName': chat.name if chat.name else user.profile.get_full_name(), 
             'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
             'chatAvatar': chat_avatar, 'shortName': chat.get_initial(),
             'isCreatedChat': is_created_chat, 

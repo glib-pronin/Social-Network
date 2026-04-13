@@ -59,11 +59,7 @@
                             {% else %}
                                 <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar">
                             {% endif %}
-                            {% if friend.user.first_name and friend.user.last_name %}
-                                <span>{{ friend.user.first_name }} {{ friend.user.last_name }}</span>
-                            {% else %}
-                                <span>{{ friend.user.username }}</span>
-                            {% endif %}
+                            <span>{{friend.get_full_name }}</span>
                         </div>
                     {% endfor %}
                 </div>
@@ -180,15 +176,11 @@
                                                 {% endif %}
                                             </div>
                                             <div class="chat-data">
-                                                {% if other.first_name and other.last_name %}
-                                                    <span>{{ other.first_name }} {{ other.last_name }}</span>
-                                                {% else %}
-                                                    <span>{{ other.username }}</span>
-                                                {% endif %}
+                                                <span>{{ other.profile.get_full_name }}</span>
                                                 {% if last_msg and not last_msg.text %}
-                                                    <span>Фото</span>
+                                                    <span class="msg-text">Фото</span>
                                                 {% else %}    
-                                                    <span>{{ last_msg.get_short_text }}</span>
+                                                    <span class="msg-text">{{ last_msg.get_short_text }}</span>
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -228,9 +220,9 @@
                                         <div class="chat-data">
                                             <span>{{ group.name }}</span>
                                             {% if last_msg and not last_msg.text %}
-                                                <span>Фото</span>
+                                                <span class="msg-text">Фото</span>
                                             {% else %}    
-                                                <span>{{ last_msg.get_short_text }}</span>
+                                                <span class="msg-text">{{ last_msg.get_short_text }}</span>
                                             {% endif %}
                                         </div>
                                     </div>

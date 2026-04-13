@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menus = document.querySelectorAll('.menu-container')
     const confirmModal = document.getElementById('confirm-action-modal')
     const cancelModalBtn = confirmModal?.querySelector('#cancel-action-btn')
+    const notificationModal = document.getElementById('notification-modal')
 
     cancelModalBtn?.addEventListener('click', () => {
         confirmModal.classList.add('hidden')
@@ -46,4 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
             menus.forEach(m => m.classList.add('hidden'))
         }
     }, true)
+    
+    notificationModal.addEventListener('click', () => {
+        const notficationContainer = notificationModal.querySelector('.notification-container')
+        const url = notficationContainer?.dataset.url
+        if (url) window.location.href = url
+    })
 })

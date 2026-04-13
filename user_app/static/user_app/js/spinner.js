@@ -34,15 +34,30 @@ function showElementSuccess(successText) {
     }, 2000)
 }
 
+let notificationTimeout = null
+let notificationVersion = 0
+
 function showNotification(notification) {
+    if (!notification.isRequestNotification) {
+        const secondBlock = document.getElementById('second-block') // Перевіряємо, чи невідкритий цей чат
+        const selectedChatId = secondBlock?.dataset.selected
+        if (secondBlock && !secondBlock.classList.contains('hidden') && Number(selectedChatId) === notification.chatId) return
+    }
+
     const modal = document.getElementById('notification-modal')
+    modal.classList.remove('fade-out', 'hidden')
+    const currentNotificationVersion = ++notificationVersion
+
+    if (notificationTimeout) clearTimeout(notificationTimeout)
+
     modal.classList.remove('hidden')
-    modal.innerHTML = notification
-    setTimeout(() => {
+    modal.innerHTML = notification.htmlNotification
+    notificationTimeout = setTimeout(() => {
         modal.classList.add('fade-out')
         modal.addEventListener('transitionend', () => {
+            if(notificationVersion !== currentNotificationVersion) return
             modal.classList.add('hidden')
             modal.classList.remove('fade-out')
         }, { once: true })
-    }, 2000)
+    }, 5000)
 }

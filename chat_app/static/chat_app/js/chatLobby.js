@@ -130,14 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setChatInfo(blocks[0], data)
         if (data.isCreatedChat) createChat(data, '.messages-all')
         blocks.forEach(block => block.classList.remove('hidden'))
+        
         msgsContainer.innerHTML += data.html
-
+        setDates(msgsContainer, data.hasNext)
         if (data.hasNext) {
             const loader = setMsgLoader(msgsContainer)
             observer = setMessagesObserver(loader, data.cursor, data.hasNext)
         }
         initLightBox()
-        setDates(msgsContainer, data.hasNext)
         msgsContainer.scrollTop = msgsContainer.scrollHeight
         connectWS(data.id)
     })

@@ -2,8 +2,6 @@ from django.db import models
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.utils import timezone
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill, ResizeToFit
 from PIL import Image
 from post_app.models import PostView
 import os, uuid, math
@@ -23,6 +21,14 @@ class Profile(models.Model):
     def __str__(self):
         return f'Profile - {self.user.username}'
     
+    def get_full_name(self):
+        user = self.user
+        if user.first_name and user.last_name:
+            return f'{user.first_name} {user.last_name}'
+        if user.username:
+            return user.username if not user.username.startswith('@') else user.username[1:]
+        return ''
+
     def formatted_birth_date(self):
         return self.birth_date.strftime('%Y-%m-%d') if self.birth_date else ''
     

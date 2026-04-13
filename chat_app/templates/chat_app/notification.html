@@ -1,30 +1,36 @@
 {% load cloudinary %}
-<div>
+{% load static %}
+<div class="notification-container" data-url="{% url 'chat_lobby' %}?chat={{ msg.chat.id }}">
     {% if msg.chat.is_group %}
         {% if msg.chat.avatar %}
-            <img src="{% cloudinary_url msh.chat.avatar.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+            <img src="{% cloudinary_url msg.chat.avatar.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
         {% else %}
             <span class="avatar-default">{{ msg.chat.get_initial }}</span>
         {% endif %}
     {% else %}
-        {% if msg.sender.profile.photo.image %}
+        {% if msg.sender.profile.photo %}
             <img src="{% cloudinary_url msg.sender.profile.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
         {% else %}
             <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar">
         {% endif %}
     {% endif %}
-    <div>
+    <div class="notification-info-block">
         {% if msg.chat.is_group %}
             <span>{{ msg.chat.name }}</span>
             <p>
-                <b>{{ msg.sender.username }}</b>:
-                <span>{{ msg.get_short_text }}</span>
+                <b>{{ msg.sender.profile.get_full_name }}</b>:
+                {% if msg.text %}
+                    <span class="msg-text">{{ msg.get_short_text }}</span>
+                {% else %}
+                    <span class="msg-text">Фото</span>
+                {% endif %}
             </p>
         {% else %}
-            {% if msg.sender.first_name and msg.sender.last_name %}
-                <span>{{ msg.sender.first_name }} {{ msg.sender.last_name }}</span>
+            <span>{{ msg.sender.profile.get_full_name }}</span>
+            {% if msg.text %}
+                <span class="msg-text">{{ msg.get_short_text }}</span>
             {% else %}
-                <span>{{ msg.sender.username }}</span>
+                <span class="msg-text">Фото</span>
             {% endif %}
         {% endif %}
     </div>

@@ -133,6 +133,10 @@
     transition: opacity 2s ease;
 }
 
+#notification-modal {
+    max-width: 300px;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }

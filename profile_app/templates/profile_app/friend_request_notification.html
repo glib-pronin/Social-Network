@@ -1,0 +1,10 @@
+{% load cloudinary %}
+{% load static %}
+<div class="notification-container" data-url="{% url 'friends_requests' %}">
+    {% if sender.photo %}
+        <img src="{% cloudinary_url sender.photo.image.name width=100  quality='auto' fetch_format='auto' %}" alt="" class="avatar">
+    {% else %}
+        <img src="{% static 'profile_app/img/default_photo.png' %}" alt="" class="avatar">
+    {% endif %}
+    <span>Користувач {{ sender.get_full_name }} направив вам запит на дружбу</span>
+</div>

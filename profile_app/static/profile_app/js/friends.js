@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (success) {
             card.remove()
             if (msg === 'created_friend' && recommendationContainer.dataset.mode != 'fullscreen') checkFriends(card)
+            if (msg !== 'created_friend') presenceWs.send(JSON.stringify({ profileId }))
             showResultMsg(recommendationContainer.querySelector('.result-msg'), 'Запит на дружбу надіслано!')
             isEmptySection(recommendationContainer, 'recommendation')
         }
