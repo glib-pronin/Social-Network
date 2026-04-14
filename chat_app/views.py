@@ -103,7 +103,7 @@ def open_chat(req: HttpRequest):
             'success': True, 'hasNext': data.get('has_next'), 'cursor': data.get('cursor'),
             'html': render_to_string(template_name='chat_app/messages.html', request=req, context=data),
             'chatName': chat.name if chat.name else user.profile.get_full_name(), 
-            'chatMembersCount': len(chat.users.all()), 'isGroup': chat.is_group,
+            'chatMembersIds': list(chat.users.values_list('id', flat=True)), 'isGroup': chat.is_group,
             'chatAvatar': chat_avatar, 'shortName': chat.get_initial(),
             'isCreatedChat': is_created_chat, 
             'id': chat.id, 'isAdmin': chat.admin == req.user, 'userId': user_id
@@ -191,7 +191,7 @@ def edit_group(req: HttpRequest, chat_id: int):
     chat_data = {
         'id': chat.id, 'chatName': chat.name, 
         'shortName': chat.get_initial(), 'isAdmin': True,
-        'isGroup': True, 'chatMembersCount': chat.users.count()
+        'isGroup': True, 'chatMembersIds': list(chat.users.values_list('id', flat=True))
     }
     if chat.avatar:
         chat_data['chatAvatar'], _ = cloudinary_url(source=chat.avatar.name, fetch_format='auto', quality='auto')

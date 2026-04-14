@@ -1,4 +1,4 @@
-function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, chatAvatar, shortName, isAdmin, userId }) {
+function setChatInfo(chatBlock, { success, chatName, chatMembersIds, isGroup, chatAvatar, shortName, isAdmin, userId }) {
     if (!success) return
 
     const chatNameSpan = chatBlock.querySelector('.chat-name')
@@ -23,8 +23,10 @@ function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, 
     deleteGroup.classList.add('hidden')
     leaveGroup.classList.add('hidden')
     
+    const groupCountSpan = document.querySelector('.chat-members-count')
     if (isGroup) {
-        chatNameSpan.nextElementSibling.textContent = setGroupCount(chatMembersCount)
+        groupCountSpan.textContent = setGroupCount(chatMembersIds.length)
+        groupCountSpan.dataset.membersIds = chatMembersIds
         horizontalLine.classList.remove('hidden')
         if (isAdmin) {
             editGroup.classList.remove('hidden')
@@ -32,11 +34,14 @@ function setChatInfo(chatBlock, { success, chatName, chatMembersCount, isGroup, 
         } else {
             leaveGroup.classList.remove('hidden')
         }
+        setOnlineMembersCount()
     } else {
+        groupCountSpan.dataset.membersIds = ''
+        groupCountSpan.textContent = ''
+        groupCountSpan.nextElementSibling.textContent = ''
         img.parentElement.dataset.id = userId
         registerIndicators(img.parentElement.parentElement)
     }
-    console.log(userPresenceIndicators);
 }
 
 function setGroupCount(count) {
@@ -46,6 +51,25 @@ function setGroupCount(count) {
     else if ([2, 3, 4].includes(lastDigit) && ![12, 13, 14].includes(lastTwoDigits)) return count + ' учасники'
     return count + ' учасників'
 }   
+
+function setOnlineMembersCount() {
+    const welcomeBlock = document.querySelector('.welcome-block')
+    const chatHeader = document.querySelector('.chat-header')
+    const chatMembersSpan = chatHeader?.querySelector('.chat-members-count')
+    if (!chatMembersSpan || !welcomeBlock.classList.contains('hidden') || !chatMembersSpan.textContent) return
+    
+    const membersIds = chatMembersSpan.dataset.membersIds?.split(',')
+    if (!membersIds) return
+
+    let count = 0
+    membersIds.forEach(id => {
+      if (onlineUsers.has(id)) count++  
+    })
+    console.log(count)
+    const onlineMembersSpan = chatMembersSpan.nextElementSibling
+    if (count > 0) onlineMembersSpan.textContent = `, ${count} в мережі`
+    else onlineMembersSpan.textContent = ''
+}
 
 
 function updateSideChat({id, chatName, shortName, chatAvatar}) {

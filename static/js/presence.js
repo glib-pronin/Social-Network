@@ -9,7 +9,7 @@ presenceWs.onmessage = async (e) => {
     const data = JSON.parse(e.data)
     const type = data.type
     if (type === 'send_notif') {
-        if (!data.isRequestNotification) addMsgToSideChat(data)
+        if (!data.isRequestNotification && typeof addMsgToSideChat === 'function') addMsgToSideChat(data)
         if (!data.isMyMsg || data.isRequestNotification) showNotification(data)
     } else {
         const user_id = String(data.user_id)
@@ -28,6 +28,7 @@ presenceWs.onmessage = async (e) => {
                 elements.splice(i, 1)
             }
         }
+        if (typeof setOnlineMembersCount === 'function') setOnlineMembersCount()
     }
 }
 

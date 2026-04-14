@@ -28,13 +28,13 @@
     gap: 5px;
 }
 
-.chat-info div span:first-child {
+.chat-info div > span:first-child {
     font-weight: 500;
     font-size: 24px;
 }
 
-.chat-info div span:last-child {
-    font-weight: 5400;
+.chat-info div p span {
+    font-weight: 400;
     font-size: 14px;
     color: var(--color-blue);
 }

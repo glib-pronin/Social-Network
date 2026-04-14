@@ -112,7 +112,9 @@
                         </div>
                         <div>
                             <span class="chat-name"></span>
-                            <span></span>
+                            <p>
+                                <span class="chat-members-count"></span><span></span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -363,6 +365,7 @@
     {% include 'profile_app/confirm_modal.html' %}
 {% endblock %}
 {% block scripts %}
+    <script src="{% static 'chat_app/js/addMsgToSideChat.js' %}"></script>
     <script src="{% static 'chat_app/js/showError.js' %}"></script>
     <script src="{% static 'chat_app/js/formDate.js' %}"></script>
     <script src="{% static 'chat_app/js/loadMessages.js' %}"></script>
