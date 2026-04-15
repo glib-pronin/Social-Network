@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput && python manage.py migrate --noinput && daphne -b 0.0.0.0 -p $PORT SocialNetwork.asgi:application
+web: python manage.py collectstatic --noinput && python manage.py migrate --noinput && python manage.py create_admin && daphne -b 0.0.0.0 -p $PORT SocialNetwork.asgi:application
