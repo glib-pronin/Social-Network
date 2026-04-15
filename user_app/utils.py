@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.contrib.auth import login
 from django.template.loader import render_to_string
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
@@ -47,3 +48,6 @@ def check_password(password):
     if not re.search(r'[0-9]', password):
         return False
     return True
+
+def login_user_with_back(req, user):
+    login(request=req, user=user, backend='django.contrib.auth.backends.ModelBackend')

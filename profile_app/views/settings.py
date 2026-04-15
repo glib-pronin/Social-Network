@@ -6,7 +6,7 @@ from django.views.decorators.http import require_http_methods
 from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code, check_password
 from post_app.utils import is_username_available
 from user_app.models import EmailVerification
-from profile_app.models import Profile, AlbumImage, Album
+from profile_app.models import Profile, AlbumImage
 from ..utils import str_to_bool, is_valid_pseudonym
 from datetime import date
 import re

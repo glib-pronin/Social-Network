@@ -3,7 +3,7 @@ from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import User, EmailVerification
 from profile_app.models import Profile, Album
-from django.contrib.auth import login, logout
+from django.contrib.auth import logout
 from .utils import *
 from .decorators import anonymous_required
 import threading
@@ -50,7 +50,7 @@ def login_user(req: HttpRequest):
     user = authenticate_by_email(email, password)
     if user:
         if user.is_active:
-            login(request=req, user=user)
+            login_user_with_back(req, user)
             return JsonResponse({'success': True})
         else:
             return make_response_with_cookie('pk', user.id, {'success': False, 'error': 'verify_email', 'email': email})
@@ -92,7 +92,7 @@ def verify_code(req: HttpRequest):
         Album.objects.get_or_create(profile=profile, name='Мої фото', is_shown=False, is_default=True)
         user.email_verification.delete()
         user.save()
-        login(request=req, user=user)
+        login_user_with_back(req, user)
         resp = JsonResponse({'success': True})
         resp.delete_cookie('pk')
         return resp

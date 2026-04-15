@@ -106,6 +106,13 @@ form .btns-container {
     right: 0;
 }
 
+.goggle-auth {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 5px;
+}
+
 @media (max-width: 1075px) {
     .auth-bg-img {
         display: none;

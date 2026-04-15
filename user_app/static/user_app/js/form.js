@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordField = form.elements.password
     const confirmPasswordField = form.elements.confirmPassword
     const mainError = form.querySelector('.main-error')
+    const googleBtn = document.querySelector('.goggle-auth')
     let switcherType = 'registration'
 
     const verifyEmail = sessionStorage.getItem('verify-email')
@@ -17,6 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
         form.classList.add('hidden')
         emailForm.classList.remove('hidden')
         emailForm.querySelector('#user-email').textContent = verifyEmail 
+    }
+
+    const params = new URLSearchParams(window.location.search)
+    const error = params.get('error')
+    console.log(error);
+    
+    if (error === 'google_account_not_linked') {
+        mainError.textContent = 'Акаунт не знайдено. Завершіть реєстрацію.'
+        mainError.classList.remove('hidden')
+        setTimeout(() => mainError.classList.add('hidden'), 3000)
+        const url = new URL(window.location)
+        url.searchParams.delete('error')
+        window.history.replaceState({}, '', url)
     }
 
     emailField.addEventListener('input', () => {
@@ -60,11 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmPasswordBlock.classList.remove('hidden')
                 sendBtn.textContent = 'Створити акаунт'
                 formText.textContent = 'Приєднуйся до World IT'
+                googleBtn.classList.add('hidden')
             } else {
                 btn.parentElement.classList.add('auth')
                 confirmPasswordBlock.classList.add('hidden')
                 sendBtn.textContent = 'Увійти'
                 formText.textContent = 'Раді тебе знову бачити!'
+                googleBtn.classList.remove('hidden')
             }
         })
     ))
