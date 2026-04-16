@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmModal = document.getElementById('confirm-action-modal')
     const cancelModalBtn = confirmModal?.querySelector('#cancel-action-btn')
     const notificationModal = document.getElementById('notification-modal')
+    const myPhotosModal = document.getElementById('my-photos-modal')
+    const chooseMyPhotoBtn = document.getElementById('choose-my-photo')
 
     cancelModalBtn?.addEventListener('click', () => {
         confirmModal.classList.add('hidden')
@@ -53,4 +55,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const url = notficationContainer?.dataset.url
         if (url) window.location.href = url
     })
+
+    chooseMyPhotoBtn?.addEventListener('click', async () => {
+        const res = await fetch('/profile/albums/get-my-photos')
+        const { photos } = await res.json()
+        myPhotosModal.querySelector('.have-no-photo').classList.toggle('hidden', photos.length > 0)      
+        const imagesGrid = myPhotosModal.querySelector('.imgs-grid')
+        imagesGrid.querySelectorAll('.img-container').forEach(imc => imc.remove())
+        photos.forEach(photo => {
+            const container = document.createElement('div')
+            container.classList.add('img-container')
+            const img = document.createElement('img')
+            img.style.cursor = 'pointer'
+            img.src = photo.url
+            img.dataset.id = photo.id
+            container.append(img)
+            imagesGrid.append(container)
+        })
+        myPhotosModal.classList.remove('hidden')
+    })
+
+    myPhotosModal?.addEventListener('dblclick', (e) => myPhotosModal.dbclickHandler?.(e))
 })

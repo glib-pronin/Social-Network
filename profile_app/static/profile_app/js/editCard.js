@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enableBtn = document.querySelector('.enable-edit-card')
     const saveBtn = document.querySelector('.save-card')
     const cancelBtn = document.querySelector('.cancel-edit-card')
-
+    const myPhotosModal = document.getElementById('my-photos-modal')
     const token = document.querySelector('input[name="csrfmiddlewaretoken"]').value
     const avatarImg = document.querySelector('.avatar')
     const photoInput = document.getElementById('photo-input')
@@ -16,7 +16,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let previewUrl
     let selectedPhoto
+    let myPhotoId
     let isUsernameAvailable = true
+
+    myPhotosModal.dbclickHandler = (e) => {
+        const img = e.target.closest('img')
+        if (!img) return
+        myPhotosModal.classList.add('hidden')
+        myPhotoId = img.dataset.id
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl)
+            previewUrl = null
+        }
+        selectedPhoto = null
+        avatarImg.src = img.src   
+    }
 
     function initOriginalData({username, photoUrl}) {
         originalData.username = username
@@ -27,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = e.target.files[0]
         if (!file) return 
         selectedPhoto = file
+        myPhotoId = null
         if (previewUrl) URL.revokeObjectURL(previewUrl)
         previewUrl = URL.createObjectURL(file)
         avatarImg.src = previewUrl
@@ -68,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     saveBtn.addEventListener('click', async () => {
-        if (originalData.username === usernameInput.value && !selectedPhoto) {
+        if (originalData.username === usernameInput.value && !selectedPhoto && !myPhotoId) {
             cancelBtn.click()
             return
         }
@@ -77,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData()
         formData.append('username', usernameInput.value)
         if (selectedPhoto) formData.append('avatar', selectedPhoto)
+        if (myPhotoId) formData.append('photoId', myPhotoId)
         showSpinner(true, saveBtn.parentElement.parentElement, saveBtn.parentElement)
         const res = await fetch('/profile/settings/update-personal-data', {
             method: 'POST',

@@ -159,6 +159,10 @@
     border-radius: 10px;
 }
 
+.imgs-grid p {
+    align-self: center;
+}
+
 .add-more {
     display: flex;
     align-items: center;

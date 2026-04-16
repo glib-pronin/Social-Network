@@ -120,3 +120,13 @@ def toggle_photo(req: HttpRequest, photo_id: int):
     photo.is_shown = not photo.is_shown
     photo.save()
     return JsonResponse({'success': True})
+
+@login_required(login_url='registration')
+@require_http_methods(["GET"])
+def get_my_photos(req: HttpRequest):
+    album = req.user.profile.albums.prefetch_related('images').filter(is_default=True).first()
+    photos = []
+    for image in album.images.all():
+        optimized_url, _ = cloudinary_url(source=image.image.name, fetch_format='auto', quality='auto')
+        photos.append({'id': image.id, 'url': optimized_url})
+    return JsonResponse({'success': True, 'photos': photos})

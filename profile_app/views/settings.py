@@ -100,6 +100,7 @@ def update_signature(req: HttpRequest):
 @require_http_methods(["POST"])
 def update_personal_data(req: HttpRequest):
     username = req.POST.get('username')
+    photo_id = req.POST.get('photoId')
     avatar = req.FILES.get('avatar')
     if not username or not re.match(r'^@[a-z0-9]+([_.][a-z0-9]+)*$', username):
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
@@ -108,11 +109,17 @@ def update_personal_data(req: HttpRequest):
     req.user.username = username
     req.user.save()
     if avatar:
-        profile, _ = Profile.objects.get_or_create(user=req.user)
+        profile = req.user.profile
         default_album = profile.albums.filter(is_default=True).first()
         if default_album:
             profile.photo = AlbumImage.objects.create(album=default_album, image=avatar, is_shown=False)
             profile.save()
+    elif photo_id:
+        album = req.user.profile.albums.prefetch_related('images').filter(is_default=True).first()
+        photo = album.images.filter(pk=photo_id).first()
+        if photo:
+            req.user.profile.photo = photo
+            req.user.profile.save()
     return JsonResponse({'success': True,'data': {
         'username': req.user.username,
         'photo_url': req.user.profile.photo.image.url if req.user.profile.photo else None
@@ -136,6 +143,7 @@ def start_email_verification(req: HttpRequest):
     code = rand_code()
     ev, _ = EmailVerification.objects.get_or_create(user=req.user)
     ev.set_code(code)
+    print(code)
     ev.new_email = email
     ev.save()
     try:

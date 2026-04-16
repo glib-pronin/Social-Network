@@ -116,6 +116,10 @@
     cursor: pointer;
 }
 
+.tool-btn div {
+    height: 20px;
+}
+
 .element-loading-modal {
     display: flex;
     align-items: center;

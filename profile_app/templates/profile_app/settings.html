@@ -3,6 +3,7 @@
 {% load profile_tags %}
 {% check_profile as my_profile %}
 {% block links %}
+    <link rel="stylesheet" href="{% static 'chat_app/css/chat_modals.css' %}">
     <link rel="stylesheet" href="{% static 'user_app/css/registration.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile_layout.css' %}">
     <link rel="stylesheet" href="{% static 'profile_app/css/profile.css' %}">
@@ -73,7 +74,7 @@
                             </svg>
                             Додайте фото
                         </label>
-                        <button type="button" class="photo-btn">
+                        <button type="button" class="photo-btn" id="choose-my-photo">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1.6665 5.00008C1.6665 4.11603 2.01769 3.26818 2.64281 2.64306C3.26794 2.01794 4.11578 1.66675 4.99984 1.66675H14.9998C15.8839 1.66675 16.7317 2.01794 17.3569 2.64306C17.982 3.26818 18.3332 4.11603 18.3332 5.00008V15.0001C18.3332 15.8841 17.982 16.732 17.3569 17.3571C16.7317 17.9822 15.8839 18.3334 14.9998 18.3334H4.99984C4.11578 18.3334 3.26794 17.9822 2.64281 17.3571C2.01769 16.732 1.6665 15.8841 1.6665 15.0001V5.00008Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M7.08309 9.16679C8.23368 9.16679 9.16642 8.23405 9.16642 7.08346C9.16642 5.93286 8.23368 5.00012 7.08309 5.00012C5.9325 5.00012 4.99976 5.93286 4.99976 7.08346C4.99976 8.23405 5.9325 9.16679 7.08309 9.16679Z" stroke="#543C52" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
@@ -413,6 +414,7 @@
                 </div>
             </form>
         </div>
+        {% include 'profile_app/my_photos_modal.html' %}
     {% endif %}
 {% endblock %}
 {% block scripts %}
@@ -421,7 +423,6 @@
         <script src="{% static 'post_app/js/usernameValidation.js' %}"></script>
         <script src="{% static 'user_app/js/password.js' %}"></script>
         <script src="{% static 'user_app/js/digitInputs.js' %}"></script>
-        <script src="{% static 'user_app/js/spinner.js' %}"></script>
         <script src="{% static 'profile_app/js/enableEditing.js' %}"></script>
         <script src="{% static 'profile_app/js/editCard.js' %}"></script>
         <script src="{% static 'profile_app/js/updateCredentials.js' %}"></script>

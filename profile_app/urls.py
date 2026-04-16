@@ -11,6 +11,7 @@ urlpatterns = [
     path('albums/delete-album/<int:album_id>', view=delete_album, name='delete_album'),
     path('albums/toggle-album/<int:album_id>', view=toggle_album, name='toggle_album'),
     path('albums/toggle-photo/<int:photo_id>', view=toggle_photo, name='toggle_photo'),
+    path('albums/get-my-photos', view=get_my_photos, name='get_my_photos'),
     path('settings/update-credentials', view=update_credentials, name='update_credentials'),
     path('settings/update-password', view=update_passwords, name='update_password'),
     path('settings/update-signature', view=update_signature, name='update_signature'),
