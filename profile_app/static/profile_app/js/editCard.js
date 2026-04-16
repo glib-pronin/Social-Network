@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoInput = document.getElementById('photo-input')
     const usernameSpan = document.getElementById('username-span')
     const usernameInput = document.getElementById('username')
+    const avatarOverlay = document.querySelector('.avatar-overlay-big')
 
     let originalData = {
         username: '',
@@ -17,31 +18,45 @@ document.addEventListener('DOMContentLoaded', () => {
     let previewUrl
     let selectedPhoto
     let myPhotoId
+    let removeAvatar = false
     let isUsernameAvailable = true
-
-    myPhotosModal.dbclickHandler = (e) => {
-        const img = e.target.closest('img')
-        if (!img) return
-        myPhotosModal.classList.add('hidden')
-        myPhotoId = img.dataset.id
-        if (previewUrl) {
-            URL.revokeObjectURL(previewUrl)
-            previewUrl = null
-        }
-        selectedPhoto = null
-        avatarImg.src = img.src   
-    }
 
     function initOriginalData({username, photoUrl}) {
         originalData.username = username
         originalData.photoUrl = photoUrl
     }
 
+    myPhotosModal.dbclickHandler = (e) => {
+        const img = e.target.closest('img')
+        if (!img) return
+        myPhotosModal.classList.add('hidden')
+        myPhotoId = img.dataset.id
+        revokePreview()
+        selectedPhoto = null
+        removeAvatar = false
+        avatarImg.dataset.enableRemove = 'true' 
+        avatarImg.src = img.src   
+    }
+
+    avatarOverlay.addEventListener('click', () => {
+        if (avatarImg.dataset.enableRemove !== 'true') return
+        avatarImg.src = avatarImg.dataset.defaultAvatar
+        removeAvatar = true
+        revokePreview()
+        console.log(previewUrl);
+        
+        selectedPhoto = null
+        myPhotoId = null
+        avatarImg.dataset.enableRemove = 'false'
+    })
+
     photoInput.addEventListener('change', (e) => {
         const file = e.target.files[0]
         if (!file) return 
         selectedPhoto = file
         myPhotoId = null
+        removeAvatar = false
+        avatarImg.dataset.enableRemove = 'true' 
         if (previewUrl) URL.revokeObjectURL(previewUrl)
         previewUrl = URL.createObjectURL(file)
         avatarImg.src = previewUrl
@@ -61,7 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
         enableBtn.parentElement.nextElementSibling.querySelector('.username').classList.add('hidden')
         enableBtn.parentElement.parentElement.classList.add('highlighted-border')
         enableBtn.nextElementSibling.classList.remove('hidden')
-        initOriginalData({username: usernameSpan.textContent, photoUrl: avatarImg.src})     
+        initOriginalData({username: usernameSpan.textContent, photoUrl: avatarImg.src}) 
+        if (!avatarImg.src.includes(avatarImg.dataset.defaultAvatar)) avatarImg.dataset.enableRemove = 'true'    
     })
 
     cancelBtn.addEventListener('click', ()=> {
@@ -76,14 +92,12 @@ document.addEventListener('DOMContentLoaded', () => {
         usernameInput.value = originalData.username
         usernameSpan.textContent = originalData.username
         selectedPhoto = null
-        if (previewUrl) {
-            URL.revokeObjectURL(previewUrl)
-            previewUrl = null
-        }
+        revokePreview()
+        avatarImg.dataset.enableRemove = 'false'
     })
 
     saveBtn.addEventListener('click', async () => {
-        if (originalData.username === usernameInput.value && !selectedPhoto && !myPhotoId) {
+        if (originalData.username === usernameInput.value && !selectedPhoto && !myPhotoId && !removeAvatar) {
             cancelBtn.click()
             return
         }
@@ -93,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('username', usernameInput.value)
         if (selectedPhoto) formData.append('avatar', selectedPhoto)
         if (myPhotoId) formData.append('photoId', myPhotoId)
+        if (removeAvatar) formData.append('removeAvatar', '1')
         showSpinner(true, saveBtn.parentElement.parentElement, saveBtn.parentElement)
         const res = await fetch('/profile/settings/update-personal-data', {
             method: 'POST',
@@ -109,4 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
             usernameInput.nextElementSibling.textContent = "Таке ім'я користувача вже існує"
         }
     })
+
+    function revokePreview() {
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl)
+            previewUrl = null
+        }
+    }
 })

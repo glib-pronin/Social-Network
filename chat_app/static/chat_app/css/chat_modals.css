@@ -89,7 +89,7 @@
     gap: 24px;
 }
 
-.avatar-overlay {
+.avatar-overlay, .avatar-overlay-big {
     height: 46px;
     width: 46px;
     border-radius: 100px;
@@ -99,6 +99,12 @@
     justify-content: center;
     cursor: pointer;
     position: absolute;
+}
+
+.avatar-overlay-big {
+    height: 96px;
+    width: 96px;
+    top: 0;
 }
 
 .group-photo-container .avatar:hover + .avatar-overlay, .avatar-overlay:hover {

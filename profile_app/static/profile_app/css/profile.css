@@ -203,6 +203,14 @@ form#verify-form .send-btn {
     margin: 0;
 }
 
+.settings-avatar-wrapper {
+    position: relative;
+}
+
+.settings-avatar-wrapper .avatar[data-enable-remove="true"]:hover + .avatar-overlay-big, .avatar-overlay-big:hover {
+    display: flex;
+}
+
 
 @media (max-width: 680px) {
     form#verify-form {

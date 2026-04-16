@@ -3,6 +3,7 @@ from django.http import JsonResponse, HttpRequest
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from django.templatetags.static import static
 from user_app.utils import get_data_from_json, check_email, User, rand_code, send_code, check_password
 from post_app.utils import is_username_available
 from user_app.models import EmailVerification
@@ -101,6 +102,7 @@ def update_signature(req: HttpRequest):
 def update_personal_data(req: HttpRequest):
     username = req.POST.get('username')
     photo_id = req.POST.get('photoId')
+    remove_avatar = req.POST.get('removeAvatar') == '1'
     avatar = req.FILES.get('avatar')
     if not username or not re.match(r'^@[a-z0-9]+([_.][a-z0-9]+)*$', username):
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
@@ -108,21 +110,24 @@ def update_personal_data(req: HttpRequest):
         return JsonResponse({'success': False, 'error': 'wrong_payload'})
     req.user.username = username
     req.user.save()
-    if avatar:
-        profile = req.user.profile
+    profile = req.user.profile
+    if remove_avatar:
+        profile.photo = None
+        profile.save()
+    elif avatar:
         default_album = profile.albums.filter(is_default=True).first()
         if default_album:
             profile.photo = AlbumImage.objects.create(album=default_album, image=avatar, is_shown=False)
             profile.save()
     elif photo_id:
-        album = req.user.profile.albums.prefetch_related('images').filter(is_default=True).first()
+        album = profile.albums.prefetch_related('images').filter(is_default=True).first()
         photo = album.images.filter(pk=photo_id).first()
         if photo:
-            req.user.profile.photo = photo
-            req.user.profile.save()
+            profile.photo = photo
+            profile.save()
     return JsonResponse({'success': True,'data': {
         'username': req.user.username,
-        'photo_url': req.user.profile.photo.image.url if req.user.profile.photo else None
+        'photo_url': profile.photo.image.url if profile.photo else req.build_absolute_uri(static('profile_app/img/default_photo.png'))
         }})
 
 @login_required(login_url='registration')
