@@ -77,20 +77,24 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
+# Allauth settings
+
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = False
 
-SOCIALACCOUNT_ADAPTER = 'user_app.adapters.MySocialAccountAdapter'
-ACCOUNT_ADAPTER = 'user_app.adapters.MyAccountAdapter'
-
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": ["email", "profile", "openid"]
     }
 }
+
+# Adapters for allauth
+
+SOCIALACCOUNT_ADAPTER = 'user_app.adapters.MySocialAccountAdapter'
+ACCOUNT_ADAPTER = 'user_app.adapters.MyAccountAdapter'
 
 ROOT_URLCONF = 'SocialNetwork.urls'
 
