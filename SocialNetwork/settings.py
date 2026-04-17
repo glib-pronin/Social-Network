@@ -225,3 +225,6 @@ cloudinary.config(
     api_secret=CLOUDINARY_STORAGE['API_SECRET'],
     secure=True
 )
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
