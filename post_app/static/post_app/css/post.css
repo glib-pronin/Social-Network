@@ -122,8 +122,12 @@
     transition: all 0.25s ease;
 }
 
-.post-info .info svg.cursor-pointer:hover path  {
-    fill: #3E2D3C;
+.post-info .info svg.heart:hover path  {
+    fill: var(--color-red);
+}
+
+.post-info .info svg.like:hover path  {
+    fill: var(--color-like);
 }
 
 

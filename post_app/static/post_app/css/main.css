@@ -52,7 +52,7 @@
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 940px) {
     .side-block {
         position: static;
         width: 100%;
@@ -60,5 +60,11 @@
     
     .main-layout {
         flex-direction: column;
+    }
+}
+
+@media (max-width: 540px) {
+    .user-bio .user-bio-statistic {
+        display: none;
     }
 }

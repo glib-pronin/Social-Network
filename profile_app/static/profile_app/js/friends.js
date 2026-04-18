@@ -57,6 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (friendContent.querySelectorAll('.friends-section-card').length === 0) {
             friendsContainer.querySelector('.empty-msg').classList.add('hidden')
         }
+        const btn1 = card.querySelector('.btn1')
+        btn1.textContent = 'Повідомлення'
+        const a = document.createElement('a')
+        a.href = `/chat/?user=${btn1.dataset.userId}`
+        btn1.replaceWith(a)
+        a.append(btn1)
         friendContent.prepend(card)
     }
 

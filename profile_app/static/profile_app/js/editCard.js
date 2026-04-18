@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameSpan = document.getElementById('username-span')
     const usernameInput = document.getElementById('username')
     const avatarOverlay = document.querySelector('.avatar-overlay-big')
+    const userBioStatistics = document.querySelector('.user-bio-statistic')
 
     let originalData = {
         username: '',
@@ -76,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         enableBtn.parentElement.nextElementSibling.querySelector('.username').classList.add('hidden')
         enableBtn.parentElement.parentElement.classList.add('highlighted-border')
         enableBtn.nextElementSibling.classList.remove('hidden')
+        userBioStatistics.classList.add('hidden')
         initOriginalData({username: usernameSpan.textContent, photoUrl: avatarImg.src}) 
         if (!avatarImg.src.includes(avatarImg.dataset.defaultAvatar)) avatarImg.dataset.enableRemove = 'true'    
     })
@@ -88,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         parent.parentElement.nextElementSibling.querySelector('.username').classList.remove('hidden')
         parent.parentElement.parentElement.classList.remove('highlighted-border')
         parent.previousElementSibling.classList.remove('hidden')
+        userBioStatistics.classList.remove('hidden')
         avatarImg.src = originalData.photoUrl
         usernameInput.value = originalData.username
         usernameSpan.textContent = originalData.username

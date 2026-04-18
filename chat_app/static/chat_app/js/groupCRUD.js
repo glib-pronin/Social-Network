@@ -32,6 +32,8 @@ function createChat(chatData, selector) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const openBtns = document.querySelectorAll('.create-group')
+    console.log(openBtns);
+    
     const selectUsersModal = document.getElementById('select-users-for-group-modal')
     const allUsers = selectUsersModal.querySelector('.all-users')
     const selectedUsersCount = document.getElementById('selected-users-count')
@@ -44,9 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedUsers = []
     let mode = 'create'
 
-    openBtns.forEach(btn => btn.addEventListener('click', openSelectModal))
+    openBtns.forEach(btn => btn.addEventListener('click', (e) => openSelectModal(e)))
     // Відкриття модалку вибору користувачів
-    async function openSelectModal(reset = true) {
+    async function openSelectModal(e, reset = true) {
+        e?.preventDefault()
         if (reset) {
             resetgroupModal()
             mode = 'create'
@@ -122,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectUsersModal.querySelector('.form-text').textContent = 'Додати учасника'
         selectedUsersCount.textContent = selectedUsers.length
         groupModal.classList.add('hidden')
-        openSelectModal(false)
+        openSelectModal(null, false)
     })
     // Делегація видалення вибраних користувачів
     groupModal.querySelector('.selected-users-list').addEventListener('click', (e) => {

@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const messagesBlock = document.getElementById('messages-block')
     const groupsBlock = document.getElementById('groups-block')
     const secondBlock = document.getElementById('second-block')
-    const createGroupBtns = Array.from(document.querySelectorAll('.create-group'))
-    const elements = [contactsBlock, contactsBlock.parentElement, messagesBlock, messagesBlock.parentElement, groupsBlock, secondBlock, ...createGroupBtns]
+    const createGroupBtn = document.getElementById('desktop-btn')
+    const elements = [contactsBlock, contactsBlock.parentElement, messagesBlock, messagesBlock.parentElement, groupsBlock, secondBlock, createGroupBtn]
     // Функція створення url
     function setTabOrChatInURL({ tab = null, chat = null }) {
         const url = new URL(window.location)
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (type === 'groups') {
             groupsBlock.classList.remove('hidden')    
             groupsBlock.parentElement.classList.remove('hidden')
-            createGroupBtns.find(btn => btn.id === 'mobile-btn').classList.remove('hidden')
         }
     }
     // Функція ініціалізації вкладки або чату
@@ -73,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleResize() {
         if (window.innerWidth >= 1100) {
             hideElments(false)
-            createGroupBtns.find(btn => btn.id === 'mobile-btn')?.classList.add('hidden')
         }
         initTabsOrChat()
     }

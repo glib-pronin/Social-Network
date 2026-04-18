@@ -42,6 +42,7 @@
   --color-silver: #CDCED2;
   --color-gray: #83848D;
   --color-orange: #22C55E;
+  --color-like: #F98232;
 
   --header-height: 88px;
   --side-padding-horizontal: 80px;
@@ -138,6 +139,7 @@ nav.mobile a {
   border-radius: 100px;
   border: 1px solid var(--color-purple);
   box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 nav.mobile a.selected {
@@ -290,7 +292,7 @@ footer a.selected {
   background-color: var(--color-orange);
 }
 
-@media (max-width: 1060px) {
+@media (max-width: 1100px) {
   nav.desktop {
     display: none;
   }
@@ -320,9 +322,12 @@ footer a.selected {
   }
 
   nav.mobile {
-    width: 30%;
-    justify-content: space-between;
-    min-width: 140px;
-    gap: 0;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 500px) {
+    nav.mobile {
+    gap: 10px;
   }
 }
