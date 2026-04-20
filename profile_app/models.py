@@ -2,8 +2,8 @@ from django.db import models
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.utils import timezone
-from PIL import Image
 from post_app.models import PostView
+from chat_app.models import Message
 import os, uuid, math
 
 # Create your models here.
@@ -47,7 +47,20 @@ class Profile(models.Model):
         received_requests = self.received_requests.count()
         if received_requests == 0:
             return ''
-        return received_requests if self.received_requests.count() <= 9 else '9+'
+        return received_requests if received_requests <= 9 else '9+'
+    
+    def get_total_unread_count(self):
+        count = Message.objects.filter(
+            chat__users=self.user
+        ).exclude(
+            readers=self.user,
+        ).exclude(
+            sender=self.user
+        ).count()
+        if count == 0:
+            return ''
+        return count if count <= 9 else '9+'
+    
 
     def total_post_views(self):
         total_views = PostView.objects.filter(post__author=self.user).count()

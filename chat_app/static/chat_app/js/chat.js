@@ -11,6 +11,10 @@ function connectWS(chatId) {
         const msgsContainer = document.getElementById('msgs-container')
         const data = JSON.parse(e.data)
         if (data.tempId) {
+            if (!data.isMine) {
+                const chatId = msgsContainer.parentElement.dataset.selected
+                scheduleRead(chatId)
+            }
             const tempMsg = document.querySelector(`.my-msg[data-temp-id="${data.tempId}"]`)
             if (tempMsg) {
                 const container = document.createElement('div')
@@ -21,7 +25,6 @@ function connectWS(chatId) {
             }
         }
         setMessage(data, msgsContainer)
-        console.log(data);
         initLightBox()
     }
 }

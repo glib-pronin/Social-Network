@@ -82,6 +82,10 @@
     justify-content: space-between;
 }
 
+.chat[data-has-unread="True"] {
+    background-color: var(--color-plum);
+}
+
 .without-time {
     display: flex;
     gap: 12px;

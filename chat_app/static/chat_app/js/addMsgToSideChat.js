@@ -2,6 +2,11 @@ function addMsgToSideChat(data) {
     const chatContainer = document.querySelector(`.chat[data-id="${data.chatId}"]`)
     if (!chatContainer) return
 
+    const secondBlock = document.getElementById('second-block')
+    if (secondBlock && secondBlock.dataset.selected != data.chatId && !data.isMyMsg) {
+        chatContainer.dataset.hasUnread = 'True'
+    }
+    
     const tempContainer = document.createElement('div')
     tempContainer.innerHTML = data.htmlNotification
 

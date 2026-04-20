@@ -43,7 +43,7 @@ function showNotification(notification) {
         const selectedChatId = secondBlock?.dataset.selected
         if (secondBlock && !secondBlock.classList.contains('hidden') && Number(selectedChatId) === notification.chatId) return
     }
-
+    incrementUnreadCount()
     const modal = document.getElementById('notification-modal')
     modal.classList.remove('fade-out', 'hidden')
     const currentNotificationVersion = ++notificationVersion

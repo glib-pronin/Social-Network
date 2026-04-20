@@ -138,6 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
         initLightBox()
         msgsContainer.scrollTop = msgsContainer.scrollHeight
         connectWS(data.id)
+
+        if (chat.classList.contains('chat') && chat.dataset.hasUnread === 'True') {
+            chat.dataset.hasUnread = 'False'
+            sendReadRequest(data.id)
+        }
     })
 
     const searchInput = document.querySelector('.search-input')

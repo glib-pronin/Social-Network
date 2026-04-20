@@ -38,9 +38,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def send_msg(self, data):
         if data.get('sender_id') == self.user.id:
-            await self.send(text_data=json.dumps({'html': data.get('html_my'), 'tempId': data.get('tempId')}))
+            await self.send(text_data=json.dumps({'html': data.get('html_my'), 'tempId': data.get('tempId'), 'isMine': True}))
         else:
-            await self.send(text_data=json.dumps({'html': data.get('html_another'), 'tempId': data.get('tempId')}))
+            await self.send(text_data=json.dumps({'html': data.get('html_another'), 'tempId': data.get('tempId'), 'isMine': False}))
 
     @database_sync_to_async
     def create_msg(self, text: str, images):
@@ -64,5 +64,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     to_attr='prefetched_users'
                 )
             ).first()
+            msg.readers.add(self.user)
             return [msg]
         return []

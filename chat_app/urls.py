@@ -11,5 +11,6 @@ urlpatterns = [
     path('edit-group/<int:chat_id>', edit_group, name='edit_group'),
     path('leave-group/<int:chat_id>', leave_group, name='leave_group'),
     path('delete-group/<int:chat_id>', delete_group, name='delete_group'),
-    path('upload-image/<int:chat_id>', upload_image, name='upload-image'),
+    path('upload-image/<int:chat_id>', upload_image, name='upload_image'),
+    path('read-chat-messages/<int:chat_id>', read_chat_messages, name='read_chat_messages'),
 ]

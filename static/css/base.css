@@ -152,7 +152,7 @@ a {
   font-weight: 500;
 }
 
-a .nav-icon-container {
+.nav-icon-container {
   position: relative;
   height: 20px;
 }

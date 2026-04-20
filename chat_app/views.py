@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.http import HttpRequest, JsonResponse
-from django.db.models import Prefetch, Max, F
+from django.db.models import Prefetch, Max, F, Exists, OuterRef
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.templatetags.static import static
@@ -19,7 +19,11 @@ import cloudinary.uploader
 def render_chat_lobby(req: HttpRequest):
     friends = req.user.profile.friends.select_related('user', 'photo').all()
     chats = req.user.chats.annotate(
-        last_message_time = Max('messages__created_at')
+        last_message_time = Max('messages__created_at'),
+        has_unread = Exists(Message.objects.filter(
+                chat=OuterRef('pk')
+            ).exclude(sender=req.user).exclude(readers=req.user)
+        )
     ).order_by(F('last_message_time').desc(nulls_last=True)).prefetch_related(Prefetch(
         'users',
         queryset=User.objects.exclude(pk=req.user.id).select_related('profile__photo'),
@@ -242,3 +246,14 @@ def upload_image(req: HttpRequest, chat_id: int):
         'url': res['secure_url'], 'publicId': res['public_id'],
         'width': res['width'], 'height': res['height']
     })
+
+@login_required(login_url='registration')
+@require_http_methods(["POST"])
+def read_chat_messages(req: HttpRequest, chat_id: int):
+    chat = Chat.objects.filter(pk=chat_id, users=req.user).first()
+    if not chat:
+        return JsonResponse({'success': False, 'error': 'chat_not_exist'})
+    unread_msgs = chat.messages.exclude(sender=req.user).exclude(readers=req.user)
+    for msg in unread_msgs:
+        msg.readers.add(req.user)
+    return JsonResponse({'success': True, 'totalUnread': req.user.profile.get_total_unread_count()})
