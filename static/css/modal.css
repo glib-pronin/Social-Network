@@ -116,7 +116,7 @@
     cursor: pointer;
 }
 
-.tool-btn div {
+.tool-btn > div {
     height: 20px;
 }
 

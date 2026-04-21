@@ -33,9 +33,7 @@ presenceWs.onmessage = async (e) => {
 }
 
 function registerIndicators(root = document) {
-    const avatars = root.querySelectorAll('.user-presence')
-    console.log(avatars);
-    
+    const avatars = root.querySelectorAll('.user-presence')    
     avatars.forEach(el => {
         const id = el.dataset.id
         if (!id) return

@@ -3,7 +3,7 @@ function addMsgToSideChat(data) {
     if (!chatContainer) return
 
     const secondBlock = document.getElementById('second-block')
-    if (secondBlock && secondBlock.dataset.selected != data.chatId && !data.isMyMsg) {
+    if (secondBlock && (secondBlock.classList.contains('hidden') || secondBlock.dataset.selected != data.chatId) && !data.isMyMsg) {
         chatContainer.dataset.hasUnread = 'True'
     }
     

@@ -32,8 +32,6 @@ function createChat(chatData, selector) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const openBtns = document.querySelectorAll('.create-group')
-    console.log(openBtns);
-    
     const selectUsersModal = document.getElementById('select-users-for-group-modal')
     const allUsers = selectUsersModal.querySelector('.all-users')
     const selectedUsersCount = document.getElementById('selected-users-count')

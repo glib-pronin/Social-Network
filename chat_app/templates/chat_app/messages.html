@@ -30,11 +30,7 @@
             {% endif %}
             <div class="msg another-msg" data-date="{{ msg.get_date }}">
                 <div class="msg-wrapper"> 
-                    {% if msg.sender.first_name or msg.sender.lastst_name %}
-                        <span class="username">{{ msg.sender.first_name }} {{ msg.sender.last_name }}</span>
-                    {% else %}
-                        <span class="username">{{ msg.sender.username }}</span>
-                    {% endif %}
+                    <span class="username">{{ msg.sender.profile.get_full_name }}</span>
                     {% if msg.images_sorted %}
                         <div class="imgs-container post-gallery">
                             {% for img in msg.images_sorted %}

@@ -31,10 +31,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     f'notification_user_{chm.id}', {
                         'type': 'send_notif',
                         'htmlNotification': render_to_string(template_name='chat_app/notification.html', context={'msg': msgs[0]}),
-                        'chatId': msgs[0].chat.id, 'msgTime': msgs[0].get_time(), 'sender_id': self.user.id
+                        'chatId': msgs[0].chat.id, 'msgTime': msgs[0].get_time(), 'sender_id': self.user.id, 'isGroup': msgs[0].chat.is_group
                     }
                 )
-
 
     async def send_msg(self, data):
         if data.get('sender_id') == self.user.id:

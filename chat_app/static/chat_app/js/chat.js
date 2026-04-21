@@ -47,9 +47,9 @@ msgBtn.addEventListener('click', async () => {
     const secondBlock = input.closest('.second-block')
     const msgsContainer = secondBlock.querySelector('.chat-body')
     const hasImages = secondBlock.hasImages?.()
-
+    
     if (!value && !hasImages) return
-
+    
     const tempId = 'temp-' + Date.now()
     const imgsCopy = Array.from(document.querySelectorAll('.img-container:not(.add-more)')).map(el => ({...el.imgObj}))
     const tempEl = createTempMsg({ text: value, images: imgsCopy, tempId }) 

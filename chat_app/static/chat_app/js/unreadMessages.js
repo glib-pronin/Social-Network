@@ -11,22 +11,26 @@ async function sendReadRequest(chatId) {
         method: 'POST',
         headers: {'X-CSRFToken': token}
     })
-    const { success, totalUnread } = await res.json()
+    const { success, totalUnread, chatUnread, groupUnread } = await res.json()
     if (success) {
-        updateUnreadCount(totalUnread)
+        updateUnreadCount(totalUnread, '.unread-total-count')
+        updateUnreadCount(chatUnread, '.unread-chat-count')
+        updateUnreadCount(groupUnread, '.unread-group-count')
+        const chat = document.querySelector(`.chat[data-id="${chatId}"]`)
+        if (chat) chat.dataset.hasUnread = 'False'
     }
 }
 
-function updateUnreadCount(totalUnread) {
-    const unreadIndicators = document.querySelectorAll('.unread-count')
+function updateUnreadCount(count, elementClass) {
+    const unreadIndicators = document.querySelectorAll(elementClass)    
     unreadIndicators.forEach(indicator => {
-        indicator.textContent = totalUnread
-        indicator.classList.toggle('hidden', !totalUnread)
+        indicator.textContent = count
+        indicator.classList.toggle('hidden', !count)
     })
 }
 
-function incrementUnreadCount() {
-    const unreadIndicators = document.querySelectorAll('.unread-count')
+function incrementUnreadCount(chatType) {
+    const unreadIndicators = document.querySelectorAll(`.unread-total-count, .unread-${chatType}-count`)
     unreadIndicators.forEach(indicator => {
         indicator.classList.remove('hidden')
         const count = indicator.textContent

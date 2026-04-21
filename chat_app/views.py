@@ -256,4 +256,8 @@ def read_chat_messages(req: HttpRequest, chat_id: int):
     unread_msgs = chat.messages.exclude(sender=req.user).exclude(readers=req.user)
     for msg in unread_msgs:
         msg.readers.add(req.user)
-    return JsonResponse({'success': True, 'totalUnread': req.user.profile.get_total_unread_count()})
+    stats = req.user.profile.get_total_unread_stats()
+    return JsonResponse({
+        'success': True, 'totalUnread': stats['total_unread_count'],
+        'chatUnread': stats['chat_unread_count'], 'groupUnread': stats['group_unread_count']
+    })

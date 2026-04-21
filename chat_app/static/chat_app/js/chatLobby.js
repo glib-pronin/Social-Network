@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function openTab(type) {   
         closeWS()     
         secondBlock.resetSelectedImages()
+        secondBlock.querySelectorAll('.chat-interface').forEach(block => block.classList.add('hidden'))
+        secondBlock.querySelector('.welcome-block').classList.remove('hidden')
         subNav.querySelectorAll('button').forEach(bt => bt.classList.remove('selected'))
         subNav.querySelector(`button[data-type="${type}"]`)?.classList.add('selected')
         hideElments()

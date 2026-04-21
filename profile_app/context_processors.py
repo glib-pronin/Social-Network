@@ -17,3 +17,9 @@ def profile_nav(request):
             ],
         }
     }
+
+def unread_messages(request):
+    if not request.user.is_authenticated:
+        return {}
+    stats = request.user.profile.get_total_unread_stats()
+    return {**stats}

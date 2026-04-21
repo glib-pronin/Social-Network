@@ -49,17 +49,15 @@ class Profile(models.Model):
             return ''
         return received_requests if received_requests <= 9 else '9+'
     
-    def get_total_unread_count(self):
-        count = Message.objects.filter(
-            chat__users=self.user
-        ).exclude(
-            readers=self.user,
-        ).exclude(
-            sender=self.user
-        ).count()
-        if count == 0:
-            return ''
-        return count if count <= 9 else '9+'
+    def get_total_unread_stats(self):
+        group_count = Message.objects.filter(chat__users=self.user, chat__is_group=True).exclude(readers=self.user).exclude(sender=self.user).count()
+        chat_count = Message.objects.filter(chat__users=self.user, chat__is_group=False).exclude(readers=self.user).exclude(sender=self.user).count()
+        total_count = group_count + chat_count
+        return {
+            'group_unread_count': '' if group_count == 0 else group_count if group_count <= 9 else '9+',
+            'chat_unread_count': '' if chat_count == 0 else chat_count if chat_count <= 9 else '9+',
+            'total_unread_count': '' if total_count == 0 else total_count if total_count <= 9 else '9+'
+        }
     
 
     def total_post_views(self):
