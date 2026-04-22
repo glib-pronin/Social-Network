@@ -9,7 +9,7 @@ from cloudinary.utils import cloudinary_url
 from post_app.utils import get_page_data
 from .models import *
 from .utils import *
-import cloudinary.uploader
+import cloudinary
 
 
 # Create your views here.
@@ -151,7 +151,7 @@ def get_group_data(req: HttpRequest, chat_id: int):
             photo_url = req.build_absolute_uri(static('profile_app/img/default_photo.png'))
         users_data.append({
             'id': us.id,
-            'name': f'{us.first_name} {us.last_name}' if us.first_name and us.last_name else us.username,
+            'name': us.profile.get_full_name(),
             'avatar': photo_url
         })
     return JsonResponse({
@@ -228,6 +228,12 @@ def delete_group(req: HttpRequest, chat_id: int):
         return JsonResponse({'success': False, 'error': 'forbidden'})
     if chat.avatar:
         chat.avatar.delete(save=False)
+    try:
+        folder_prefix = f'media/chats/{chat.id}/'
+        cloudinary.api.delete_resources_by_prefix(folder_prefix)
+        cloudinary.api.delete_folder(folder_prefix)
+    except cloudinary.exceptions.NotFound:
+        pass
     chat.delete()
     return JsonResponse({'success': True})
 
@@ -240,7 +246,7 @@ def upload_image(req: HttpRequest, chat_id: int):
     file = req.FILES.get('image')
     if not file: 
         return JsonResponse({'success': False, 'error': 'missing_file'})
-    res = cloudinary.uploader.upload(file, folder=f'chats/{chat_id}')
+    res = cloudinary.uploader.upload(file, folder=f'media/chats/{chat_id}')
     return JsonResponse({
         'success': True,
         'url': res['secure_url'], 'publicId': res['public_id'],

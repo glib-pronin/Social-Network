@@ -12,7 +12,7 @@ def group_friends_by_letter(friends, req):
     latin = {}
     cyrillic = {}
     for f in friends:
-        name = f.user.first_name or f.user.last_name or f.user.username or ''
+        name = f.get_full_name()
         if not name:
             continue
 
@@ -31,7 +31,7 @@ def group_friends_by_letter(friends, req):
         
         target[letter].append({
             'id': f.user.id,
-            'name': f'{f.user.first_name} {f.user.last_name}' if f.user.first_name and f.user.last_name else f.user.username,
+            'name': name,
             'avatar': photo_url,
         })
     return (latin, cyrillic)
