@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursorPost = document.querySelector('.post:first-child')
     const prevTop = cursorPost?.getBoundingClientRect().top ?? 0
     
-    const res = await fetch(`get-posts?cursor=${cursor}&new_posts=${true}`)
+    const res = await fetch(`get-posts?cursor=${cursor}&new_posts=${true}&url_name=main`)
     const { html_post, new_cursor } = await res.json()
     loadingBlock.classList.add('hidden')
     if (!new_cursor) failuretBlock.classList.remove('hidden')    

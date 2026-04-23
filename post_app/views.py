@@ -36,6 +36,7 @@ def get_post(req: HttpRequest):
     profile_id = req.GET.get('id')
     new_posts = req.GET.get('new_posts', '') == 'true'
     url_name = req.GET.get('url_name', '')
+    print(url_name)
     if not profile_id:
         hidden_ids = HiddenPost.objects.filter(user=req.user).values_list('post_id', flat=True)
         page_qs = Post.objects.exclude(id__in=hidden_ids)
