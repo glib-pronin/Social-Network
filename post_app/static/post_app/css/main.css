@@ -64,7 +64,11 @@
 }
 
 @media (max-width: 540px) {
-    .user-bio .user-bio-statistic {
+    .side-block {
         display: none;
+    }
+
+    .side-block[data-is-my-profile="False"] {
+        display: flex;
     }
 }

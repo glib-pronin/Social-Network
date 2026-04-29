@@ -40,7 +40,7 @@
 .contacts-block {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: clamp(16px, 3vh, 24px);
     padding: 16px;
     box-sizing: border-box;
     flex: 1 1 0;
@@ -76,7 +76,7 @@
 }
 
 .chat {
-    padding: 8px 16px;
+    padding: clamp(5px, 1vh, 8px) 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -111,7 +111,7 @@
 .msg-time {
     align-self: flex-start;
     font-weight: 400;
-    font-size: 14;
+    font-size: 12px;
     color: var(--color-blue);
 }
 
@@ -119,7 +119,7 @@
     padding: 16px 0;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: clamp(16px, 2vh, 24px);
     flex: 1 1 0;
 }
 

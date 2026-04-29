@@ -96,6 +96,8 @@
 .photo-container img {
     height: 96px;
     width: 96px;
+    max-height: 96px;
+    max-width: 96px;
     border-radius: 100px;
     object-fit: cover;
 }

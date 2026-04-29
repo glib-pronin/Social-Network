@@ -43,6 +43,8 @@ function showNotification(notification) {
         const selectedChatId = secondBlock?.dataset.selected
         if (secondBlock && !secondBlock.classList.contains('hidden') && Number(selectedChatId) === notification.chatId) return
         else incrementUnreadCount(notification.isGroup ? 'group' : 'chat')
+    } else {
+        incrRequestCount()
     }
     const modal = document.getElementById('notification-modal')
     modal.classList.remove('fade-out', 'hidden')

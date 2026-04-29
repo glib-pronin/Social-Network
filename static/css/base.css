@@ -238,22 +238,18 @@ footer a.selected {
 }
 
 .standart-border {
-    box-sizing: border-box;
-    border: 1px solid var(--color-silver);
-    border-radius: 10px;
-    background-color: var(--color-white);
+  box-sizing: border-box;
+  border: 1px solid var(--color-silver);
+  border-radius: 10px;
+  background-color: var(--color-white);
 }
 
 .avatar {
-    height: 46px;
-    width: 46px;
-    border-radius: 100px;
-    object-fit: cover;
+  border-radius: 100px;
+  object-fit: cover;
 }
 
 .avatar-default {
-  height: 46px;
-  width: 46px;
   font-size: 16px;
   font-weight: 500;
   color: var(--color-white);
@@ -264,6 +260,13 @@ footer a.selected {
   justify-content: center;
 }
 
+.avatar, .avatar-default {
+  height: 5.6vh;
+  width: 5.6vh;
+  max-height: 46px;
+  max-width: 46px;
+}
+
 .user-presence {
   position: relative;
 }
@@ -271,8 +274,10 @@ footer a.selected {
 .user-presence::before {
   content: '';
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 1.5vh;
+  height: 1.5vh;
+  max-width: 12px;
+  max-height: 12px;
   background-color: var(--color-silver);
   position: absolute;
   bottom: 1.5px;

@@ -9,7 +9,7 @@
 {% endblock %}
 {% block content %}
     <div class="main-layout">
-        <div class="side-block">
+        <div class="side-block" data-is-my-profile="{{ my_profile }}">
             {% include 'post_app/user_bio.html' %}
         </div>
         <div class="content-container">
@@ -38,7 +38,6 @@
 {% block scripts %}
     <script src="{% static 'post_app/js/loadPost.js' %}"></script>
     <script src="{% static 'post_app/js/post.js' %}"></script>
-    <script src="{% static 'profile_app/js/changeRequestIndicator.js' %}"></script>
     <script src="{% static 'profile_app/js/profileFriendship.js' %}"></script>
     <script src="{% static 'post_app/js/createPost.js' %}"></script>
 {% endblock %}
