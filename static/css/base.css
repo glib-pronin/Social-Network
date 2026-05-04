@@ -261,8 +261,8 @@ footer a.selected {
 }
 
 .avatar, .avatar-default {
-  height: 5.6vh;
-  width: 5.6vh;
+  height: 5vh;
+  width: 5vh;
   max-height: 46px;
   max-width: 46px;
 }
@@ -274,8 +274,8 @@ footer a.selected {
 .user-presence::before {
   content: '';
   display: block;
-  width: 1.5vh;
-  height: 1.5vh;
+  width: 1.3vh;
+  height: 1.3vh;
   max-width: 12px;
   max-height: 12px;
   background-color: var(--color-silver);
@@ -288,7 +288,9 @@ footer a.selected {
 
 .user-presence.big-icon::before {
   width: 18px;
+  max-width: 18px;
   height: 18px;
+  max-height: 18px;
   bottom: 6.5px;
   right: 6.5px;
 }

@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: 10px;
+    padding-bottom: min(1vh, 10px);
     border-bottom: 1px solid var(--color-plum);
 }
 
@@ -30,12 +30,12 @@
 
 .chat-info div > span:first-child {
     font-weight: 500;
-    font-size: 24px;
+    font-size: 1.5rem;
 }
 
 .chat-info div p span {
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     color: var(--color-blue);
 }
 
